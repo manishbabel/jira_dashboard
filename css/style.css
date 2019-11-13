@@ -222,3 +222,14 @@ h1 {
 .PT_Serif{
     font-family: 'PT Serif', serif;
 }
+#view_select {
+    margin-top: 10px;
+}
+
+a, a:visited, a:active {
+    color: #444;
+}
+
+footer {
+    text-align: center;
+}
