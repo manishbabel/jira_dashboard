@@ -18,41 +18,24 @@ StoryChart.prototype.initVis = function (){
     vis.height = 600 -  vis.margin.top -  vis.margin.bottom;
 
 
+    vis.pack = d3.pack()
+        .size([ vis.width,  vis.height])
+        .padding(1.5);
 
     vis.svg = d3.select("#" + vis.parentElement).append("svg")
         .attr("width",  vis.width -  vis.margin.left -  vis.margin.right )
         .attr("height",  vis.height  )
         // .append("g").attr("transform", "translate(" + 10   + "," + 800 + ")");
     // Scales and axes
-    vis.x = d3.scaleTime()
-        .range([0, vis.width]);
+    // List of node names
+    // List of node names
 
-    vis.y = d3.scaleLinear()
-        .range([vis.height, 0]);
+    // A linear scale to position the nodes on the X axis
+    vis.x = d3.scalePoint()
+        .range([0, vis.width])
+        // .domain(allNodes)
 
-    vis.xAxis = d3.axisBottom()
-        .scale(vis.x);
-
-    vis.yAxis = d3.axisLeft()
-        .scale(vis.y)
-        .ticks(6);
-
-
-    // Set domains
-    var minMaxY= [0, 24];
-    vis.y.domain(minMaxY);
-
-    var minMaxX = d3.extent([1,2,3,4]);
-    vis.x.domain(minMaxX);
-
-    vis.svg.append("g")
-        .attr("class", "x-axis axis").style("fill","red")
-        .attr("transform", "translate("+20+"," + vis.height + ")");
-
-    vis.svg.append("g")
-        .attr("class", "y-axis axis")
-        .style("fill","red")
-        // .attr("transform", "translate( "+vis.height+"," + 10 + ")");
+    // Add the circle for the nodes
 
     vis.wrangleData()
 }
@@ -77,75 +60,83 @@ StoryChart.prototype.updateVis = function (value){
     console.log("changelog",vis.changelog)
     startDate = dateFormatter(vis.activeSprint['startDate'])
     endDate = dateFormatter(vis.activeSprint['endDate'])
-    // Set domains
-    var minMaxY= [0, 24];
-    vis.y.domain(minMaxY);
-    time = []
-    dates=[]
-    vis.changelog.forEach(function(d){
-        date = new Date(d.created)
-        var minute = date.getUTCMinutes();
-        var hour = date.getUTCHours();
-        var a = parseInt(hour) + parseInt(minute)/60
-        time.push(a)
-        dates.push(date.getDate())
-    })
+    data = createNodes1(vis.changelog,vis)
+    var allNodes = data.map(function(d){return d.name})
+    vis.x.domain(allNodes)
+    vis.svg
+        .selectAll("mynodes")
+        .data(data)
+        .enter()
+        .append("circle")
+        .attr("cx", function(d){ return(vis.x(d.name))})
+        .attr("cy", vis.height-30)
+        .attr("r", 8)
+        .style("fill", "#69b3a2")
 
-    console.log(time,dates);
-    var minMaxX = [0,31]
-    // console.log('minMaxX',minMaxX)
-    vis.x.domain(minMaxX);
+    // And give them a label
+    vis.svg
+        .selectAll("mylabels")
+        .data(data)
+        .enter()
+        .append("text")
+        .attr("x", function(d){ return(vis.x(d.name))})
+        .attr("y", vis.height-10)
+        .text(function(d){ return(d.name)})
+        .style("text-anchor", "middle")
 
-    // Call axis functions with the new domain
-    vis.svg.select(".x-axis").call(vis.xAxis);
-    vis.svg.select(".y-axis").call(vis.yAxis);
+    // Add links between nodes. Here is the tricky part.
+    // In my input data, links are provided between nodes -id-, NOT between node names.
+    // So I have to do a link between this id and the name
+    var idToNode = {};
+    data.forEach(function (n) {
+        idToNode[n.id] = n;
+    });
+    // Cool, now if I do idToNode["2"].name I've got the name of the node with id 2
 
-    bubble = vis.svg.selectAll(".bubble")
-        .data(vis.changelog
-        )
-        .enter().append("g")
-        .attr("class", "bubble")
-        // .call(d3.drag()
-        .call(d3.drag()
-            .on("start", (d) => {
-                if (!d3.event.active) { simulation.alphaTarget(0.2).restart(); }
-                d.fx = d.x;
-                d.fy = d.y;
-            })
-            .on("drag", (d) => {
-                d.fx = d3.event.x;
-                d.fy = d3.event.y;
-            })
-            .on("end", (d) => {
-                if (!d3.event.active) { simulation.alphaTarget(0); }
-                d.fx = null;
-                d.fy = null;
-            })
-        )
+    // Add the links
+    vis.svg
+        .selectAll('mylinks')
+        .data(data)
+        .enter()
+        .append('path')
+        .attr('d', function (d) {
+            start = vis.x(idToNode[d.source].name)    // X position of start node on the X axis
+            end = vis.x(idToNode[d.target].name)      // X position of end node
+            return ['M', start, vis.height-30,    // the arc starts at the coordinate x=start, y=height-30 (where the starting node is)
+                'A',                            // This means we're gonna build an elliptical arc
+                (start - end)/2, ',',    // Next 2 lines are the coordinates of the inflexion point. Height of this point is proportional with start - end distance
+                (start - end)/2, 0, 0, ',',
+                start < end ? 1 : 0, end, ',', vis.height-30] // We always want the arc on top. So if end is before start, putting 0 here turn the arc upside down.
+                .join(' ');
+        })
+        .style("fill", "none")
+        .attr("stroke", "black")
 
 }
-function createNodes(source,vis) {
+function createNodes1(source,vis) {
     // console.log("source",source)
     let root = d3.hierarchy({ children: source })
         .sum(d => d.value);
-    // console.log("root",root)
+    console.log("root",root)
     const rootData = vis.pack(root).leaves().map((d, i) => {
         const data = d.data;
-        // console.log("data",d)
-        const color = scaleColor(data.fields.issuetype.name);
+        console.log("data",d)
+        const color = scaleColor(data.id);
         return {
             x: vis.centerX + (d.x - vis.centerX) * 3,
             y: vis.centerY + (d.y - vis.centerY) * 3,
             id: "bubble" + i,
             r: 0,
             radius: data.storyPoints * 50,
-            value: data.storyPoints,
-            name: data.fields.issuetype.name,
+            value: data.items,
+            name: dateFormatter(new Date(data.created)),
+            id:data.id,
             color: color,
         }
     });
 
     // sort them to prevent occlusion of smaller nodes.
-    rootData.sort((a, b) => b.value - a.value);
+    // rootData.sort((a, b) => b.value - a.value);
+    console.log(rootData)
     return rootData;
 }
