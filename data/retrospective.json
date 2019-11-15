@@ -1,0 +1,10 @@
+{
+  "sprints": {
+    "sprint": "1",
+    "team-member": "1",
+    "replies": true
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}
