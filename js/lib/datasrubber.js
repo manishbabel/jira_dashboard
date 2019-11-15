@@ -1,3 +1,5 @@
+let fs = require("fs");
+
 var verbs, nouns, adjectives, adverbs, preposition;
 nouns = ["bird", "clock", "boy", "plastic", "duck", "teacher", "old lady", "professor", "hamster", "dog"];
 verbs = ["kicked", "ran", "flew", "dodged", "sliced", "rolled", "died", "breathed", "slept", "killed"];
@@ -29,22 +31,26 @@ function shortSentence() {
 
 }
 
-queue()
-    .defer(d3.json, "data/CFX-data.json")
-    .await(readyToScrub);
 
-function readyToScrub(error, jiraData) {
-    jiraData.issues.forEach(function (issue) {
+var jiraData = JSON.parse(fs.readFileSync("CFX-data.json"));
+
+	jiraData.issues.forEach(function (issue) {
        issue.fields.summary =  shortSentence();
        issue.fields.description =  sentence();
        issue.fields.comment.comments.forEach(function (comment) {
            comment.body = sentence();
        })
+	   issue.fields.customfield_13802 = sentence();
+	   
+	   //spice up the data
+	   if(issue.key == "CFX-1973" ) issue.fields.customfield_10003 = 5;
+	   if(issue.key == "CFX-1983" ) issue.fields.customfield_10003 = 3;
+	   if(issue.key == "CFX-1986" ) issue.fields.customfield_10003 = 3;
+
+	   
 
     });
 
-    var txtFile = "CFX-data-scrubbed.json";
-    var file = new File([""], txtFile);
     var str = JSON.stringify(jiraData);
     console.log(str);
-}
+

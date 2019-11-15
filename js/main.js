@@ -21,9 +21,8 @@ queue()
 
 function dataLoaded(error, jiraData) {
     issueStore = new IssueStore(jiraData);
-    // console.log(issueStore.getIssuesForSprint(47785));
+     // console.log(issueStore.getIssuesForSprint(47785));
     bubbleChart = new BubbleChart("bubble-chart",issueStore)
     // storyChart = new StoryChart("story-chart",issueStore)
 }
-
 

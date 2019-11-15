@@ -146,6 +146,17 @@ function deserializeIssueDates(issue) {
     issue.fields.created = parseDate(issue.fields.created);
     issue.fields.updated = parseDate(issue.fields.updated);
     issue.fields.resolutiondate = parseDate(issue.fields.resolutiondate);
+	//changelog
+	if(issue.changelog) issue.changelog.histories.forEach(function(history) {
+		history.created = parseDate(history.created);
+	});
+	//comments
+	issue.fields.comment.comments.forEach(function(comment) {
+		comment.created = parseDate(comment.created);
+		comment.updated = parseDate(comment.updated);
+		
+	});
+	
 }
 
 function setIssueHelperProperties(issue) {
