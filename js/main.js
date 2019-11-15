@@ -7,5 +7,4 @@ queue()
 
 function dataLoaded(error, jiraData) {
     issueStore = new IssueStore(jiraData);
-    console.log(issueStore.getSprints());
 }
