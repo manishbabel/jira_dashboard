@@ -1,10 +1,19 @@
 {
   "sprints": {
     "sprint": "1",
-    "team-member": "1",
-    "replies": true
-  },
-  "exclude": [
-    "node_modules"
-  ]
+    "team-memebers": {
+      "team-member": "1",
+      "replies": {
+        "question1": "5",
+        "question2": "-2",
+        "question3": "2"
+      }
+    },
+      "team-member": "2",
+      "replies": {
+        "question1": "3",
+        "question2": "2",
+        "question3": "-2"
+      }
+  }
 }

@@ -27,3 +27,4 @@ class Svg {
     get margin(){return this._margin;}
     set margin(margin){this._margin = margin;}
 }
+
