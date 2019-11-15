@@ -28,15 +28,13 @@
   <div class="header">
     <h1> Sprint Overview </h1>
   </div>
-  <div id="main" role="main">
-    <div id ="view_select" class="btn-group">
-      <a href="#" id = "current_sprint" class="btn active">Current Sprint</a>
-      <a href="#" id = "story_type" class="btn">Story Type</a>
-      <a href="#" id = "backlog" class="btn">Backlog</a>
+    <div id="vis">
+      <button id="play-button">Play</button>
     </div>
+    <div class="row">
     <div id="bubble-chart"></div>
-  </div>
-  <footer>
+    <div id="story-chart"></div></div>
+   <footer>
 
     <p><a href="http://222.html">Main Menu</a> | <a href="https://111">References</a></p>
   </footer>
@@ -48,38 +46,23 @@
   <!-- Bootstrap core JavaScript-->
 
   <script src="js/jquery.min.js"></script>
+  <script src="js/popper.min.js"></script>
   <script src="js/bootstrap.min.js"></script>
-
-  <!-- Core plugin JavaScript-->
-
-  <!-- Dependencies for all pages-->
-  <script src="js/jquery.min.js"></script>
   <script src="js/d3.min.js"></script>
   <script src="js/d3-legend.js"></script>
   <script src="js/d3-tip.js"></script>
   <script src="js/queue.min.js"></script>
-  <script src="js/popper.min.js"></script>
   <script src="js/topojson.min.js"></script>
   <script src="js/lib/issuestore.js"></script>
+  <script src="js/bubble-chart.js"></script>
+  <script src="js/story-chart.js"></script>
 
 
   <!-- Page level plugins -->
 
   <!-- Page level custom scripts -->
 
-  <script type="text/javascript">
-    $(document).ready(function() {
-      $(document).ready(function() {
-        $('#view_select a').click(function() {
-          var view_type = $(this).attr('id');
-          $('#view_select  a').removeClass('active');
-          $(this).toggleClass('active');
-          toggle_view(view_type);
-          return false;
-        });
-      });
-    });
-  </script>
+
 
   <script src="js/vis-chart1.js"></script>
   <script src="js/vis-chart2.js"></script>
