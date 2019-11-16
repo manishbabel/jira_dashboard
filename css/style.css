@@ -222,3 +222,7 @@ h1 {
 .PT_Serif{
     font-family: 'PT Serif', serif;
 }
+
+.x-axis, .y-axis, .layerLegend {
+    font-size: 7px;
+}
