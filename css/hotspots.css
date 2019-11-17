@@ -1,0 +1,72 @@
+/* Hotspots code adapted from https://codepen.io/jack-taylor89/pen/JeajeL?editors=1100 */
+body { margin: 0 !important; padding: 0 !important; width: 100% !important; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol' !important; }
+.img-container { position: relative; overflow: hidden; height: 45vw; background-image:url("../img/scrum-framework.jpg"); background-size: cover; }
+input { display: none; }
+p { margin: 0; }
+.button { color: white; font-weight: bold; font-size: 20px; background-color: dodgerblue; display: block; padding: 10px 16px; border-radius: 100%; cursor: pointer; animation: fadein .5s; animation: pulse 1.5s infinite; }
+.content { background: white; padding: 1rem 1rem 2rem 1rem; text-align: center; display: none; margin: 10%; border-radius: 8px; box-shadow: 0 4px 2px -2px rgba(211,47,47,0); }
+.cross { font-weight: bold; }
+
+#b-product-backlog,
+#b-sprint-backlog,
+#b-product-increment{
+    padding-top: 67px;
+    padding-bottom: 67px;
+    padding-left: 32px;
+    padding-right: 32px;
+    position: absolute;
+    top: 70%;
+}
+#b-product-backlog { left: 3%;}
+#b-sprint-backlog { left: 30.5%;}
+#b-product-increment { left: 79.7%;}
+
+#b-po { top: 50%; left: 3%; }
+#b-sm { top: 15%; left: 51%; }
+#b-tm { top: 50%; left: 23%; }
+
+#b-daily-scrum { top: 30%; left: 83%;}
+#b-sprint { top: 44%; left: 50%;
+            padding-top: 100px; padding-bottom: 100px;
+            padding-left: 50px; padding-right: 50px;
+
+}
+#b-showcase { top: 50%; left: 93%; }
+#b-retrospective { top: 90%; left: 93%; }
+
+#b-po,
+#b-sm,
+#b-tm,
+#b-daily-scrum,
+#b-sprint,
+#b-showcase,
+#b-retrospective { position: absolute; }
+
+#input-product-backlog:checked ~ #content-product-backlog,
+#input-sprint-backlog:checked ~ #content-sprint-backlog,
+#input-product-increment:checked ~ #content-product-increment,
+#input-po:checked ~ #content-po,
+#input-sm:checked ~ #content-sm,
+#input-tm:checked ~ #content-tm,
+#input-retrospective:checked ~ #content-retrospective,
+#input-daily-scrum:checked ~ #content-daily-scrum,
+#input-showcase:checked ~ #content-showcase,
+#input-sprint:checked ~ #content-sprint{ display: block !important; animation: fadein .5s; }
+
+input:checked ~ label .button { display: none !important; animation: fadeout .5s; }
+.button:hover { color: dodgerblue; background: white; }
+.cta { display: inline-block; background: dodgerblue; color: white; padding: 12px 24px; margin-top: 48px; border-radius: 24px; text-decoration: none; transition: all .3s ease; }
+.cta:hover { text-decoration: underline !important; box-shadow: 0 0 0 6px rgba(211, 46, 46, 0.4); }
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+@keyframes fadeout {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+@keyframes pulse {
+    from { box-shadow: 0 0 0 0px rgba(30, 144, 255); }
+    to { box-shadow: 0 0 0 5px rgba(0, 0, 0, 0); }
+}
+/******* End Hotspots ******************/

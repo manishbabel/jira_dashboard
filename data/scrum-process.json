@@ -1,4 +1,5 @@
-{"overview": "Every Scrum training revolves around the Scrum process diagram which has 4 Ceremonies, 3 Roles, and 4 Artifacts.  But at work they provide JIRA, a tool that only supports 3 ceremonies, no roles.   And the 4 “supported” artifacts are crummy lists with minimal visualization and certainly no interactive visualization.  Really?  No  interactive visualization?!!! Don’t worry, we made the Scrum Visualizer just for you—whew! Never again will you experience cognitive overload mentally mapping the scrum diagram from training to JIRA.  No more filling in the gaps and imagining Scrum.   Start living scrum joy with the Scrum Visualizer.",
+{
+  "sprint": "2 - 4 week iteration which is planned to produce incremental product which meets the definition of done.",
   "roles": {
     "product-owner": "The product owner owns the product vision.  Sets the priorities.  Sets the acceptance criteria and approves product increment.",
     "scrum-master": "The scrum master controls the Scrum process, e.g., measures the velocity, runs the retrospective, etc.",
