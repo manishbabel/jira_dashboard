@@ -91,3 +91,21 @@
     fill: black;
 }
 
+
+.PT_Serif{
+    font-family: 'PT Serif', serif;
+}
+
+.x-axis, .y-axis, .layerLegend {
+    font-size: 7px;
+}
+
+/*Line chart */
+.axis text {
+    font-size: 14pt;
+}
+
+.label {
+    fill: lightgray;
+}
+

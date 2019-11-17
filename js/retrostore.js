@@ -4,7 +4,5 @@ class RetroStore {
     }
 
     get data(){return this._data;}
-    getScores(sprint){return this.data.sprints[sprint].scores;}
-
 }
 
