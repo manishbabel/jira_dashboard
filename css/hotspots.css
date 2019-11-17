@@ -3,7 +3,7 @@ body { margin: 0 !important; padding: 0 !important; width: 100% !important; font
 .img-container { position: relative; overflow: hidden; height: 45vw; background-image:url("../img/scrum-framework.jpg"); background-size: cover; }
 input { display: none; }
 p { margin: 0; }
-.button { color: white; font-weight: bold; font-size: 20px; background-color: dodgerblue; display: block; padding: 10px 16px; border-radius: 100%; cursor: pointer; animation: fadein .5s; animation: pulse 1.5s infinite; }
+.button { color: white; font-weight: bold; font-size: 20px; background-color: #4e73df; display: block; padding: 10px 16px; border-radius: 100%; cursor: pointer; animation: fadein .5s; animation: pulse 1.5s infinite; }
 .content { background: white; padding: 1rem 1rem 2rem 1rem; text-align: center; display: none; margin: 10%; border-radius: 8px; box-shadow: 0 4px 2px -2px rgba(211,47,47,0); }
 .cross { font-weight: bold; }
 
@@ -55,8 +55,8 @@ p { margin: 0; }
 { display: block !important; animation: fadein .5s; }
 
 input:checked ~ label .button { display: none !important; animation: fadeout .5s; }
-.button:hover { color: dodgerblue; background: white; }
-.cta { display: inline-block; background: dodgerblue; color: white; padding: 12px 24px; margin-top: 48px; border-radius: 24px; text-decoration: none; transition: all .3s ease; }
+.button:hover { color: #4e73df; background: white; }
+.cta { display: inline-block; background: #4e73df; color: white; padding: 12px 24px; margin-top: 48px; border-radius: 24px; text-decoration: none; transition: all .3s ease; }
 .cta:hover { text-decoration: underline !important; box-shadow: 0 0 0 6px rgba(211, 46, 46, 0.4); }
 @keyframes fadein {
     from { opacity: 0; }
@@ -67,7 +67,7 @@ input:checked ~ label .button { display: none !important; animation: fadeout .5s
     to   { opacity: 1; }
 }
 @keyframes pulse {
-    from { box-shadow: 0 0 0 0px rgba(30, 144, 255); }
+    from { box-shadow: 0 0 0 0px rgba(78, 115, 223); }
     to { box-shadow: 0 0 0 5px rgba(0, 0, 0, 0); }
 }
 /******* End Hotspots ******************/
