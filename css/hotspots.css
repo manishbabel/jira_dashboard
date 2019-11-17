@@ -51,7 +51,8 @@ p { margin: 0; }
 #input-retrospective:checked ~ #content-retrospective,
 #input-daily-scrum:checked ~ #content-daily-scrum,
 #input-showcase:checked ~ #content-showcase,
-#input-sprint:checked ~ #content-sprint{ display: block !important; animation: fadein .5s; }
+#input-sprint:checked ~ #content-sprint
+{ display: block !important; animation: fadein .5s; }
 
 input:checked ~ label .button { display: none !important; animation: fadeout .5s; }
 .button:hover { color: dodgerblue; background: white; }

@@ -8,6 +8,7 @@ class ScrumTextStore {
     get ceremonies(){return this.data.ceremonies;}
     get roles(){return this.data.roles;}
     get artifacts(){return this.data.artifacts;}
+    get general(){return this.data.general;}
 
 }
 

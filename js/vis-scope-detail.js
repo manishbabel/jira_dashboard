@@ -1,4 +1,4 @@
-class VelocityChart {
+class ScopeDetailChart {
     constructor(data, svg) {
         this._data = data;
         this._svg = svg;

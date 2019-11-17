@@ -1,10 +1,11 @@
 class Svg {
-    constructor(container,width, height) {
-        this.margin = {top: 0, right: 0, bottom: 0, left: 0};
+    constructor(container, width, height, margin) {
+        this.margin = margin;
         this.width = width - this.margin.left - this.margin.right;
         this.height = height - this.margin.top - this.margin.bottom;
+        this.container = container;
 
-        this.svg = d3.select(container)
+        this.svg = d3.select(this.container)
             .append("svg")
             .attr("width", this.width)
             .attr("height", this.height)
@@ -26,5 +27,8 @@ class Svg {
 
     get margin(){return this._margin;}
     set margin(margin){this._margin = margin;}
+
+    get container(){return this._container;}
+    set container(container){this._container = container;}
 }
 

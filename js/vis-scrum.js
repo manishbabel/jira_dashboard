@@ -1,7 +1,11 @@
+//Main page controller class
 class ScrumProcess {
-    constructor(data) {
+    constructor(data, actionMapping) {
         this._data = data;
+        this._actionMapping = actionMapping;
+
         this.setText();
+        this.setClickHandlers();
     }
 
     setText() {
@@ -33,9 +37,33 @@ class ScrumProcess {
             this.data.artifacts["product-increment"];
 
         document.querySelector("#content-sprint p").innerText =
-            this.data.artifacts["sprint"];
+            this.data.general["sprint"];
 
     }
+
+    setClickHandlers(){
+
+        const visualizations = document.querySelectorAll(".viz");
+        visualizations.forEach( viz => { viz.style.display = "none"; });
+
+        //The element clicked is the key
+        //The viz object to display is the value
+        Object.keys(this.actionMapping)
+            .forEach( key => {
+
+                const visContainerSelector = this.actionMapping[key].svg.container;
+
+                document.querySelector(key).onclick = () => {
+                    const visualizations = document.querySelectorAll(".viz");
+                    visualizations.forEach( viz => { viz.style.display = "none"; });
+
+                    document.querySelector(visContainerSelector).style.display = "block";
+                }
+            });
+    }
+
     get data(){return this._data;}
+    get actionMapping(){return this._actionMapping;}
+
 }
 

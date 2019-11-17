@@ -31,13 +31,13 @@
     <!-- Sidebar -->
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
-      <!-- Sidebar - Brand -->
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-        <div class="sidebar-brand-icon rotate-n-15">
-          <i class="fas fa-glasses"></i>
-        </div>
-        <div class="sidebar-brand-text mx-3">Scrum Visualizer </div>
-      </a>
+    <!-- Sidebar Brand -->
+          <span class="sidebar-brand d-flex align-items-center justify-content-center">
+            <span class="sidebar-brand-icon rotate-n-15">
+              <i class="fas fa-glasses"></i>
+            </span>
+            <span class="sidebar-brand-text mx-3">Scrum Visualizer </span>
+          </span>
 
       <!-- Divider -->
       <hr class="sidebar-divider my-0">
@@ -48,7 +48,7 @@
           <i class="fas fa-fw fa-wrench"></i>
           <span>Utilities</span>
         </a>
-        <div id="collapseTools" class="collapse" aria-labelledby="headingTools" data-parent="#accordionSidebar">
+        <div id="collapseTools" class="collapse"  data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Tools:</h6>
             <a class="collapse-item" href="https://cs171-jira.atlassian.net/secure/RapidBoard.jspa?rapidView=1&projectKey=JV&selectedIssue=JV-23">Jira</a>
@@ -71,14 +71,6 @@
           <span>Tables</span></a>
       </li>
 
-      <!-- Divider -->
-      <hr class="sidebar-divider d-none d-md-block">
-
-      <!-- Sidebar Toggler (Sidebar) -->
-      <div class="text-center d-none d-md-inline">
-        <button class="rounded-circle border-0" id="sidebarToggle"></button>
-      </div>
-
     </ul>
     <!-- End of Sidebar -->
 
@@ -95,10 +87,10 @@
           </h2>
           <h5>
             We learn through the <a href="https://www.visual-paradigm.com/tutorials/agile-tutorial/">Scrum process diagram</a>
-            which has <a href="https://thedigitalprojectmanager.com/scrum-ceremonies-made-simple/">4 Ceremonies</a>,
-            <a href="https://www.visual-paradigm.com/scrum/what-are-the-three-scrum-roles/"> 3 Roles</a>, and
-            <a href="https://www.tutorialspoint.com/scrum/scrum_artifacts.htm"> 4 Artifacts</a>.
-            The <a href="https://agilemanifesto.org/">Agile Manifesto</a> teaches us to value people over tools
+            which has <a href="https://thedigitalprojectmanager.com/scrum-ceremonies-made-simple/"> ceremonies</a>,
+            <a href="https://www.visual-paradigm.com/scrum/what-are-the-three-scrum-roles/"> roles</a>, and
+            <a href="https://www.tutorialspoint.com/scrum/scrum_artifacts.htm"> artifacts</a>.
+            The <a href="https://agilemanifesto.org/">Agile Manifesto</a> teaches us to value people over tools.
           </h5>
           <br>
 
@@ -107,17 +99,21 @@
             <i class="fas fa-sad-tear fa-2x"></i>
           </h2>
           <h5>
-            JIRA causes <a href="https://medium.com/@jiajingguo/how-is-data-visualization-influenced-by-our-cognitive-processes-281d8486abfe"> cognitive overload</a>
-            because it does not fully model the Scrum process.
-            Jira supports only 3 of 4 ceremonies and none of the roles so we must mentally map
-            the scrum process diagram to Jira, juggling gaps and work-arounds in our head.
-            Can you believe JIRA doesn't support Scrum's retrospective ceremony?
-            Furthermore, JIRA is text driven with minimal static visualization and certainly no interactive visualization.
+            Jira causes <a href="https://medium.com/@jiajingguo/how-is-data-visualization-influenced-by-our-cognitive-processes-281d8486abfe"> cognitive overload</a>
+            because it does not leverage the universal Scrum process diagram which
+            anchors our common understanding of how we work.
+            Moreover, Jira only partially models the Scrum process.
+            We must mentally map the missing diagram to Jira and work-around tools for
+            the retrospective ceremony and the estimation poker ceremony.
+            The daily Scrum ceremony is universally run with a text only JIRA board.
+            All Jira charts are segregated, static, and independent.
+            Jira lacks integrated interactive visualization.
+
           </h5>
           <br>
 
           <h2 style="color:darkgreen">
-            So we made the Scrum Visualizer to be happy again
+            The Scrum Visualizer makes us happy again
             <i id="happy-again" class="fas fa-smile-wink fa-2x"></i>
           </h2>
           <h5>
@@ -231,24 +227,23 @@
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                   <h6 class="m-0 font-weight-bold text-primary">Explore Sprint 42</h6>
                   <div class="dropdown no-arrow">
-                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLinkScrumProcess" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
                       <div class="dropdown-header">Select Sprint:</div>
-                      <a class="dropdown-item" href="#">Sprint 1</a>
-                      <a class="dropdown-item" href="#">Sprint 2</a>
+                       <a class="dropdown-item" href="#">Sprint 1</a>
+                        <a class="dropdown-item" href="#">Sprint 2</a>
+                      </div>
                     </div>
                   </div>
-                </div>
                 <!-- Card Body -->
                 <div class="card-body">
-                  <div class="scrum-process">
                     <!--image from https://upload.wikimedia.org/wikipedia/commons/5/58/Scrum_process.svg                    -->
                     <!--Scrum icon by Vorillaz https://iconscout.com/contributors/vorillaz https://iconscout.com/icon/scrum-2 -->
                     <!--Scrum Framework poster https://scrumorg-website-prod.s3.amazonaws.com/drupal/2016-06/ScrumFramework_17x11.pdf -->
                     <!--<img src="img/scrum-framework.jpg" width = "100%">-->
-                  </div>
+
                   <div class="img-container">
                     <input type="checkbox" class="input" id="input-product-backlog" name="inputs">
                     <input type="checkbox" class="input" id="input-sprint-backlog" name="inputs">
@@ -261,34 +256,34 @@
                     <input type="checkbox" class="input" id="input-retrospective" name="inputs">
                     <input type="checkbox" class="input" id="input-sprint" name="inputs">
                     <label for="input-product-backlog">
-                      <div id="b-product-backlog" class="button">99 Stories</div>
+                      <span id="b-product-backlog" class="button">99 Stories</span>
                     </label>
                     <label for="input-sprint-backlog">
-                      <div id="b-sprint-backlog" class="button">22 Stories</div>
+                      <span id="b-sprint-backlog" class="button">22 Stories</span>
                     </label>
                     <label for="input-product-increment">
-                      <div id="b-product-increment" class="button">11 Stories</div>
+                      <span id="b-product-increment" class="button">11 Stories</span>
                     </label>
                     <label for="input-po">
-                      <div id="b-po" class="button">+</div>
+                      <span id="b-po" class="button">+</span>
                     </label>
                     <label for="input-sm">
-                      <div id="b-sm" class="button">+</div>
+                      <span id="b-sm" class="button">+</span>
                     </label>
                     <label for="input-tm">
-                      <div id="b-tm" class="button">+</div>
+                      <span id="b-tm" class="button">+</span>
                     </label>
                     <label for="input-daily-scrum">
-                      <div id="b-daily-scrum" class="button">+</div>
+                      <span id="b-daily-scrum" class="button">+</span>
                     </label>
                     <label for="input-showcase">
-                      <div id="b-showcase" class="button">+</div>
+                      <span id="b-showcase" class="button">+</span>
                     </label>
                     <label for="input-retrospective">
-                      <div id="b-retrospective" class="button">+</div>
+                      <span id="b-retrospective" class="button">+</span>
                     </label>
                     <label for="input-sprint">
-                      <div id="b-sprint" class="button">2 Week Sprint</div>
+                      <span id="b-sprint" class="button">2 Week Sprint</span>
                     </label>
                     <div id="content-product-backlog" class="content">
                       <div style="text-align: right;">
@@ -339,7 +334,7 @@
                       <a href="#" class="cta">Find out more</a>
                     </div>
                     <div id="content-daily-scrum" class="content">
-                      <div style="text-align: right;">
+                      <div style="text-align: right">
                         <label for="input-daily-scrum" class="cross">X</label>
                       </div>
                       <h1>Daily Scrum</h1>
@@ -374,8 +369,52 @@
                 </div>
               </div>
             </div>
-
         </div>
+
+          <!-- Content Row -->
+
+          <div class="row">
+
+            <!-- Scrum Process -->
+            <div class="col-xl-12 col-lg-7">
+              <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h6 class="m-0 font-weight-bold text-primary">Explore Sprint 42</h6>
+                  <div class="dropdown no-arrow">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLinkScrumProcess" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                      <div class="dropdown-header">Select Sprint:</div>
+                      <a class="dropdown-item" href="#">Sprint 1</a>
+                      <a class="dropdown-item" href="#">Sprint 2</a>
+                    </div>
+                  </div>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body" >
+                  <div id="burn-down-chart" class="viz">
+                    Burn Down Chart
+                  </div>
+                  <div id="scope-chart" class="viz">
+                    Scope Chart
+                  </div>
+                  <div id="scope-detail-chart" class="viz">
+                    Scope Detail Chart
+                  </div>
+                  <div id="velocity-chart" class="viz">
+                    Velocity Chart
+                  </div>
+                  <div id="retrospective-chart" class="viz">
+                    Retrospective Chart
+                  </div>
+                </div>
+                <!-- End Card Body -->
+              </div>
+            </div>
+          </div>
+
         <!-- /.container-fluid -->
 
       </div>
@@ -424,6 +463,7 @@
   <!-- Page level custom scripts -->
   <script src="js/vis-scrum.js"></script>
   <script src="js/vis-scope.js"></script>
+  <script src="js/vis-scope-detail.js"></script>
   <script src="js/vis-velocity.js"></script>
   <script src="js/vis-retro.js"></script>
   <script src="js/vis-burndown.js"></script>
