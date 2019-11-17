@@ -1,3 +1,5 @@
+//references: https://codepen.io/ashokgowtham/pen/LpnHe lab6 https://www.d3-graph-gallery.com/graph/line_cursor.html
+
 let defaultLayer = "storyPoints";
 
 
@@ -11,8 +13,6 @@ VelocityChart = function(_parentElement, _issueStore){
 VelocityChart.prototype.initVis = function(){
     var vis = this;
     var processingData = true;
-
-    splitRange([0,200], 5);
 
     //initialize initial data
     //TODO: filter by selected time band
@@ -82,8 +82,9 @@ VelocityChart.prototype.initVis = function(){
         .attr("height", vis.height);
 
     // Scales and axes
+    vis.xRange = splitRange([0, vis.width], vis.displayData.length);
     vis.x = d3.scaleOrdinal()
-        .range(splitRange([0, vis.width], vis.displayData.length))
+        .range(vis.xRange)
         .domain(vis.displayData.map(function (d) {
             return d.name;
         }));
@@ -130,6 +131,18 @@ VelocityChart.prototype.initVis = function(){
         .attr("id", "layer-name")
         .attr("x", 20)
         .attr("y", 20);
+
+    //tool tip
+    vis.tool_tip = d3.tip()
+        .attr("class", "d3-tip")
+        .offset([-8, 0])
+        .html(function(d) {
+            return "tool tip";
+        });
+    vis.svg.call(vis.tool_tip);
+
+    // This allows to find the closest X index of the mouse:
+    vis.bisect = d3.bisector(function(d) { return d.name; }).left;
 
     // (Filter, aggregate, modify data)
     vis.wrangleData();
@@ -196,6 +209,86 @@ VelocityChart.prototype.updateVis = function(){
      */
 
     categories.exit().remove();
+    var dataPoints = {};
+    //draw points
+    var points = vis.svg.selectAll('.dots')
+        .data(vis.stackedData)
+        .enter()
+        .append("g")
+        .attr("class", "dots")
+        .attr("d", function(d) { return vis.area(d.values); })
+        .attr("clip-path", "url(#clip)");
+
+    points.selectAll('.dot')
+        .data(function(d, index){
+            var a = [];
+            d.forEach(function(point,i){
+                a.push({'index': index, 'point': point});
+            });
+            return a;
+        })
+        .enter()
+        .append('circle')
+        .attr('class','dot')
+        .attr("r", 1.5)
+        .attr('fill', function(d,i){
+            return '#000000';
+        })
+        .attr("transform", function(d) {
+            var key = vis.x(d.point.data.name);
+            dataPoints[key] = dataPoints[key] || [];
+            dataPoints[key].push(d);
+            return "translate(" + vis.x(d.point.data.name) + "," + vis.y(d.point[1]) + ")"; }
+        );
+
+    //goal: something like http://nvd3.org/examples/stackedArea.html
+
+    // Create the line that travels along the curve of chart
+    var vertline = vis.svg
+        .append('g')
+        .append('line')
+        .style("fill", "none")
+        .attr("stroke", "black")
+        .attr("stroke-width", "1")
+        .style("opacity", 0);
+
+    // Create the text that travels along the curve of chart
+    var lineText = vis.svg
+        .append('g')
+        .append('text')
+        .style("opacity", 0)
+        .attr("text-anchor", "left")
+        .attr("alignment-baseline", "middle");
+
+    // Create a rect on top of the svg area: this rectangle recovers mouse position
+    vis.svg
+        .append('rect')
+        .style("fill", "none")
+        .style("pointer-events", "all")
+        .attr('width', vis.width)
+        .attr('height', vis.height)
+        .on('mouseover', function () {
+            vertline.style("opacity", 1);
+            lineText.style("opacity",1);
+        })
+        .on('mousemove', function() {
+            // recover coordinate we need
+            var i = findClosestPoint(vis.xRange,d3.mouse(this)[0]);
+            vertline
+                .attr("x1", vis.x(vis.stackedData[0][i].data.name))
+                .attr("y1", vis.y(vis.stackedData[vis.stackedData.length -1][i][1]))
+                .attr("x2", vis.x(vis.stackedData[0][i].data.name))
+                .attr("y2", vis.height);
+            lineText
+                .html(vis.stackedData[0][i].data.name)
+                .attr("x", vis.x(vis.stackedData[0][i].data.name) -100)
+                .attr("y", 0)
+                .attr("class", "label value-label");
+        })
+        .on('mouseout', function(){
+            vertline.style("opacity", 0);
+            lineText.style("opacity", 0);
+        });
 
 
     // Call axis functions with the new domain
@@ -246,15 +339,21 @@ VelocityChart.prototype.updateVis = function(){
 //Function that returns discrete values of a range given start, end, and # of values
 function splitRange(range, n) {
     if(n <=2 ) return range;
-    var finalRange = [];
     var increment = (range[1] - range[0])/(n-1);
-    finalRange.push(range[0]);
+    return d3.range(0,n).map(function (d) {
+        return range[0] + d*increment;
+    });
+}
 
-    for(var i = 1; i < n-1; i++) {
-        finalRange.push(finalRange[i-1] + increment);
-    }
-    finalRange.push(range[1]);
+function findClosestPoint(range, value) {
+    var result;
+    var min = 10000000;
 
-    return finalRange;
-
+    range.forEach(function (d, i) {
+        if(Math.abs(d - value) < min) {
+            min = Math.abs(d - value);
+            result = i;
+        }
+    });
+    return result;
 }
