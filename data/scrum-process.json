@@ -1,4 +1,5 @@
-{"overview": "Every Scrum training revolves around the Scrum process diagram which has 4 Ceremonies, 3 Roles, and 4 Artifacts.  But at work they provide JIRA, a tool that only supports 3 ceremonies, no roles.   And the 4 “supported” artifacts are crummy lists with minimal visualization and certainly no interactive visualization.  Really?  No  interactive visualization?!!! Don’t worry, we made the Scrum Visualizer just for you—whew! Never again will you experience cognitive overload mentally mapping the scrum diagram from training to JIRA.  No more filling in the gaps and imagining Scrum.   Start living scrum joy with the Scrum Visualizer.",
+{
+  "sprint": "2 - 4 week iteration which is planned to produce incremental product which meets the definition of done.",
   "roles": {
     "product-owner": "The product owner owns the product vision.  Sets the priorities.  Sets the acceptance criteria and approves product increment.",
     "scrum-master": "The scrum master controls the Scrum process, e.g., measures the velocity, runs the retrospective, etc.",
@@ -9,7 +10,7 @@
     "sprint-planning": "During sprint planning the product owner sets the sprint goal, prioritizes the stories, and answer requirements questions aka grooms the backlog.  Scrum master right sizes the scope based upon estimates and team velocity, e.g., last sprint we completed 100 story points so this sprint we will plan for 101, not 200.",
     "daily-scrum": "During the daily scrum, the team starts every day with a quick stand-up meeting.   Each team member gets 2 minutes to answer 3 questions:  What did I do yesterday, what will I do today, and what blockers am I facing.",
     "showcase": "At the end of a sprint is the showcase. The team demos the working software progress at that end of the sprint.  Users give feedback.  Team celebrates.",
-    "retrospective": "After the showcase and the sprint is complete, the team looks back at the completed sprint and decides what went well and what needs to be fixed.  Action items are recorded and tracked to conclusion.",
+    "retrospective": "After the showcase and the sprint is complete, the team looks back at the completed sprint and decides what went well and what needs to be fixed.  Action items are recorded and tracked to conclusion."
   },
   "artifacts": {
     "product-backlog": "The product backlog is a collection of all stories, i.e., all features and bugs that have been submitted.",

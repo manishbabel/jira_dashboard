@@ -1,19 +1,20 @@
 {
-  "sprints": {
-    "sprint": "1",
-    "team-memebers": {
-      "team-member": "1",
-      "replies": {
-        "question1": "5",
-        "question2": "-2",
-        "question3": "2"
+  "sprints": [
+    {
+      "sprint": "1",
+      "scores": {
+        "question1": "5,3,2,1",
+        "question2": "-2,4,1,2",
+        "question3": "2,3,5,-1"
       }
     },
-      "team-member": "2",
-      "replies": {
-        "question1": "3",
-        "question2": "2",
-        "question3": "-2"
+    {
+      "sprint": "2",
+      "scores": {
+        "question1": "5,3,2,1",
+        "question2": "-2,4,1,2",
+        "question3": "2,3,5,-1"
       }
-  }
+    }
+  ]
 }
