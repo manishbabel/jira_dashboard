@@ -10,71 +10,466 @@
   <meta name="author" content="">
 
   <title>JIRA - Dashboard</title>
-  <link rel="stylesheet" href="css/bootstrap.min.css">
-  <link rel="stylesheet" href="css/all.min.css">
-  <link rel="stylesheet" href="css/jira-dashboard.css">
-  <link rel="stylesheet" href="css/style.css">
 
   <!-- Custom fonts for this template-->
-   <!-- Custom styles for this template-->
+  <link href="css/all.min.css" rel="stylesheet" type="text/css">
+<!--  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">-->
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+  <!-- Custom styles for this template-->
   <link href="css/jira-dashboard.min.css" rel="stylesheet">
+  <link href="css/hotspots.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
 
 </head>
 
 <body id="page-top">
 
   <!-- Page Wrapper -->
-<div class="container-fluid">
-  <div class="header">
-    <h1> Sprint Overview </h1>
+  <div id="wrapper">
+
+    <!-- Sidebar -->
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+    <!-- Sidebar Brand -->
+          <span class="sidebar-brand d-flex align-items-center justify-content-center">
+            <span class="sidebar-brand-icon rotate-n-15">
+              <i class="fas fa-glasses"></i>
+            </span>
+            <span class="sidebar-brand-text mx-3">Scrum Visualizer </span>
+          </span>
+
+      <!-- Divider -->
+      <hr class="sidebar-divider my-0">
+
+      <!-- Nav Item - Tools Collapse Menu -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTools" aria-expanded="true" aria-controls="collapseTools">
+          <i class="fas fa-fw fa-wrench"></i>
+          <span>Utilities</span>
+        </a>
+        <div id="collapseTools" class="collapse"  data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <h6 class="collapse-header">Tools:</h6>
+            <a class="collapse-item" href="https://cs171-jira.atlassian.net/secure/RapidBoard.jspa?rapidView=1&projectKey=JV&selectedIssue=JV-23">Jira</a>
+            <a class="collapse-item" href="https://secure.teamretro.com/demo/retrospectives/scrum-retrospective">Retrospective</a>
+          </div>
+        </div>
+      </li>
+
+      <!-- Nav Item - Charts -->
+      <li class="nav-item">
+        <a class="nav-link" href="charts.html">
+          <i class="fas fa-fw fa-chart-area"></i>
+          <span>Charts</span></a>
+      </li>
+
+      <!-- Nav Item - Tables -->
+      <li class="nav-item">
+        <a class="nav-link" href="tables.html">
+          <i class="fas fa-fw fa-table"></i>
+          <span>Tables</span></a>
+      </li>
+
+    </ul>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+      <!-- Main Content -->
+      <main id="content">
+
+        <header id="overview">
+          <h2 style="color:darkgreen">
+            Learning Agile Scrum is easy and makes us happy
+            <i class="fas fa-smile-beam fa-2x" ></i>
+          </h2>
+          <h5>
+            We learn through the <a href="https://www.visual-paradigm.com/tutorials/agile-tutorial/">Scrum process diagram</a>
+            which has <a href="https://thedigitalprojectmanager.com/scrum-ceremonies-made-simple/"> ceremonies</a>,
+            <a href="https://www.visual-paradigm.com/scrum/what-are-the-three-scrum-roles/"> roles</a>, and
+            <a href="https://www.tutorialspoint.com/scrum/scrum_artifacts.htm"> artifacts</a>.
+            The <a href="https://agilemanifesto.org/">Agile Manifesto</a> teaches us to value people over tools.
+          </h5>
+          <br>
+
+          <h2 style="color:darkred">
+            Practicing Scrum with the flawed JIRA tool makes us sad
+            <i class="fas fa-sad-tear fa-2x"></i>
+          </h2>
+          <h5>
+            Jira causes <a href="https://medium.com/@jiajingguo/how-is-data-visualization-influenced-by-our-cognitive-processes-281d8486abfe"> cognitive overload</a>
+            because it does not leverage the universal Scrum process diagram which
+            anchors our common understanding of how we work.
+            Moreover, Jira only partially models the Scrum process.
+            We must mentally map the missing diagram to Jira and work-around tools for
+            the retrospective ceremony and the estimation poker ceremony.
+            The daily Scrum ceremony is universally run with a text only JIRA board.
+            All Jira charts are segregated, static, and independent.
+            Jira lacks integrated interactive visualization.
+
+          </h5>
+          <br>
+
+          <h2 style="color:darkgreen">
+            The Scrum Visualizer makes us happy again
+            <i id="happy-again" class="fas fa-smile-wink fa-2x"></i>
+          </h2>
+          <h5>
+            We visualize the mapping from scrum diagram to JIRA and the retrospective and the roles.
+            No more filling in the gaps and imagining Scrum.   Start living scrum joy with the Scrum Visualizer."
+          </h5>
+
+        </header>
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+
+          <!-- Page Heading -->
+          <div class="d-sm-flex align-items-center justify-content-between mb-4">
+
+            <h1 class="h3 mb-0 text-gray-800">
+              Scrum Visualizer
+            </h1>
+            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-glasses fa-sm text-white-50"></i> Visualize Sprint Outcome</a>
+          </div>
+
+          <!-- Content Row -->
+          <div class="row">
+
+            <!-- Goal Card -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Sprint Target Goal</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">Deliver XYZ product feature...</div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-bullseye fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Velocity Card -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Velocity</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">94 story points</div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-tachometer-alt fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Burn Down Card -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Burn Down</div>
+                      <div class="row no-gutters align-items-center">
+                        <div class="col-auto">
+                          <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
+                        </div>
+                        <div class="col">
+                          <div class="progress progress-sm mr-2">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-fire fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Blockers Card -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-danger shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Blockers</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-hand-paper fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Content Row -->
+
+          <div class="row">
+
+            <!-- Scrum Process -->
+            <div class="col-xl-12 col-lg-7">
+              <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h6 class="m-0 font-weight-bold text-primary">Explore Sprint 42</h6>
+                  <div class="dropdown no-arrow">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLinkScrumProcess" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                      <div class="dropdown-header">Select Sprint:</div>
+                       <a class="dropdown-item" href="#">Sprint 1</a>
+                        <a class="dropdown-item" href="#">Sprint 2</a>
+                      </div>
+                    </div>
+                  </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                    <!--image from https://upload.wikimedia.org/wikipedia/commons/5/58/Scrum_process.svg                    -->
+                    <!--Scrum icon by Vorillaz https://iconscout.com/contributors/vorillaz https://iconscout.com/icon/scrum-2 -->
+                    <!--Scrum Framework poster https://scrumorg-website-prod.s3.amazonaws.com/drupal/2016-06/ScrumFramework_17x11.pdf -->
+                    <!--<img src="img/scrum-framework.jpg" width = "100%">-->
+
+                  <div class="img-container">
+                    <input type="checkbox" class="input" id="input-product-backlog" name="inputs">
+                    <input type="checkbox" class="input" id="input-sprint-backlog" name="inputs">
+                    <input type="checkbox" class="input" id="input-product-increment" name="inputs">
+                    <input type="checkbox" class="input" id="input-po" name="inputs">
+                    <input type="checkbox" class="input" id="input-sm" name="inputs">
+                    <input type="checkbox" class="input" id="input-tm" name="inputs">
+                    <input type="checkbox" class="input" id="input-daily-scrum" name="inputs">
+                    <input type="checkbox" class="input" id="input-showcase" name="inputs">
+                    <input type="checkbox" class="input" id="input-retrospective" name="inputs">
+                    <input type="checkbox" class="input" id="input-sprint" name="inputs">
+                    <label for="input-product-backlog">
+                      <span id="b-product-backlog" class="button">99 Stories</span>
+                    </label>
+                    <label for="input-sprint-backlog">
+                      <span id="b-sprint-backlog" class="button">22 Stories</span>
+                    </label>
+                    <label for="input-product-increment">
+                      <span id="b-product-increment" class="button">11 Stories</span>
+                    </label>
+                    <label for="input-po">
+                      <span id="b-po" class="button">+</span>
+                    </label>
+                    <label for="input-sm">
+                      <span id="b-sm" class="button">+</span>
+                    </label>
+                    <label for="input-tm">
+                      <span id="b-tm" class="button">+</span>
+                    </label>
+                    <label for="input-daily-scrum">
+                      <span id="b-daily-scrum" class="button">+</span>
+                    </label>
+                    <label for="input-showcase">
+                      <span id="b-showcase" class="button">+</span>
+                    </label>
+                    <label for="input-retrospective">
+                      <span id="b-retrospective" class="button">+</span>
+                    </label>
+                    <label for="input-sprint">
+                      <span id="b-sprint" class="button">2 Week Sprint</span>
+                    </label>
+                    <div id="content-product-backlog" class="content">
+                      <div style="text-align: right;">
+                        <label for="input-product-backlog" class="cross">X</label>
+                      </div>
+                      <h1>Product Backlog</h1>
+                      <p class="bodyCopy">Additional content goes here.</p>
+                      <a href="#" class="cta">Find out more</a>
+                    </div>
+                    <div id="content-sprint-backlog" class="content">
+                      <div style="text-align: right;">
+                        <label for="input-sprint-backlog" class="cross">X</label>
+                      </div>
+                      <h1>Sprint Backlog</h1>
+                      <p class="bodyCopy">Additional content goes here.</p>
+                      <a href="#" class="cta">Find out more</a>
+                    </div>
+                    <div id="content-product-increment" class="content">
+                      <div style="text-align: right;">
+                        <label for="input-product-increment" class="cross">X</label>
+                      </div>
+                      <h1>Product Increment</h1>
+                      <p class="bodyCopy">Additional content goes here.</p>
+                      <a href="#" class="cta">Find out more</a>
+                    </div>
+                    <div id="content-po" class="content">
+                      <div style="text-align: right;">
+                        <label for="input-po" class="cross">X</label>
+                      </div>
+                      <h1>Product Owner</h1>
+                      <p class="bodyCopy">Additional content goes here.</p>
+                      <a href="https://www.agilealliance.org/glossary/product-owner/" class="cta">Find out more</a>
+                    </div>
+                    <div id="content-sm" class="content">
+                      <div style="text-align: right;">
+                        <label for="input-sm" class="cross">X</label>
+                      </div>
+                      <h1>Scrum Master</h1>
+                      <p class="bodyCopy">Additional content goes here.</p>
+                      <a href="#" class="cta">Find out more</a>
+                    </div>
+                    <div id="content-tm" class="content">
+                      <div style="text-align: right;">
+                        <label for="input-tm" class="cross">X</label>
+                      </div>
+                      <h1>Team</h1>
+                      <p class="bodyCopy">Additional content goes here.</p>
+                      <a href="#" class="cta">Find out more</a>
+                    </div>
+                    <div id="content-daily-scrum" class="content">
+                      <div style="text-align: right">
+                        <label for="input-daily-scrum" class="cross">X</label>
+                      </div>
+                      <h1>Daily Scrum</h1>
+                      <p class="bodyCopy">Additional content goes here.</p>
+                      <a href="#" class="cta">Find out more</a>
+                    </div>
+                    <div id="content-showcase" class="content">
+                      <div style="text-align: right;">
+                        <label for="input-showcase" class="cross">X</label>
+                      </div>
+                      <h1>Showcase</h1>
+                      <p class="bodyCopy">Additional content goes here.</p>
+                      <a href="#" class="cta">Find out more</a>
+                    </div>
+                    <div id="content-retrospective" class="content">
+                      <div style="text-align: right;">
+                        <label for="input-retrospective" class="cross">X</label>
+                      </div>
+                      <h1>Retrospective</h1>
+                      <p class="bodyCopy">Additional content goes here.</p>
+                      <a href="#" class="cta">Find out more</a>
+                    </div>
+                    <div id="content-sprint" class="content">
+                      <div style="text-align: right;">
+                        <label for="input-sprint" class="cross">X</label>
+                      </div>
+                      <h1>Sprint</h1>
+                      <p class="bodyCopy">Additional content goes here.</p>
+                      <a href="#" class="cta">Find out more</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+
+          <!-- Content Row -->
+
+          <div class="row">
+
+            <!-- Scrum Process -->
+            <div class="col-xl-12 col-lg-7">
+              <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h6 class="m-0 font-weight-bold text-primary">Explore Sprint 42</h6>
+                  <div class="dropdown no-arrow">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLinkScrumProcess" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                      <div class="dropdown-header">Select Sprint:</div>
+                      <a class="dropdown-item" href="#">Sprint 1</a>
+                      <a class="dropdown-item" href="#">Sprint 2</a>
+                    </div>
+                  </div>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body" >
+                  <div id="burn-down-chart" class="viz">
+                    Burn Down Chart
+                  </div>
+                  <div id="scope-chart" class="viz">
+                    Scope Chart
+                  </div>
+                  <div id="scope-detail-chart" class="viz">
+                    Scope Detail Chart
+                  </div>
+                  <div id="velocity-chart" class="viz">
+                  </div>
+                  <div id="retrospective-chart" class="viz">
+                  </div>
+                </div>
+                <!-- End Card Body -->
+              </div>
+            </div>
+          </div>
+
+        <!-- /.container-fluid -->
+
+      </div>
+
+      </main>
+      <!-- End of Main Content -->
+
+      <!-- Footer -->
+      <footer class="sticky-footer bg-white">
+        <div class="container my-auto">
+          <div class="copyright text-center my-auto">
+            <span>Copyright &copy; 2019 David Collins, James Massa, Manish Babel, and Kevin Dong</span>
+          </div>
+        </div>
+      </footer>
+      <!-- End of Footer -->
+
+
+    </div>
+    <!-- End of Content Wrapper -->
+
   </div>
-    <div id="vis">
-      <button id="inProgress">InProgress</button>
-      <button id="all">All</button>
+  <!-- End of Page Wrapper -->
 
-    </div>
-    <div class="row">
-    <div id="bubble-chart"></div>
-    <div id="story-chart"></div></div>
-    </div>
-   <footer>
-
-    <p><a href="http://222.html">Main Menu</a> | <a href="https://111">References</a></p>
-  </footer>
-</div>
-
-
-
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
 
   <!-- Bootstrap core JavaScript-->
+  <script src="js/lib/jquery.min.js"></script>
+  <script src="js/lib/popper.min.js"></script>
+  <script src="js/lib/bootstrap.min.js"></script>
+  <!-- Core plugin JavaScript-->
 
-  <script src="js/jquery.min.js"></script>
-  <script src="js/popper.min.js"></script>
-  <script src="js/bootstrap.min.js"></script>
-  <script src="js/d3.min.js"></script>
-  <script src="js/d3-legend.js"></script>
-  <script src="js/d3-tip.js"></script>
-  <script src="js/queue.min.js"></script>
-  <script src="js/topojson.min.js"></script>
-  <script src="js/lib/issuestore.js"></script>
-  <script src="js/bubble-chart.js"></script>
-  <script src="js/story-chart.js"></script>
-
+  <!-- Dependencies for all pages-->
+  <script src="js/lib/d3.min.js"></script>
+  <script src="js/lib/d3-legend.js"></script>
+  <script src="js/lib/d3-tip.js"></script>
+  <script src="js/lib/queue.min.js"></script>
+  <script src="js/issuestore.js"></script>
+  <script src="js/retrostore.js"></script>
+  <script src="js/scrumstore.js"></script>
+  <script src="js/svg.js"></script>
 
   <!-- Page level plugins -->
 
   <!-- Page level custom scripts -->
-
-
-
-  <script src="js/vis-chart1.js"></script>
-  <script src="js/vis-chart2.js"></script>
-  <script src="js/vis-chart3.js"></script>
-  <script src="js/vis-chart4.js"></script>
+  <script src="js/vis-scrum.js"></script>
+  <script src="js/vis-scope.js"></script>
+  <script src="js/vis-scope-detail.js"></script>
+  <script src="js/vis-velocity.js"></script>
+  <script src="js/vis-retro.js"></script>
+  <script src="js/vis-burndown.js"></script>
 
   <!-- Main script -->
   <script src="js/main.js"></script>
-
 
 </body>
 

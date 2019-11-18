@@ -107,10 +107,6 @@ BubbleChart.prototype.updateVis = function (value){
             return d.y
         })
     }
-
-
-
-
 }
 
 

@@ -1,28 +1,47 @@
-//https://startbootstrap.com/themes/sb-admin-2/
-// var json = {"countries_msg_vol": {
-//         "CA": 170, "US": 393, "BB": 12, "CU": 9, "BR": 89, "MX": 192, "PY": 32, "UY": 9, "VE": 25, "BG": 42, "CZ": 12, "HU": 7, "RU": 184, "FI": 42, "GB": 162, "IT": 87, "ES": 65, "FR": 42, "DE": 102, "NL": 12, "CN": 92, "JP": 65, "KR": 87, "TW": 9, "IN": 98, "SG": 32, "ID": 4, "MY": 7, "VN": 8, "AU": 129, "NZ": 65, "GU": 11, "EG": 18, "LY": 4, "ZA": 76, "A1": 2, "Other": 254
-//     }};
-//
-// getData()
-// function getData() {
-//     d3.json("data/bubble.json",function(data){
-//         // console.log(data)
-//
-//
-//     });
-// }
+document.addEventListener("DOMContentLoaded", () => {
 
-var issueStore;
+    queue()
+        .defer(d3.json, "data/CFX-data-scrubbed.json")
+        .defer(d3.json, "data/scrum-process.json")
+        .defer(d3.json, "data/metrics.json")
+        .await(visualize);
+});
 
-queue()
-    .defer(d3.json, "data/CFX-data-scrubbed.json")
-    //TODO: add csv file for retrospective data
-    .await(dataLoaded);
+function visualize(error, jiraData, scrumText, retroData) {
+        const issueStore = new IssueStore(jiraData);
+        const scrumTextStore = new ScrumTextStore(scrumText);
+        const retroStore = new RetroStore(retroData);
 
-function dataLoaded(error, jiraData) {
-    issueStore = new IssueStore(jiraData);
-     // console.log(issueStore.getIssuesForSprint(47785));
-    bubbleChart = new BubbleChart("bubble-chart",issueStore)
-    storyChart = new StoryChart("story-chart",issueStore)
+        console.log(issueStore.getSprints());
+        console.log(scrumTextStore.ceremonies);
+        console.log(retroStore.data);
+
+        const margin = {top: 0, right: 0, bottom: 0, left: 0};
+        const marginVelocity = { top: 40, right: 60, bottom: 60, left: 60 };
+        const width = 800;
+        const height = 200;
+
+        const svgVelocity = new Svg("#velocity-chart", width, height, marginVelocity);
+        const svgScope = new Svg("#scope-chart", width/2, height, margin);
+        const svgScopeDetail = new Svg("#scope-detail-chart", width/2, height, margin);
+        const svgRetro = new Svg("#retrospective-chart", width, height, margin);
+        const svgBurnDown = new Svg("#burn-down-chart", width, height, margin);
+
+        const visVelocity = new VelocityChart2(issueStore, svgVelocity);
+        const visScopeDetail = new ScopeDetailChart(issueStore, svgScopeDetail);
+        const visScope = new ScopeChart(issueStore, svgScope, visScopeDetail);
+        const visRetro = new RetroChart(retroData, svgRetro);
+        const visBurnDown = new BurnDownChart(issueStore, svgBurnDown);
+
+        //Map clickable elements to the visualization objects which will display
+        const actionMapping = {
+                "#input-sprint-backlog": visScope,
+                "#input-product-increment": visScope,
+                "#input-retrospective": visRetro,
+                "#input-sprint": visVelocity,
+                "#input-daily-scrum": visBurnDown
+        };
+
+        const visScrumProcess = new ScrumProcess(scrumTextStore, actionMapping);
 }
 
