@@ -23,20 +23,20 @@ function visualize(error, jiraData, scrumText, retroData) {
 
         const svgVelocity = new Svg("#velocity-chart", width, height, marginVelocity);
         const svgScope = new Svg("#scope-chart", width/2, height, margin);
-        const svgScopeDetail = new Svg("#scope-detail-chart", width/2, height, margin);
+        const svgStory = new Svg("#story-chart", width/2, height, margin);
         const svgRetro = new Svg("#retrospective-chart", width, height, margin);
         const svgBurnDown = new Svg("#burn-down-chart", width, height, margin);
 
         const visVelocity = new VelocityChart2(issueStore, svgVelocity);
-        const visScopeDetail = new ScopeDetailChart(issueStore, svgScopeDetail);
-        const visScope = new ScopeChart(issueStore, svgScope, visScopeDetail);
+        const visStory = new StoryChart2(issueStore, svgStory);
+        const visScope = new ScopeChart(issueStore, svgScope, visStory);
         const visRetro = new RetroChart(retroData, svgRetro);
         const visBurnDown = new BurnDownChart(issueStore, svgBurnDown);
 
         //Map clickable elements to the visualization objects which will display
         const actionMapping = {
                 "#input-sprint-backlog": visScope,
-                "#input-product-increment": visScope,
+                "#input-product-increment": visStory,
                 "#input-retrospective": visRetro,
                 "#input-sprint": visVelocity,
                 "#input-daily-scrum": visBurnDown
