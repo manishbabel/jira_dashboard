@@ -9,49 +9,68 @@ p { margin: 0; }
 
 #b-product-backlog,
 #b-sprint-backlog,
+#b-sprint-planning,
 #b-product-increment{
-    padding-top: 67px;
-    padding-bottom: 67px;
-    padding-left: 32px;
-    padding-right: 32px;
+    padding-top: 51px;
+    padding-bottom: 51px;
+    padding-left: 22px;
+    padding-right: 22px;
     position: absolute;
     top: 70%;
 }
 #b-product-backlog { left: 3%;}
-#b-sprint-backlog { left: 30.5%;}
-#b-product-increment { left: 79.7%;}
+#b-sprint-planning { left: 18%;}
+#b-sprint-backlog { left: 32%;}
+#b-product-increment { left: 84%;}
 
 #b-po { top: 50%; left: 3%; }
 #b-sm { top: 15%; left: 51%; }
 #b-tm { top: 50%; left: 23%; }
 
 #b-daily-scrum { top: 30%; left: 83%;}
-#b-sprint { top: 44%; left: 50%;
-            padding-top: 100px; padding-bottom: 100px;
-            padding-left: 50px; padding-right: 50px;
+#b-sprint { top: 40%; left: 50%;
+            padding-top: 90px; padding-bottom: 90px;
+            padding-left: 37px; padding-right: 37px;
 
 }
 #b-showcase { top: 50%; left: 93%; }
 #b-retrospective { top: 90%; left: 93%; }
+
+#b-product-increment-desc { top: 67%; left: 85%; }
+#b-product-backlog-desc { top: 67%; left: 5%; }
+#b-sprint-backlog-desc{ top: 67%; left: 32%; }
+#b-sprint-planning-desc{ top: 67%; left: 20%; }
+#b-sprint-desc{ top: 40%; left: 55%; }
 
 #b-po,
 #b-sm,
 #b-tm,
 #b-daily-scrum,
 #b-sprint,
+#b-sprint-desc,
 #b-showcase,
+#b-product-increment-desc,
+#b-product-backlog-desc,
+#b-sprint-backlog-desc,
+#b-sprint-planning-desc,
 #b-retrospective { position: absolute; }
 
 #input-product-backlog:checked ~ #content-product-backlog,
+#input-product-backlog-desc:checked ~ #content-product-backlog-desc,
 #input-sprint-backlog:checked ~ #content-sprint-backlog,
-#input-product-increment:checked ~ #content-product-increment,
+#input-sprint-backlog-desc:checked ~ #content-sprint-backlog-desc,
+#input-product-increment:checked ~ #content-product-increment-desc,
+#input-product-increment-desc:checked ~ #content-product-increment,
 #input-po:checked ~ #content-po,
 #input-sm:checked ~ #content-sm,
 #input-tm:checked ~ #content-tm,
 #input-retrospective:checked ~ #content-retrospective,
 #input-daily-scrum:checked ~ #content-daily-scrum,
 #input-showcase:checked ~ #content-showcase,
-#input-sprint:checked ~ #content-sprint
+#input-sprint:checked ~ #content-sprint,
+#input-sprint:checked ~ #content-sprint-desc,
+#input-sprint-planning:checked ~ #content-sprint-planning,
+#input-sprint-planning-desc:checked ~ #content-sprint-planning-desc
 { display: block !important; animation: fadein .5s; }
 
 input:checked ~ label .button { display: none !important; animation: fadeout .5s; }

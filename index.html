@@ -9,7 +9,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>JIRA - Dashboard</title>
+  <title>Jira - Dashboard</title>
 
   <!-- Custom fonts for this template-->
   <link href="css/all.min.css" rel="stylesheet" type="text/css">
@@ -95,7 +95,7 @@
           <br>
 
           <h2 style="color:darkred">
-            Practicing Scrum with the flawed JIRA tool makes us sad
+            Practicing Scrum with the flawed Jira tool makes us sad
             <i class="fas fa-sad-tear fa-2x"></i>
           </h2>
           <h5>
@@ -105,7 +105,7 @@
             Moreover, Jira only partially models the Scrum process.
             We must mentally map the missing diagram to Jira and work-around tools for
             the retrospective ceremony and the estimation poker ceremony.
-            The daily Scrum ceremony is universally run with a text only JIRA board.
+            The daily Scrum ceremony is universally run with a text only Jira board.
             All Jira charts are segregated, static, and independent.
             Jira lacks integrated interactive visualization.
 
@@ -116,8 +116,9 @@
             The Scrum Visualizer makes us happy again
             <i id="happy-again" class="fas fa-smile-wink fa-2x"></i>
           </h2>
+
           <h5>
-            We visualize the mapping from scrum diagram to JIRA and the retrospective and the roles.
+            We visualize the mapping from scrum diagram to Jira and the retrospective and the roles.
             No more filling in the gaps and imagining Scrum.   Start living scrum joy with the Scrum Visualizer."
           </h5>
 
@@ -246,8 +247,11 @@
 
                   <div class="img-container">
                     <input type="checkbox" class="input" id="input-product-backlog" name="inputs">
+                    <input type="checkbox" class="input" id="input-product-backlog-desc" name="inputs">
                     <input type="checkbox" class="input" id="input-sprint-backlog" name="inputs">
+                    <input type="checkbox" class="input" id="input-sprint-backlog-desc" name="inputs">
                     <input type="checkbox" class="input" id="input-product-increment" name="inputs">
+                    <input type="checkbox" class="input" id="input-product-increment-desc" name="inputs">
                     <input type="checkbox" class="input" id="input-po" name="inputs">
                     <input type="checkbox" class="input" id="input-sm" name="inputs">
                     <input type="checkbox" class="input" id="input-tm" name="inputs">
@@ -255,14 +259,26 @@
                     <input type="checkbox" class="input" id="input-showcase" name="inputs">
                     <input type="checkbox" class="input" id="input-retrospective" name="inputs">
                     <input type="checkbox" class="input" id="input-sprint" name="inputs">
+                    <input type="checkbox" class="input" id="input-sprint-desc" name="inputs">
+                    <input type="checkbox" class="input" id="input-sprint-planning" name="inputs">
+                    <input type="checkbox" class="input" id="input-sprint-planning-desc" name="inputs">
                     <label for="input-product-backlog">
                       <span id="b-product-backlog" class="button">99 Stories</span>
                     </label>
+                    <label for="input-product-backlog-desc">
+                      <span id="b-product-backlog-desc" class="button">+</span>
+                    </label>
                     <label for="input-sprint-backlog">
-                      <span id="b-sprint-backlog" class="button">22 Stories</span>
+                      <span id="b-sprint-backlog" class="button">94 Points</span>
+                    </label>
+                    <label for="input-sprint-backlog-desc">
+                      <span id="b-sprint-backlog-desc" class="button">+</span>
                     </label>
                     <label for="input-product-increment">
-                      <span id="b-product-increment" class="button">11 Stories</span>
+                      <span id="b-product-increment" class="button">37 points</span>
+                    </label>
+                    <label for="input-product-increment-desc">
+                      <span id="b-product-increment-desc" class="button">+</span>
                     </label>
                     <label for="input-po">
                       <span id="b-po" class="button">+</span>
@@ -283,14 +299,26 @@
                       <span id="b-retrospective" class="button">+</span>
                     </label>
                     <label for="input-sprint">
-                      <span id="b-sprint" class="button">2 Week Sprint</span>
+                      <span id="b-sprint" class="button" style="text-align: center">
+                        Sprint Day 5 of 14
+                        <br>Ends 10/14
+                      </span>
+                    </label>
+                    <label for="input-sprint-desc">
+                      <span id="b-sprint-desc" class="button">+</span>
+                    </label>
+                    <label for="input-sprint-planning">
+                      <span id="b-sprint-planning" class="button">14 Alerts</span>
+                    </label>
+                    <label for="input-sprint-planning-desc">
+                      <span id="b-sprint-planning-desc" class="button">+</span>
                     </label>
                     <div id="content-product-backlog" class="content">
                       <div style="text-align: right;">
                         <label for="input-product-backlog" class="cross">X</label>
                       </div>
                       <h1>Product Backlog</h1>
-                      <p class="bodyCopy">Additional content goes here.</p>
+                      <p class="bodyCopy"></p>
                       <a href="#" class="cta">Find out more</a>
                     </div>
                     <div id="content-sprint-backlog" class="content">
@@ -298,7 +326,7 @@
                         <label for="input-sprint-backlog" class="cross">X</label>
                       </div>
                       <h1>Sprint Backlog</h1>
-                      <p class="bodyCopy">Additional content goes here.</p>
+                      <p class="bodyCopy"></p>
                       <a href="#" class="cta">Find out more</a>
                     </div>
                     <div id="content-product-increment" class="content">
@@ -306,7 +334,7 @@
                         <label for="input-product-increment" class="cross">X</label>
                       </div>
                       <h1>Product Increment</h1>
-                      <p class="bodyCopy">Additional content goes here.</p>
+                      <p class="bodyCopy"></p>
                       <a href="#" class="cta">Find out more</a>
                     </div>
                     <div id="content-po" class="content">
@@ -314,7 +342,7 @@
                         <label for="input-po" class="cross">X</label>
                       </div>
                       <h1>Product Owner</h1>
-                      <p class="bodyCopy">Additional content goes here.</p>
+                      <p class="bodyCopy"></p>
                       <a href="https://www.agilealliance.org/glossary/product-owner/" class="cta">Find out more</a>
                     </div>
                     <div id="content-sm" class="content">
@@ -322,7 +350,7 @@
                         <label for="input-sm" class="cross">X</label>
                       </div>
                       <h1>Scrum Master</h1>
-                      <p class="bodyCopy">Additional content goes here.</p>
+                      <p class="bodyCopy"></p>
                       <a href="#" class="cta">Find out more</a>
                     </div>
                     <div id="content-tm" class="content">
@@ -330,7 +358,7 @@
                         <label for="input-tm" class="cross">X</label>
                       </div>
                       <h1>Team</h1>
-                      <p class="bodyCopy">Additional content goes here.</p>
+                      <p class="bodyCopy"></p>
                       <a href="#" class="cta">Find out more</a>
                     </div>
                     <div id="content-daily-scrum" class="content">
@@ -338,7 +366,7 @@
                         <label for="input-daily-scrum" class="cross">X</label>
                       </div>
                       <h1>Daily Scrum</h1>
-                      <p class="bodyCopy">Additional content goes here.</p>
+                      <p class="bodyCopy"></p>
                       <a href="#" class="cta">Find out more</a>
                     </div>
                     <div id="content-showcase" class="content">
@@ -346,7 +374,7 @@
                         <label for="input-showcase" class="cross">X</label>
                       </div>
                       <h1>Showcase</h1>
-                      <p class="bodyCopy">Additional content goes here.</p>
+                      <p class="bodyCopy"></p>
                       <a href="#" class="cta">Find out more</a>
                     </div>
                     <div id="content-retrospective" class="content">
@@ -354,7 +382,7 @@
                         <label for="input-retrospective" class="cross">X</label>
                       </div>
                       <h1>Retrospective</h1>
-                      <p class="bodyCopy">Additional content goes here.</p>
+                      <p class="bodyCopy"></p>
                       <a href="#" class="cta">Find out more</a>
                     </div>
                     <div id="content-sprint" class="content">
@@ -362,7 +390,31 @@
                         <label for="input-sprint" class="cross">X</label>
                       </div>
                       <h1>Sprint</h1>
-                      <p class="bodyCopy">Additional content goes here.</p>
+                      <p class="bodyCopy"></p>
+                      <a href="#" class="cta">Find out more</a>
+                    </div>
+                    <div id="content-sprint-desc" class="content">
+                      <div style="text-align: right;">
+                        <label for="input-sprint-desc" class="cross">X</label>
+                      </div>
+                      <h1>Sprint</h1>
+                      <p class="bodyCopy"></p>
+                      <a href="#" class="cta">Find out more</a>
+                    </div>
+                    <div id="content-sprint-planning" class="content">
+                      <div style="text-align: right;">
+                        <label for="input-sprint-planning" class="cross">X</label>
+                      </div>
+                      <h1>Sprint Planning</h1>
+                      <p class="bodyCopy"></p>
+                      <a href="#" class="cta">Find out more</a>
+                    </div>
+                    <div id="content-sprint-planning-desc" class="content">
+                      <div style="text-align: right;">
+                        <label for="input-sprint-planning-desc" class="cross">X</label>
+                      </div>
+                      <h1>Sprint Planning</h1>
+                      <p class="bodyCopy"></p>
                       <a href="#" class="cta">Find out more</a>
                     </div>
                   </div>
@@ -382,7 +434,7 @@
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                   <h6 class="m-0 font-weight-bold text-primary">Explore Sprint 42</h6>
                   <div class="dropdown no-arrow">
-                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLinkScrumProcess" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLinkScrumProcess2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
