@@ -383,7 +383,7 @@ const velocityHtml = `
         <div class="col-md-2">
             <select class="select" id="velocitySelect">
                 ${velocitySelect.map(function (option) {
-                    return `<option value=${option.value}>${option.displayName}</option>`
+                    return `<option value=${option.value} ${option.selected ? "selected" : ""}>${option.displayName}</option>`
                 }).join('')}
             </select>
         </div>
@@ -391,7 +391,7 @@ const velocityHtml = `
         <div class="col-md-2">
             <select class="select" id="velocityLayersSelect">
                 ${breakdownOptions.map(function (option) {
-                     return `<option value=${option.value}>${option.displayName}</option>`
+                     return `<option value=${option.value} ${option.selected ? "selected" : ""}>${option.displayName}</option>`
                     }).join('')}
             </select>
 </div>
