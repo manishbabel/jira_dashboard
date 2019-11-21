@@ -1,5 +1,8 @@
 //TODO: DAVID Merge Velocity Chart into VelocityChart2 structure
 //TODO:  Use the svg object passed from VelocityChart2 instead of creating another
+
+//references: https://wesbos.com/template-strings-html/
+
 class VelocityChart2 {
     constructor(data, svg) {
         this._data = data;
@@ -27,6 +30,9 @@ VelocityChart.prototype.initVis = function(){
     var vis = this;
     var processingData = true;
 
+    //inject template html
+    document.getElementById(vis.parentElement).innerHTML = velocityHtml;
+
     //initialize initial data
     //TODO: filter by selected time band
     vis.displayData = vis.issueStore.getSprints().filter(function (d) {
@@ -49,14 +55,6 @@ VelocityChart.prototype.initVis = function(){
 
         //get all possible priorities
         sprint.issues.forEach(function (issue) {
-
-            //TODO remove once priority bug is fixed
-            if(issue.fields.priority == null) {
-                issue.fields.priority = {
-                    id:"3",name:"Minor"
-                }
-            }
-
             if(! priorityIds[issue.fields.priority.id]) {
                 priorities.push(issue.fields.priority.name);
                 priorityIds[issue.fields.priority.id] = issue.fields.priority.name;
@@ -78,10 +76,10 @@ VelocityChart.prototype.initVis = function(){
     //initialize SVG drawing area
     vis.margin = { top: 40, right: 60, bottom: 60, left: 60 };
 
-    vis.width = $("#" + vis.parentElement).width() - vis.margin.left - vis.margin.right,
+    vis.width = $("#vis-velocity-chart").width() - vis.margin.left - vis.margin.right,
         vis.height = 400 - vis.margin.top - vis.margin.bottom;
 
-    vis.svg = d3.select("#" + vis.parentElement).append("svg")
+    vis.svg = d3.select("#vis-velocity-chart").append("svg")
         .attr("width", vis.width + vis.margin.left + vis.margin.right)
         .attr("height", vis.height + vis.margin.top + vis.margin.bottom)
         .append("g")
@@ -365,3 +363,42 @@ function findClosestPoint(range, value) {
     return result;
 
 }
+
+const velocitySelect = [
+    {value: "totalStoryPoints", displayName: "Total Story Points", selected:true},
+    {value: "completedStoryPoints", displayName: "Completed Story Points"},
+    {value: "issueCount", displayName: "Issue Count"}
+];
+
+const breakdownOptions = [
+    {value: "priorities", displayName: "Priorities", selected:true},
+    {value: "components", displayName: "Components"},
+    {value: "issueType", displayName: "Issue Type"},
+    {value: "epic", displayName: "Epic"}
+];
+
+const velocityHtml = `
+<div class="container">
+    <div class="row">
+        <div class="col-md-2">
+            <select class="select" id="velocitySelect">
+                ${velocitySelect.map(function (option) {
+                    return `<option value=${option.value}>${option.displayName}</option>`
+                }).join('')}
+            </select>
+        </div>
+        <div class="col-md-8"></div>
+        <div class="col-md-2">
+            <select class="select" id="velocityLayersSelect">
+                ${breakdownOptions.map(function (option) {
+                     return `<option value=${option.value}>${option.displayName}</option>`
+                    }).join('')}
+            </select>
+</div>
+    </div>
+    <div class="row">
+        <div class="col-md-12" id="vis-velocity-chart"></div>
+    </div>
+</div>
+</div>
+`;
