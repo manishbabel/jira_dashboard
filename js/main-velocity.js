@@ -9,5 +9,10 @@ queue()
 
 function dataLoaded(error, jiraData) {
     issueStore = new IssueStore(jiraData);
+
+    issueStore.getIssuesForSprint(48793).forEach(function (issue) {
+        console.log(issue.fields.status.name);
+    });
+
     new VelocityChart("vis-velocity", issueStore);
 }

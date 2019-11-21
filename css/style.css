@@ -180,7 +180,6 @@ footer {
 
 .axis line,
 .axis path {
-    fill: red;
     stroke: #555;
     shape-rendering: crispEdges;
 }
