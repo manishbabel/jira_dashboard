@@ -9,5 +9,5 @@ queue()
 
 function dataLoaded(error, jiraData) {
     issueStore = new IssueStore(jiraData);
-    new VelocityChart("vis-velocity", issueStore);
+    new VelocityChart(issueStore, "vis-velocity");
 }

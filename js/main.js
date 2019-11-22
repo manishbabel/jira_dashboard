@@ -21,13 +21,12 @@ function visualize(error, jiraData, scrumText, retroData) {
         const width = 800;
         const height = 200;
 
-        const svgVelocity = new Svg("#velocity-chart", width, height, marginVelocity);
-        const svgScope = new Svg("#scope-chart", width/2, height, margin);
-        const svgStory = new Svg("#story-chart", width/2, height, margin);
-        const svgRetro = new Svg("#retrospective-chart", width, height, margin);
-        const svgBurnDown = new Svg("#burn-down-chart", width, height, margin);
+        const svgScope = new Svg("scope-chart", width/2, height, margin);
+        const svgStory = new Svg("story-chart", width/2, height, margin);
+        const svgRetro = new Svg("retrospective-chart", width, height, margin);
+        const svgBurnDown = new Svg("burn-down-chart", width, height, margin);
 
-        const visVelocity = new VelocityChart2(issueStore, svgVelocity);
+        const visVelocity = new VelocityChart(issueStore, "velocity-chart");
         const visStory = new StoryChart2(issueStore, svgStory);
         const visScope = new ScopeChart(issueStore, svgScope, visStory);
         const visRetro = new RetroChart(retroData, svgRetro);

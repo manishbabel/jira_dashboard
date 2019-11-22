@@ -2,25 +2,13 @@
 //TODO:  Use the svg object passed from VelocityChart2 instead of creating another
 
 //references: https://wesbos.com/template-strings-html/
-
-class VelocityChart2 {
-    constructor(data, svg) {
-        this._data = data;
-        this._svg = svg;
-        this._velocityChart = new VelocityChart(this.svg.container.substr(1), this.data);
-    }
-
-    get data() {return this._data;}
-
-    get svg() {return this._svg;}
-}
 //references: https://codepen.io/ashokgowtham/pen/LpnHe lab6 https://www.d3-graph-gallery.com/graph/line_cursor.html
 
 let defaultLayer = "storyPoints";
 
 
-VelocityChart = function(_parentElement, _issueStore){
-    this.parentElement = _parentElement;
+VelocityChart = function(_issueStore, _container){
+    this.container = _container;
     this.issueStore = _issueStore;
 
     this.initVis();
@@ -28,10 +16,8 @@ VelocityChart = function(_parentElement, _issueStore){
 
 VelocityChart.prototype.initVis = function(){
     var vis = this;
-    var processingData = true;
-
     //inject template html
-    document.getElementById(vis.parentElement).innerHTML = velocityHtml;
+    document.getElementById(vis.container).innerHTML = velocityHtml;
 
     //initialize initial data
     //TODO: filter by selected time band
