@@ -1,8 +1,9 @@
 
-BubbleChart = function(_parentElement, _data){
+BubbleChart = function(_parentElement, _data, _eventHandler){
     this.parentElement = _parentElement
     this.data = _data
     this.displayData = []
+    this.eventHandler =_eventHandler
     this.initVis()
 }
 
@@ -10,7 +11,7 @@ BubbleChart.prototype.initVis = function (){
     var vis = this
     const diameter = 600;
     vis.margin = { top: 60, right: 60, bottom: 60, left: 60 };
-    vis.width = 800
+    vis.width = 700
     vis.height = 600
      vis.svg = d3.select("#" + vis.parentElement).append("svg")
         .attr("width",  vis.width  )
@@ -19,7 +20,7 @@ BubbleChart.prototype.initVis = function (){
     vis.defs = vis.svg.append("defs")
 
 
-    vis.radiusScale = d3.scaleSqrt().domain([0,11]).range([40,90])
+    vis.radiusScale = d3.scaleSqrt().domain([0,11]).range([20,60])
     vis.forceXSPlit = d3.forceX(function(d){
         if(d.isResolved == true){
             return 100
@@ -53,7 +54,7 @@ BubbleChart.prototype.wrangleData = function (){
 }
 BubbleChart.prototype.updateVis = function (value){
     var vis = this
-    console.log('vis.storiesForActiveSprint',vis.storiesForActiveSprint)
+    // console.log('vis.storiesForActiveSprint',vis.storiesForActiveSprint)
     vis.defs.selectAll(".scrum-pattern")
         .data(vis.storiesForActiveSprint).enter()
         .append("pattern")
@@ -77,14 +78,14 @@ BubbleChart.prototype.updateVis = function (value){
         .enter().append("circle")
         .attr("class","bubble")
         .attr("r",function(d){
-            console.log(d.storyPoints)
+            // console.log(d.storyPoints)
             return vis.radiusScale(d.storyPoints)
         })
        .attr("fill", function(d){
            return ("url(#"+d.id+")")
        })
         .on("click",function(d){
-            console.log(d)
+            $(vis.eventHandler).trigger("selectionChanged", d)
         })
     vis.simulation.nodes(vis.storiesForActiveSprint)
         .on("tick",ticked)
