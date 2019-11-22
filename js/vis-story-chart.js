@@ -2,12 +2,11 @@
 var dateFormatter = d3.timeFormat("%Y-%m-%d");
 var dateParser = d3.timeParse("%Y-%m-%d");
 
-
 StoryChart = function(_parentElement, _data){
-    this.parentElement = _parentElement
-    this.data = _data
-    this.displayData = []
-    this.initVis()
+    this.parentElement = _parentElement;
+    this.data = _data;
+    this.displayData = [];
+    this.initVis();
 }
 
 StoryChart.prototype.initVis = function (){
@@ -30,7 +29,7 @@ StoryChart.prototype.initVis = function (){
     // Scales and axes
     vis.x = d3.scaleTime()
         .range([0, vis.width])
-        // .domain([0,99]);
+    // .domain([0,99]);
 
     vis.y = d3.scaleLinear()
         .range([vis.height, 0]);
@@ -84,9 +83,9 @@ StoryChart.prototype.wrangleData = function (d){
 StoryChart.prototype.updateVis = function (value){
     var vis = this
     tip = d3.tip().attr('class', 'd3-tip')
-            .html(function(d) {
+        .html(function(d) {
 
-                return d.desc; });
+            return d.desc; });
     vis.svg.call(tip)
 
     console.log("extent",d3.extent(vis.dataset, function(d) { return d.date; }))
@@ -165,7 +164,7 @@ StoryChart.prototype.updateVis = function (value){
     //     .style("text-anchor", "middle")
     //
     // labels.exit().remove()
-   // console.log(vis.x.domain("2019-11-02"))
+    // console.log(vis.x.domain("2019-11-02"))
 
     vis.svg.select(".x-axis").call(vis.xAxis).selectAll("text")
         .style("text-anchor", "end")
@@ -176,7 +175,6 @@ StoryChart.prototype.updateVis = function (value){
         })
     // vis.svg.select(".x-axis").call(vis.xAxis);
     vis.svg.select(".y-axis").call(vis.yAxis);
-
 
 }
 

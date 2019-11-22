@@ -14,14 +14,9 @@ function dataLoaded(error, jiraData) {
     bubbleChart = new BubbleChart("bubble-chart",issueStore,MyEventHandler)
     storyChart = new StoryChart("story-chart",issueStore)
     employeeChart = new EmployeeChart("employee-chart",issueStore)
-    employeeDetailsChart=  new EmployeeDetailsChart("employee",issueStore)
     $(MyEventHandler).bind("selectionChanged", function(event, d) {
         console.log("eventtriggeered",d)
         storyChart.onSelectionChange(d)
-        employeeDetailsChart.onSelectionChange(d)
-        // ageVis.onSelectionChange(rangeStart,rangeEnd)
-        // prioVis.onSelectionChange(rangeStart,rangeEnd)
-        // countVis.onSelectionChange(rangeStart,rangeEnd)
     })
 }
 

@@ -1,5 +1,8 @@
 //TODO: DAVID Merge Velocity Chart into VelocityChart2 structure
 //TODO:  Use the svg object passed from VelocityChart2 instead of creating another
+
+//references: https://wesbos.com/template-strings-html/
+
 class VelocityChart2 {
     constructor(data, svg) {
         this._data = data;
@@ -7,13 +10,9 @@ class VelocityChart2 {
         this._velocityChart = new VelocityChart(this.svg.container.substr(1), this.data);
     }
 
-    get data() {
-        return this._data;
-    }
+    get data() {return this._data;}
 
-    get svg() {
-        return this._svg;
-    }
+    get svg() {return this._svg;}
 }
 //references: https://codepen.io/ashokgowtham/pen/LpnHe lab6 https://www.d3-graph-gallery.com/graph/line_cursor.html
 
@@ -30,6 +29,9 @@ VelocityChart = function(_parentElement, _issueStore){
 VelocityChart.prototype.initVis = function(){
     var vis = this;
     var processingData = true;
+
+    //inject template html
+    document.getElementById(vis.parentElement).innerHTML = velocityHtml;
 
     //initialize initial data
     //TODO: filter by selected time band
@@ -53,14 +55,6 @@ VelocityChart.prototype.initVis = function(){
 
         //get all possible priorities
         sprint.issues.forEach(function (issue) {
-
-            //TODO remove once priority bug is fixed
-            if(issue.fields.priority == null) {
-                issue.fields.priority = {
-                    id:"3",name:"Minor"
-                }
-            }
-
             if(! priorityIds[issue.fields.priority.id]) {
                 priorities.push(issue.fields.priority.name);
                 priorityIds[issue.fields.priority.id] = issue.fields.priority.name;
@@ -82,10 +76,10 @@ VelocityChart.prototype.initVis = function(){
     //initialize SVG drawing area
     vis.margin = { top: 40, right: 60, bottom: 60, left: 60 };
 
-    vis.width = $("#" + vis.parentElement).width() - vis.margin.left - vis.margin.right,
+    vis.width = $("#vis-velocity-chart").width() - vis.margin.left - vis.margin.right,
         vis.height = 400 - vis.margin.top - vis.margin.bottom;
 
-    vis.svg = d3.select("#" + vis.parentElement).append("svg")
+    vis.svg = d3.select("#vis-velocity-chart").append("svg")
         .attr("width", vis.width + vis.margin.left + vis.margin.right)
         .attr("height", vis.height + vis.margin.top + vis.margin.bottom)
         .append("g")
@@ -125,7 +119,7 @@ VelocityChart.prototype.initVis = function(){
     // Initialize stack layout
     vis.colorScale = d3.scaleOrdinal(d3.schemeCategory20);
     vis.colorScale.domain(vis.priorities);
-    var stack = d3.stack()
+    const stack = d3.stack()
         .keys(vis.colorScale.domain());
 
     // Stack data
@@ -153,33 +147,29 @@ VelocityChart.prototype.initVis = function(){
     vis.tool_tip = d3.tip()
         .attr("class", "d3-tip")
         .offset([-8, 0])
-        .html(function(d) {
-            return "tool tip";
-        });
+        .html(() => "tool tip");
     vis.svg.call(vis.tool_tip);
 
     // This allows to find the closest X index of the mouse:
-    vis.bisect = d3.bisector(function(d) { return d.name; }).left;
+    vis.bisect = d3.bisector(d => d.name ).left;
 
     // (Filter, aggregate, modify data)
     vis.wrangleData();
-}
-
-
+};
 
 /*
  * Data wrangling
  */
 
 VelocityChart.prototype.wrangleData = function(){
-    var vis = this;
+    const vis = this;
 
     // In the first step no data wrangling/filtering needed
     //vis.displayData = vis.issueStore.getSprints();
 
     // Update the visualization
     vis.updateVis();
-}
+};
 
 
 
@@ -200,10 +190,10 @@ VelocityChart.prototype.updateVis = function(){
     })
     ]);
 
-    var dataCategories = vis.colorScale.domain();
+    const dataCategories = vis.colorScale.domain();
 
 // Draw the layers
-    var categories = vis.svg.selectAll(".area")
+    const categories = vis.svg.selectAll(".area")
         .data(vis.stackedData);
         //.data(vis.displayData);
 
@@ -238,7 +228,7 @@ VelocityChart.prototype.updateVis = function(){
 
     points.selectAll('.dot')
         .data(function(d, index){
-            var a = [];
+            const a = [];
             d.forEach(function(point,i){
                 a.push({'index': index, 'point': point});
             });
@@ -329,14 +319,12 @@ VelocityChart.prototype.updateVis = function(){
     lineLegend
         .append('rect')
         .attr("x", 10)
-        .attr("y", function(d, i) {
-            return i * 20;
-        })
+        .attr("y", (d, i) => i * 20)
         .attr("width", 10)
         .attr("height", 10)
         .style("stroke", "black")
         .style("stroke-width", 1)
-        .style("fill", function(d){return vis.colorScale(d);});
+        .style("fill", d => vis.colorScale(d));
     //the data objects are the fill colors
     lineLegend
         .append('text')
@@ -375,3 +363,42 @@ function findClosestPoint(range, value) {
     return result;
 
 }
+
+const velocitySelect = [
+    {value: "totalStoryPoints", displayName: "Total Story Points", selected:true},
+    {value: "completedStoryPoints", displayName: "Completed Story Points"},
+    {value: "issueCount", displayName: "Issue Count"}
+];
+
+const breakdownOptions = [
+    {value: "priorities", displayName: "Priorities", selected:true},
+    {value: "components", displayName: "Components"},
+    {value: "issueType", displayName: "Issue Type"},
+    {value: "epic", displayName: "Epic"}
+];
+
+const velocityHtml = `
+<div class="container">
+    <div class="row">
+        <div class="col-md-2">
+            <select class="select" id="velocitySelect">
+                ${velocitySelect.map(function (option) {
+                    return `<option value=${option.value} ${option.selected ? "selected" : ""}>${option.displayName}</option>`
+                }).join('')}
+            </select>
+        </div>
+        <div class="col-md-8"></div>
+        <div class="col-md-2">
+            <select class="select" id="velocityLayersSelect">
+                ${breakdownOptions.map(function (option) {
+                     return `<option value=${option.value} ${option.selected ? "selected" : ""}>${option.displayName}</option>`
+                    }).join('')}
+            </select>
+</div>
+    </div>
+    <div class="row">
+        <div class="col-md-12" id="vis-velocity-chart"></div>
+    </div>
+</div>
+</div>
+`;
