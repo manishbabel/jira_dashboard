@@ -1,0 +1,104 @@
+/*references */
+/* Hotspots code inspired and adapted from https://codepen.io/jack-taylor89/pen/JeajeL?editors=1100 */
+body { margin: 0 !important; padding: 0 !important; width: 100% !important; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol' !important; }
+.img-container { position: relative; overflow: hidden; height: 45vw; background-image:url("../img/scrum-framework.jpg"); background-size: cover; }
+input { display: none; }
+p { margin: 0; }
+.button { color: white; font-weight: bold; font-size: 20px; background-color: #4e73df; display: block; border-radius: 100%; cursor: pointer; animation: fadein .5s; animation: pulse 1.5s infinite; }
+.help { color: white; font-weight: bold; font-size: 20px; background-color: #4e73df; display: block; padding: 5px 10px; font-size: x-small; border-radius: 100%; cursor: pointer; animation: fadein .5s; animation: pulse 1.5s infinite; }
+.content { background: white; padding: 1rem 1rem 2rem 1rem; text-align: center; display: none; margin: 10%; border-radius: 8px; box-shadow: 0 4px 2px -2px rgba(211,47,47,0); }
+.cross { font-weight: bold; }
+
+#b-product-backlog,
+#b-sprint-backlog,
+#b-sprint-planning,
+#b-product-increment{
+    padding-top: 50px;
+    padding-bottom: 50px;
+    padding-left: 21px;
+    padding-right: 21px;
+    position: absolute;
+    top: 75%;
+}
+#b-product-backlog { left: 1%;}
+#b-sprint-planning { left: 17%;}
+#b-sprint-backlog { left: 30%;}
+#b-product-increment { left: 79%;}
+
+
+#b-po { top: 55%; left: 3%; }
+#b-sm { top: 15%; left: 51%; }
+#b-tm { top: 55%; left: 23%; }
+
+#b-daily-scrum { top: 30%; left: 83%;}
+
+#b-retrospective {
+    top: 90%;
+    left: 91%;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+#b-sprint { top: 44%; left: 46%;
+            padding-top: 76px; padding-bottom: 76px;
+            padding-left: 30px; padding-right: 30px;
+}
+
+#b-showcase { top: 55%; left: 93%; }
+#b-retrospective-desc { top: 85%; left: 96%; }
+
+#b-product-increment-desc { top: 72%; left: 80%; }
+#b-product-backlog-desc { top: 72%; left: 1%; }
+#b-sprint-backlog-desc{ top: 72%; left: 31%; }
+#b-sprint-planning-desc{ top: 72%; left: 18%; }
+#b-sprint-desc{ top: 40%; left: 55%; }
+
+#b-po,
+#b-sm,
+#b-tm,
+#b-daily-scrum,
+#b-sprint,
+#b-sprint-desc,
+#b-showcase,
+#b-product-increment-desc,
+#b-product-backlog-desc,
+#b-sprint-backlog-desc,
+#b-sprint-planning-desc,
+#b-retrospective,
+#b-retrospective-desc { position: absolute; }
+
+#input-product-backlog-desc:checked ~ #content-product-backlog-desc,
+#input-sprint-backlog-desc:checked ~ #content-sprint-backlog-desc,
+#input-product-increment-desc:checked ~ #content-product-increment-desc,
+#input-po:checked ~ #content-po,
+#input-sm:checked ~ #content-sm,
+#input-tm:checked ~ #content-tm,
+#input-retrospective-desc:checked ~ #content-retrospective-desc,
+#input-daily-scrum:checked ~ #content-daily-scrum,
+#input-showcase:checked ~ #content-showcase,
+#input-sprint-desc:checked ~ #content-sprint-desc,
+#input-sprint-planning-desc:checked ~ #content-sprint-planning-desc
+{ display: block !important; animation: fadein .5s; }
+
+.input-help:checked ~ label .button,
+.input-help:checked ~ label .help { display: none !important; animation: fadeout .5s; }
+
+.button:hover,
+.help:hover { color: #4e73df; background: white; }
+
+.cta { display: inline-block; background: #4e73df; color: white; padding: 12px 24px; margin-top: 18px; border-radius: 24px; text-decoration: none; transition: all .3s ease; }
+.cta:hover { text-decoration: underline !important; box-shadow: 0 0 0 6px rgba(211, 46, 46, 0.4); }
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+@keyframes fadeout {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+@keyframes pulse {
+    from { box-shadow: 0 0 0 0px rgba(78, 115, 223); }
+    to { box-shadow: 0 0 0 5px rgba(0, 0, 0, 0); }
+}
+/******* End Hotspots ******************/
