@@ -49,86 +49,79 @@ let sprintField = "customfield_10401";
 let storyPointField = "customfield_10003";
 let parseDate = d3.timeParse("%Y-%m-%dT%H:%M:%S.%L%Z");
 
+class IssueStore {
+    constructor(_data) {
 
-IssueStore = function(_data){
-    if(_data.issues == null ) {
-        console.error("Expected issues object");
-        return;
-    }
-    this.issues = _data.issues;
-
-    this.initStore();
-};
-
-//initialize the IssueStore object
-IssueStore.prototype.initStore = function() {
-    var self = this;
-
-    var allSprints = [];
-    var sprintMap = [];
-
-    self.issues.forEach(function (issue) {
-        var sprints = issue.fields[sprintField];
-        if(sprints != null) {
-            sprints.forEach(function (sprint, index) {
-                var deserializedSprint = deserializeSprint(sprint);
-                //update the sprint to be the deserianlized version of the sprint
-                issue.fields[sprintField][index] = deserializedSprint;
-
-                //If this is the first time seeing a particular sprint
-                if (! sprintMap[deserializedSprint.id]) {
-                    sprintMap[deserializedSprint.id] = [];
-                    allSprints.push(deserializedSprint);
-                }
-
-                //add this issue to the sprint
-                sprintMap[deserializedSprint.id].push(issue);
-            });
+        if (_data.issues == null) {
+            console.error("Expected issues object");
+            return;
         }
-        //deserialize dates
-        deserializeIssueDates(issue);
-        //setup issue helper functions
-        setIssueHelperProperties(issue);
-    });
+        this.issues = _data.issues;
 
-    self.sprints = allSprints;
-    self.sprintMap = sprintMap;
+        this.initStore();
+    }
+    //initialize the IssueStore object
+    initStore () {
+        const self = this;
 
-    //setup sprint helper functions
-    allSprints.forEach(function (sprint) {
-        setSprintHelperProperies(sprint, self.getIssuesForSprint(sprint));
-    });
-};
+        const allSprints = [];
+        const sprintMap = [];
 
-IssueStore.prototype.getSprints = function () {
-    var self = this;
-    return self.sprints;
-};
+        self.issues.forEach(function (issue) {
+            var sprints = issue.fields[sprintField];
+            if(sprints != null) {
+                sprints.forEach(function (sprint, index) {
+                    var deserializedSprint = deserializeSprint(sprint);
+                    //update the sprint to be the deserianlized version of the sprint
+                    issue.fields[sprintField][index] = deserializedSprint;
 
-IssueStore.prototype.getIssues = function () {
-    var self = this;
-    return self.issues;
-}
+                    //If this is the first time seeing a particular sprint
+                    if (! sprintMap[deserializedSprint.id]) {
+                        sprintMap[deserializedSprint.id] = [];
+                        allSprints.push(deserializedSprint);
+                    }
 
-IssueStore.prototype.getIssuesForSprint = function (sprint) {
-    var self = this;
+                    //add this issue to the sprint
+                    sprintMap[deserializedSprint.id].push(issue);
+                });
+            }
+            //deserialize dates
+            deserializeIssueDates(issue);
+            //setup issue helper functions
+            setIssueHelperProperties(issue);
+        });
 
-    //look up by passed ID or passed object
-    return sprint.id == null ? self.sprintMap[sprint] : self.sprintMap[sprint.id];
+        self.sprints = allSprints;
+        self.sprintMap = sprintMap;
+
+        //setup sprint helper functions
+        allSprints.forEach(function (sprint) {
+            setSprintHelperProperties(sprint, self.getIssuesForSprint(sprint));
+        });
+    };
+
+    getIssuesForSprint (sprint) {
+        //look up by passed ID or passed object
+        return sprint.id == null ? this.sprintMap[sprint] : this.sprintMap[sprint.id];
+    }
+
+    getSprints() {return this.sprints;}
+    getIssues(){return this.issues;}
+
 }
 
 function deserializeSprint(s) {
     if (s == null) return null;
 
-    var id= s.match(/id=(\d+)/);
-    var rapidViewId= s.match(/rapidViewId=(\d+)/);
-    var state = s.match(/state=(\w+)/);
-    var name = s.match(/name=(.+),startDate/);
-    var startDate = s.match(/startDate=(.+),endDate/);
-    var endDate = s.match(/endDate=(.+),completeDate/);
-    var completeDate = s.match(/completeDate=(.+),sequence/);
-    var sequence = s.match(/sequence=(\d+)/);
-    var goal = s.match(/goal=(.+)]/);
+    const id= s.match(/id=(\d+)/);
+    const rapidViewId= s.match(/rapidViewId=(\d+)/);
+    const state = s.match(/state=(\w+)/);
+    const name = s.match(/name=(.+),startDate/);
+    const startDate = s.match(/startDate=(.+),endDate/);
+    const endDate = s.match(/endDate=(.+),completeDate/);
+    const completeDate = s.match(/completeDate=(.+),sequence/);
+    const sequence = s.match(/sequence=(\d+)/);
+    const goal = s.match(/goal=(.+)]/);
 
     return { id:id && id[1] ? +id[1] : null,
         rapidViewId: rapidViewId && rapidViewId[1] ? +rapidViewId[1] : null,
@@ -151,7 +144,7 @@ function deserializeIssueDates(issue) {
 		history.created = parseDate(history.created);
 	});
 	//comments
-	issue.fields.comment.comments.forEach(function(comment) {
+	issue.fields.comment.comments.forEach((comment) => {
 		comment.created = parseDate(comment.created);
 		comment.updated = parseDate(comment.updated);
 		
@@ -164,19 +157,24 @@ function setIssueHelperProperties(issue) {
     issue.isResolved = issue.fields["resolution"] != null;
 }
 
-function setSprintHelperProperies(sprint, sprintIssues) {
-    var self = this;
-    var storyPoints = 0;
-    var completedStoryPoints = 0;
+function setSprintHelperProperties(sprint, sprintIssues) {
+    let storyPoints = 0;
+    let completedStoryPoints = 0;
+    let blockers = 0;
     sprintIssues.forEach(function (issue) {
         storyPoints += issue.storyPoints;
         //we want to use completedDate if available
-        var completedDate = sprint.completeDate != null ? sprint.completeDate : sprint.endDate;
+        const completedDate = sprint.completeDate != null ? sprint.completeDate : sprint.endDate;
         if(issue.fields.resolutiondate != null && issue.fields.resolutiondate <= completedDate) {
             completedStoryPoints += issue.storyPoints;
+        }
+
+        if (issue.fields.status.name == "Blocked") {
+            blockers += 1;
         }
     });
 
     sprint.totalStoryPoints = storyPoints;
     sprint.completedStoryPoints = completedStoryPoints;
+    sprint.totalBlockers = blockers;
 }
