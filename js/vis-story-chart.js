@@ -25,7 +25,7 @@ StoryChart.prototype.initVis = function (){
 
     vis.margin = { top: 20, right: 20, bottom: 200, left: 60 };
 
-    vis.width = 600 - vis.margin.left - vis.margin.right,
+    vis.width = 400 - vis.margin.left - vis.margin.right,
         vis.height = 400 - vis.margin.top - vis.margin.bottom;
 
     // SVG drawing area

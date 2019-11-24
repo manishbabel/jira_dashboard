@@ -20,8 +20,8 @@ class ScopeChart {
         var vis = this;
         const diameter = 600;
         vis.margin = { top: 60, right: 60, bottom: 60, left: 60 };
-        vis.width = 500;
-        vis.height = 600;
+        vis.width = 600;
+        vis.height = 400;
         vis.svgElem = d3.select("#" + vis.parentElement).append("svg")
             .attr("width",  vis.width  )
             .attr("height",  vis.height  );
@@ -30,10 +30,10 @@ class ScopeChart {
         vis.radiusScale = d3.scaleSqrt().domain([0,11]).range([20,60]);
         vis.forceXSPlit = d3.forceX(function(d){
             if(d.isResolved == true){
-                return 100
+                return 150
             }
             else{
-                return 700
+                return 400
             }
 
         }).strength(0.05)
