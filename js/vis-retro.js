@@ -13,6 +13,7 @@ class RetroChart {
     get svg(){return this._svg;}
 }
 
+//TODO Kevin cut and paste your latest from here down.  You can please leave RetroChart.
 /*
  * LineChart - Object constructor function
  * @param _parentElement 	-- the HTML element in which to draw the visualization
