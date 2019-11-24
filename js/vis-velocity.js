@@ -1,20 +1,21 @@
 //TODO: DAVID Merge Velocity Chart into VelocityChart2 structure
 //TODO:  Use the svg object passed from VelocityChart2 instead of creating another
 
-//references: https://wesbos.com/template-strings-html/
+
 
 class VelocityChart2 {
     constructor(data, svg) {
         this._data = data;
         this._svg = svg;
-        this._velocityChart = new VelocityChart(this.svg.container.substr(1), this.data);
+        this._velocityChart =
+            new VelocityChart(this.svg.container.substr(1), this.data);
     }
 
     get data() {return this._data;}
-
     get svg() {return this._svg;}
 }
 //references: https://codepen.io/ashokgowtham/pen/LpnHe lab6 https://www.d3-graph-gallery.com/graph/line_cursor.html
+//references: https://wesbos.com/template-strings-html/
 
 let defaultLayer = "storyPoints";
 
@@ -27,8 +28,7 @@ VelocityChart = function(_parentElement, _issueStore){
 }
 
 VelocityChart.prototype.initVis = function(){
-    var vis = this;
-    var processingData = true;
+    const vis = this;
 
     //inject template html
     document.getElementById(vis.parentElement).innerHTML = velocityHtml;
@@ -45,8 +45,8 @@ VelocityChart.prototype.initVis = function(){
     //TODO: filter by selected time band
     vis.displayData = vis.displayData.slice(0, Math.min(vis.displayData.length, 10));
 
-    var priorities = [];
-    var priorityIds = [];
+    const priorities = [];
+    const priorityIds = [];
 
     //pre-process data
     vis.displayData.forEach(function (sprint) {
@@ -96,9 +96,7 @@ VelocityChart.prototype.initVis = function(){
     vis.xRange = splitRange([0, vis.width], vis.displayData.length);
     vis.x = d3.scaleOrdinal()
         .range(vis.xRange)
-        .domain(vis.displayData.map(function (d) {
-            return d.name;
-        }));
+        .domain(vis.displayData.map(d => d.name));
 
     vis.y = d3.scaleLinear()
         .range([vis.height, 0]);
@@ -128,13 +126,9 @@ VelocityChart.prototype.initVis = function(){
     // Stacked area layout
     vis.area = d3.area()
         .curve(d3.curveLinear)
-        .x(function(d) {
-            return vis.x(d.data.name); })
-        .y0(function(d) {
-            return vis.y(d[0]); })
-        .y1(function(d) {
-            return vis.y(d[1]); });
-
+        .x(d => vis.x(d.data.name))
+        .y0(d => vis.y(d[0]))
+        .y1(d => vis.y(d[1]));
 
     // TO-DO: Tooltip placeholder
     vis.svg.append("text")
@@ -179,16 +173,11 @@ VelocityChart.prototype.wrangleData = function(){
  */
 
 VelocityChart.prototype.updateVis = function(){
-    var vis = this;
+    const vis = this;
 
     // Update domain
     // Get the maximum of the multi-dimensional array or in other words, get the highest peak of the uppermost layer
-    vis.y.domain([0, d3.max(vis.stackedData, function(d) {
-        return d3.max(d, function(e) {
-            return e[1];
-        });
-    })
-    ]);
+    vis.y.domain([0, d3.max(vis.stackedData, d => d3.max(d, e => e[1]))]);
 
     const dataCategories = vis.colorScale.domain();
 
@@ -207,7 +196,7 @@ VelocityChart.prototype.updateVis = function(){
         .attr("d", function(d) {
             return vis.area(d);
 
-            // TO-DO: Update tooltip text
+            //TODO: Update tooltip text
         });
     /*.on("mouseover", function(d,i) {
         vis.svg.select("#layer-name").text(d.key);
@@ -216,20 +205,20 @@ VelocityChart.prototype.updateVis = function(){
      */
 
     categories.exit().remove();
-    var dataPoints = {};
+    const dataPoints = {};
     //draw points
-    var points = vis.svg.selectAll('.dots')
+    const points = vis.svg.selectAll('.dots')
         .data(vis.stackedData)
         .enter()
         .append("g")
         .attr("class", "dots")
-        .attr("d", function(d) { return vis.area(d.values); })
+        .attr("d", d => vis.area(d.values))
         .attr("clip-path", "url(#clip)");
 
     points.selectAll('.dot')
-        .data(function(d, index){
+        .data(function(d){
             const a = [];
-            d.forEach(function(point,i){
+            d.forEach(function(point,index){
                 a.push({'index': index, 'point': point});
             });
             return a;
@@ -238,11 +227,9 @@ VelocityChart.prototype.updateVis = function(){
         .append('circle')
         .attr('class','dot')
         .attr("r", 1.5)
-        .attr('fill', function(d,i){
-            return '#000000';
-        })
+        .attr('fill','#000000')
         .attr("transform", function(d) {
-            var key = vis.x(d.point.data.name);
+            const key = vis.x(d.point.data.name);
             dataPoints[key] = dataPoints[key] || [];
             dataPoints[key].push(d);
             return "translate(" + vis.x(d.point.data.name) + "," + vis.y(d.point[1]) + ")"; }
@@ -251,7 +238,7 @@ VelocityChart.prototype.updateVis = function(){
     //goal: something like http://nvd3.org/examples/stackedArea.html
 
     // Create the line that travels along the curve of chart
-    var vertline = vis.svg
+    const vertline = vis.svg
         .append('g')
         .append('line')
         .style("fill", "none")
@@ -260,7 +247,7 @@ VelocityChart.prototype.updateVis = function(){
         .style("opacity", 0);
 
     // Create the text that travels along the curve of chart
-    var lineText = vis.svg
+    const lineText = vis.svg
         .append('g')
         .append('text')
         .style("opacity", 0)
@@ -280,7 +267,7 @@ VelocityChart.prototype.updateVis = function(){
         })
         .on('mousemove', function() {
             // recover coordinate we need
-            var i = findClosestPoint(vis.xRange,d3.mouse(this)[0]);
+            const i = findClosestPoint(vis.xRange,d3.mouse(this)[0]);
             vertline
                 .attr("x1", vis.x(vis.stackedData[0][i].data.name))
                 .attr("y1", vis.y(vis.stackedData[vis.stackedData.length -1][i][1]))
@@ -312,7 +299,7 @@ VelocityChart.prototype.updateVis = function(){
     vis.svg.select(".y-axis").call(vis.yAxis);
 
     //Legends for the layers
-    var lineLegend = vis.svg.selectAll('g.layerLegend')
+    const lineLegend = vis.svg.selectAll('g.layerLegend')
         .data(vis.colorScale.domain())
         .enter()
         .append('g').attr('class', 'layerLegend');
@@ -335,24 +322,24 @@ VelocityChart.prototype.updateVis = function(){
         })
         .attr("dy", "0.8em") //place text one line *below* the x,y point
         .text(function(d,i) {
-            var index = vis.priorities.length - i -1;
+            const index = vis.priorities.length - i -1;
             return d;
         });
-}
+};
 
 
 //Function that returns discrete values of a range given start, end, and # of values
 function splitRange(range, n) {
     if(n <=2 ) return range;
-    var increment = (range[1] - range[0])/(n-1);
+    const increment = (range[1] - range[0])/(n-1);
     return d3.range(0,n).map(function (d) {
         return range[0] + d*increment;
     });
 }
 
 function findClosestPoint(range, value) {
-    var result;
-    var min = 10000000;
+    let result;
+    let min = 10000000;
 
     range.forEach(function (d, i) {
         if(Math.abs(d - value) < min) {

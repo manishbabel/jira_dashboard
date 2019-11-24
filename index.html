@@ -15,7 +15,7 @@
   <link href="css/all.min.css" rel="stylesheet" type="text/css">
 <!--  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">-->
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-
+  <link href="css/reset.css" rel="stylesheet">
   <!-- Custom styles for this template-->
   <link href="css/jira-dashboard.min.css" rel="stylesheet">
   <link href="css/hotspots.css" rel="stylesheet">
@@ -28,52 +28,6 @@
   <!-- Page Wrapper -->
   <div id="wrapper">
 
-    <!-- Sidebar -->
-    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
-    <!-- Sidebar Brand -->
-          <span class="sidebar-brand d-flex align-items-center justify-content-center">
-            <span class="sidebar-brand-icon rotate-n-15">
-              <i class="fas fa-glasses"></i>
-            </span>
-            <span class="sidebar-brand-text mx-3">Scrum Visualizer </span>
-          </span>
-
-      <!-- Divider -->
-      <hr class="sidebar-divider my-0">
-
-      <!-- Nav Item - Tools Collapse Menu -->
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTools" aria-expanded="true" aria-controls="collapseTools">
-          <i class="fas fa-fw fa-wrench"></i>
-          <span>Utilities</span>
-        </a>
-        <div id="collapseTools" class="collapse"  data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Tools:</h6>
-            <a class="collapse-item" href="https://cs171-jira.atlassian.net/secure/RapidBoard.jspa?rapidView=1&projectKey=JV&selectedIssue=JV-23">Jira</a>
-            <a class="collapse-item" href="https://secure.teamretro.com/demo/retrospectives/scrum-retrospective">Retrospective</a>
-          </div>
-        </div>
-      </li>
-
-      <!-- Nav Item - Charts -->
-      <li class="nav-item">
-        <a class="nav-link" href="charts.html">
-          <i class="fas fa-fw fa-chart-area"></i>
-          <span>Charts</span></a>
-      </li>
-
-      <!-- Nav Item - Tables -->
-      <li class="nav-item">
-        <a class="nav-link" href="tables.html">
-          <i class="fas fa-fw fa-table"></i>
-          <span>Tables</span></a>
-      </li>
-
-    </ul>
-    <!-- End of Sidebar -->
-
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
 
@@ -82,11 +36,11 @@
 
         <header id="overview">
           <h2 style="color:darkgreen">
-            Learning Agile Scrum is easy and makes us happy
+            Agile Scrum is easy and makes us happy
             <i class="fas fa-smile-beam fa-2x" ></i>
           </h2>
           <h5>
-            We learn through the <a href="https://www.visual-paradigm.com/tutorials/agile-tutorial/">Scrum process diagram</a>
+            We learn Scrum through the intuitive universal <a href="https://www.visual-paradigm.com/tutorials/agile-tutorial/">Scrum process diagram</a>
             which has <a href="https://thedigitalprojectmanager.com/scrum-ceremonies-made-simple/"> ceremonies</a>,
             <a href="https://www.visual-paradigm.com/scrum/what-are-the-three-scrum-roles/"> roles</a>, and
             <a href="https://www.tutorialspoint.com/scrum/scrum_artifacts.htm"> artifacts</a>.
@@ -95,31 +49,30 @@
           <br>
 
           <h2 style="color:darkred">
-            Practicing Scrum with the flawed Jira tool makes us sad
+            Practicing Scrum with Jira is hard and makes us sad
             <i class="fas fa-sad-tear fa-2x"></i>
           </h2>
           <h5>
             Jira causes <a href="https://medium.com/@jiajingguo/how-is-data-visualization-influenced-by-our-cognitive-processes-281d8486abfe"> cognitive overload</a>
-            because it does not leverage the universal Scrum process diagram which
-            anchors our common understanding of how we work.
-            Moreover, Jira only partially models the Scrum process.
-            We must mentally map the missing diagram to Jira and work-around tools for
-            the retrospective ceremony and the estimation poker ceremony.
-            The daily Scrum ceremony is universally run with a text only Jira board.
-            All Jira charts are segregated, static, and independent.
-            Jira lacks integrated interactive visualization.
+            because it is incomplete, ineffective, and unvisual.  Jira is incomplete because it <i>partially</i> models the Scrum process,
+            and doesn't support Scrum ceremonies such as the retrospective, showcase, and estimation poker.
+            Jira is ineffective because it focuses us on the tool and not the people and what they
+            are doing.  Jira doesn't ground us in the universal Scrum diagram so we must mentally map
+            the missing diagram to Jira, filling in the missing ceremonies. Jira is unvisual,
+            relying relying primarily on text.
 
           </h5>
           <br>
 
           <h2 style="color:darkgreen">
-            The Scrum Visualizer makes us happy again
+            Scrum Visualizer makes us happy again
             <i id="happy-again" class="fas fa-smile-wink fa-2x"></i>
           </h2>
 
           <h5>
-            We visualize the mapping from scrum diagram to Jira and the retrospective and the roles.
-            No more filling in the gaps and imagining Scrum.   Start living scrum joy with the Scrum Visualizer."
+            Scrum Visualizer models the the full scrum process, starting with the universal
+            diagram and encourages to explore with interactive visualizations. Live
+            frictionless Agile with Scrum Visualizer.
           </h5>
 
         </header>
@@ -133,20 +86,19 @@
             <h1 class="h3 mb-0 text-gray-800">
               Scrum Visualizer
             </h1>
-            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-glasses fa-sm text-white-50"></i> Visualize Sprint Outcome</a>
           </div>
 
           <!-- Content Row -->
           <div class="row">
 
             <!-- Goal Card -->
-            <div class="col-xl-3 col-md-6 mb-4">
+            <div class="col-xl-3 col-md-3 mb-4">
               <div class="card border-left-primary shadow h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Sprint Target Goal</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">Deliver XYZ product feature...</div>
+                      <div id="sprint-goal" class="h5 mb-0 font-weight-bold text-gray-800"></div>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-bullseye fa-2x text-gray-300"></i>
@@ -157,13 +109,13 @@
             </div>
 
             <!-- Velocity Card -->
-            <div class="col-xl-3 col-md-6 mb-4">
+            <div class="col-xl-3 col-md-3 mb-4">
               <div class="card border-left-success shadow h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Velocity</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">94 story points</div>
+                      <div id="scrum-velocity" class="h5 mb-0 font-weight-bold text-gray-800">story points</div>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-tachometer-alt fa-2x text-gray-300"></i>
@@ -174,7 +126,7 @@
             </div>
 
             <!-- Burn Down Card -->
-            <div class="col-xl-3 col-md-6 mb-4">
+            <div class="col-xl-3 col-md-3 mb-4">
               <div class="card border-left-success shadow h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
@@ -182,11 +134,11 @@
                       <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Burn Down</div>
                       <div class="row no-gutters align-items-center">
                         <div class="col-auto">
-                          <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
+                          <div id="scrum-burndown-pct" class="h5 mb-0 mr-3 font-weight-bold text-gray-800"></div>
                         </div>
                         <div class="col">
                           <div class="progress progress-sm mr-2">
-                            <div class="progress-bar bg-success" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div id="burn-down-progress" class="progress-bar bg-success" role="progressbar" style="width: 0%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
                           </div>
                         </div>
                       </div>
@@ -200,13 +152,13 @@
             </div>
 
             <!-- Blockers Card -->
-            <div class="col-xl-3 col-md-6 mb-4">
+            <div class="col-xl-3 col-md-3 mb-4">
               <div class="card border-left-danger shadow h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Blockers</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                      <div id="total-blockers" class="h5 mb-0 font-weight-bold text-gray-800"></div>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-hand-paper fa-2x text-gray-300"></i>
@@ -217,12 +169,12 @@
             </div>
           </div>
 
-          <!-- Content Row -->
+            <!-- Content Row -->
 
           <div class="row">
 
             <!-- Scrum Process -->
-            <div class="col-xl-12 col-lg-7">
+            <div class="col-xl-12 col-lg-12">
               <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -244,59 +196,66 @@
                     <!--Scrum icon by Vorillaz https://iconscout.com/contributors/vorillaz https://iconscout.com/icon/scrum-2 -->
                     <!--Scrum Framework poster https://scrumorg-website-prod.s3.amazonaws.com/drupal/2016-06/ScrumFramework_17x11.pdf -->
                     <!--<img src="img/scrum-framework.jpg" width = "100%">-->
-
+                  <div>
+                    <button id = "forecast" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-glasses fa-sm text-white-50"></i> Watch Sprint Forecast</button>
+                    <button id = "replay" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-glasses fa-sm text-white-50"></i> Watch Sprint Replay</button>
+                  </div>
                   <div class="img-container">
                     <input type="checkbox" class="input" id="input-product-backlog" name="inputs">
-                    <input type="checkbox" class="input" id="input-product-backlog-desc" name="inputs">
+                    <input type="checkbox" class="input-help" id="input-product-backlog-desc" name="inputs">
                     <input type="checkbox" class="input" id="input-sprint-backlog" name="inputs">
-                    <input type="checkbox" class="input" id="input-sprint-backlog-desc" name="inputs">
+                    <input type="checkbox" class="input-help" id="input-sprint-backlog-desc" name="inputs">
                     <input type="checkbox" class="input" id="input-product-increment" name="inputs">
-                    <input type="checkbox" class="input" id="input-product-increment-desc" name="inputs">
-                    <input type="checkbox" class="input" id="input-po" name="inputs">
-                    <input type="checkbox" class="input" id="input-sm" name="inputs">
-                    <input type="checkbox" class="input" id="input-tm" name="inputs">
-                    <input type="checkbox" class="input" id="input-daily-scrum" name="inputs">
-                    <input type="checkbox" class="input" id="input-showcase" name="inputs">
+                    <input type="checkbox" class="input-help" id="input-product-increment-desc" name="inputs">
+                    <input type="checkbox" class="input-help" id="input-po" name="inputs">
+                    <input type="checkbox" class="input-help" id="input-sm" name="inputs">
+                    <input type="checkbox" class="input-help" id="input-tm" name="inputs">
+                    <input type="checkbox" class="input-help" id="input-daily-scrum" name="inputs">
+                    <input type="checkbox" class="input-help" id="input-showcase" name="inputs">
+                    <input type="checkbox" class="input-help" id="input-retrospective-desc" name="inputs">
                     <input type="checkbox" class="input" id="input-retrospective" name="inputs">
                     <input type="checkbox" class="input" id="input-sprint" name="inputs">
-                    <input type="checkbox" class="input" id="input-sprint-desc" name="inputs">
+                    <input type="checkbox" class="input-help" id="input-sprint-desc" name="inputs">
                     <input type="checkbox" class="input" id="input-sprint-planning" name="inputs">
-                    <input type="checkbox" class="input" id="input-sprint-planning-desc" name="inputs">
+                    <input type="checkbox" class="input-help" id="input-sprint-planning-desc" name="inputs">
                     <label for="input-product-backlog">
-                      <span id="b-product-backlog" class="button">99 Stories</span>
+                      <span id="b-product-backlog" class="button"</span>
                     </label>
                     <label for="input-product-backlog-desc">
-                      <span id="b-product-backlog-desc" class="button">+</span>
+                      <span id="b-product-backlog-desc" class="help">?</span>
                     </label>
                     <label for="input-sprint-backlog">
-                      <span id="b-sprint-backlog" class="button">94 Points</span>
+                      <span id="b-sprint-backlog" class="button"></span>
                     </label>
                     <label for="input-sprint-backlog-desc">
-                      <span id="b-sprint-backlog-desc" class="button">+</span>
+                      <span id="b-sprint-backlog-desc" class="help">?</span>
                     </label>
                     <label for="input-product-increment">
-                      <span id="b-product-increment" class="button">37 points</span>
+                      <span id="b-product-increment" class="button"></span>
                     </label>
                     <label for="input-product-increment-desc">
-                      <span id="b-product-increment-desc" class="button">+</span>
+                      <span id="b-product-increment-desc" class="help">?</span>
                     </label>
                     <label for="input-po">
-                      <span id="b-po" class="button">+</span>
+                      <span id="b-po" class="help">?</span>
                     </label>
                     <label for="input-sm">
-                      <span id="b-sm" class="button">+</span>
+                      <span id="b-sm" class="help">?</span>
                     </label>
                     <label for="input-tm">
-                      <span id="b-tm" class="button">+</span>
+                      <span id="b-tm" class="help">?</span>
                     </label>
                     <label for="input-daily-scrum">
-                      <span id="b-daily-scrum" class="button">+</span>
+                      <span id="b-daily-scrum" class="help">?</span>
                     </label>
                     <label for="input-showcase">
-                      <span id="b-showcase" class="button">+</span>
+                      <span id="b-showcase" class="help">?</span>
+                    </label>
+                    <label for="input-retrospective-desc">
+                      <span id="b-retrospective-desc" class="help">?</span>
                     </label>
                     <label for="input-retrospective">
-                      <span id="b-retrospective" class="button">+</span>
+                      <span id="b-retrospective" class="button fas fa-1x">&nbsp&nbsp</span>
                     </label>
                     <label for="input-sprint">
                       <span id="b-sprint" class="button" style="text-align: center">
@@ -305,33 +264,33 @@
                       </span>
                     </label>
                     <label for="input-sprint-desc">
-                      <span id="b-sprint-desc" class="button">+</span>
+                      <span id="b-sprint-desc" class="help">?</span>
                     </label>
                     <label for="input-sprint-planning">
                       <span id="b-sprint-planning" class="button">14 Alerts</span>
                     </label>
                     <label for="input-sprint-planning-desc">
-                      <span id="b-sprint-planning-desc" class="button">+</span>
+                      <span id="b-sprint-planning-desc" class="help">?</span>
                     </label>
-                    <div id="content-product-backlog" class="content">
+                    <div id="content-product-backlog-desc" class="content">
                       <div style="text-align: right;">
-                        <label for="input-product-backlog" class="cross">X</label>
+                        <label for="input-product-backlog-desc" class="cross">X</label>
                       </div>
                       <h1>Product Backlog</h1>
                       <p class="bodyCopy"></p>
                       <a href="#" class="cta">Find out more</a>
                     </div>
-                    <div id="content-sprint-backlog" class="content">
+                    <div id="content-sprint-backlog-desc" class="content">
                       <div style="text-align: right;">
-                        <label for="input-sprint-backlog" class="cross">X</label>
+                        <label for="input-sprint-backlog-desc" class="cross">X</label>
                       </div>
                       <h1>Sprint Backlog</h1>
                       <p class="bodyCopy"></p>
                       <a href="#" class="cta">Find out more</a>
                     </div>
-                    <div id="content-product-increment" class="content">
+                    <div id="content-product-increment-desc" class="content">
                       <div style="text-align: right;">
-                        <label for="input-product-increment" class="cross">X</label>
+                        <label for="input-product-increment-desc" class="cross">X</label>
                       </div>
                       <h1>Product Increment</h1>
                       <p class="bodyCopy"></p>
@@ -377,19 +336,11 @@
                       <p class="bodyCopy"></p>
                       <a href="#" class="cta">Find out more</a>
                     </div>
-                    <div id="content-retrospective" class="content">
+                    <div id="content-retrospective-desc" class="content">
                       <div style="text-align: right;">
-                        <label for="input-retrospective" class="cross">X</label>
+                        <label for="input-retrospective-desc" class="cross">X</label>
                       </div>
                       <h1>Retrospective</h1>
-                      <p class="bodyCopy"></p>
-                      <a href="#" class="cta">Find out more</a>
-                    </div>
-                    <div id="content-sprint" class="content">
-                      <div style="text-align: right;">
-                        <label for="input-sprint" class="cross">X</label>
-                      </div>
-                      <h1>Sprint</h1>
                       <p class="bodyCopy"></p>
                       <a href="#" class="cta">Find out more</a>
                     </div>
@@ -398,14 +349,6 @@
                         <label for="input-sprint-desc" class="cross">X</label>
                       </div>
                       <h1>Sprint</h1>
-                      <p class="bodyCopy"></p>
-                      <a href="#" class="cta">Find out more</a>
-                    </div>
-                    <div id="content-sprint-planning" class="content">
-                      <div style="text-align: right;">
-                        <label for="input-sprint-planning" class="cross">X</label>
-                      </div>
-                      <h1>Sprint Planning</h1>
                       <p class="bodyCopy"></p>
                       <a href="#" class="cta">Find out more</a>
                     </div>
@@ -426,13 +369,12 @@
           <!-- Content Row -->
 
           <div class="row">
-
-            <!-- Scrum Process -->
-            <div class="col-xl-12 col-lg-7">
+            <!-- Visualizations -->
+            <div class="col-xl-12 col-lg-12">
               <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">Explore Sprint 42</h6>
+                  <h6 class="m-0 font-weight-bold text-primary">Exploring Sprint 42</h6>
                   <div class="dropdown no-arrow">
                     <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLinkScrumProcess2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
@@ -449,16 +391,21 @@
                   <div id="burn-down-chart" class="viz">
                     Burn Down Chart
                   </div>
-                  <div id="scope-chart" class="viz">
-                      <button id="inProgress">InProgress</button>
-                      <button id="all">All</button>
-                  </div>
-                  <div id="story-chart" class="viz">
-                    story chart
-                  </div>
-                  <div id="velocity-chart" class="viz">
-                  </div>
-                  <div id="retrospective-chart" class="viz">
+                  <div id="employee-chart" class="viz"></div>
+                  <div id="velocity-chart" class="viz"></div>
+                  <div id="retrospective-chart" class="viz"></div>
+                  <div class="container-fluid">
+                    <div class="row">
+                      <div class="col-xl-6 col-lg-6">
+                        <div id="scope-chart" class="viz">
+                          <button id="inProgress">InProgress</button>
+                          <button id="all">All</button>
+                        </div>
+                      </div>
+                      <div class="col-xl-6 col-lg-6">
+                        <div id="story-chart" class="viz"></div>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <!-- End Card Body -->
@@ -519,6 +466,7 @@
   <script src="js/vis-story-chart.js"></script>
   <script src="js/vis-velocity.js"></script>
   <script src="js/vis-retro.js"></script>
+  <script src="js/employee-chart.js"></script>
   <script src="js/vis-burndown.js"></script>
 
   <!-- Main script -->

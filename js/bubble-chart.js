@@ -1,26 +1,25 @@
 
 BubbleChart = function(_parentElement, _data, _eventHandler){
-    this.parentElement = _parentElement
-    this.data = _data
-    this.displayData = []
-    this.eventHandler =_eventHandler
-    this.initVis()
+    this.parentElement = _parentElement;
+    this.data = _data;
+    this.displayData = [];
+    this.eventHandler =_eventHandler;
+    this.initVis();
 }
 
 BubbleChart.prototype.initVis = function (){
-    var vis = this
+    var vis = this;
     const diameter = 600;
     vis.margin = { top: 60, right: 60, bottom: 60, left: 60 };
-    vis.width = 700
-    vis.height = 600
+    vis.width = 500;
+    vis.height = 600;
      vis.svg = d3.select("#" + vis.parentElement).append("svg")
         .attr("width",  vis.width  )
-        .attr("height",  vis.height  )
-        // .append("g").attr("transform", "translate(" + 0   + "," + ( vis.width  ) + ")");
-    vis.defs = vis.svg.append("defs")
+        .attr("height",  vis.height  );
+    vis.defs = vis.svg.append("defs");
 
 
-    vis.radiusScale = d3.scaleSqrt().domain([0,11]).range([20,60])
+    vis.radiusScale = d3.scaleSqrt().domain([0,11]).range([20,60]);
     vis.forceXSPlit = d3.forceX(function(d){
         if(d.isResolved == true){
             return 100
@@ -41,19 +40,16 @@ BubbleChart.prototype.initVis = function (){
      vis.wrangleData()
 }
 BubbleChart.prototype.wrangleData = function (){
-    var vis = this
-    vis.displayData = vis.data.getSprints()
-    vis.activeSprint = vis.displayData.filter(function(d){
-        return d.state == "ACTIVE"
-    })
-    vis.activeSprint= vis.activeSprint[0]
-    vis.storiesForActiveSprint = vis.data.getIssuesForSprint(vis.activeSprint["id"])
-    vis.updateVis()
+    const vis = this;
+    vis.displayData = vis.data.getSprints();
+    vis.activeSprint = vis.displayData.filter((d)=> d.state == "ACTIVE");
+    vis.activeSprint= vis.activeSprint[0];
+    vis.storiesForActiveSprint = vis.data.getIssuesForSprint(vis.activeSprint["id"]);
+    vis.updateVis();
+};
 
-
-}
 BubbleChart.prototype.updateVis = function (value){
-    var vis = this
+    const vis = this
     // console.log('vis.storiesForActiveSprint',vis.storiesForActiveSprint)
     vis.defs.selectAll(".scrum-pattern")
         .data(vis.storiesForActiveSprint).enter()
@@ -72,43 +68,35 @@ BubbleChart.prototype.updateVis = function (value){
         .attr("xlink:href",function(d,i) {
             return "img/"+i+".png"
             // return d.fields.assignee.avatarUrls["16x16"]
-        })
-    var circles = vis.svg.selectAll(".bubble")
+        });
+    const circles = vis.svg.selectAll(".bubble")
         .data(vis.storiesForActiveSprint)
         .enter().append("circle")
         .attr("class","bubble")
-        .attr("r",function(d){
-            // console.log(d.storyPoints)
-            return vis.radiusScale(d.storyPoints)
-        })
-       .attr("fill", function(d){
-           return ("url(#"+d.id+")")
-       })
+        .attr("r",d => vis.radiusScale(d.storyPoints))
+       .attr("fill", d => ("url(#"+d.id+")"))
         .on("click",function(d){
             $(vis.eventHandler).trigger("selectionChanged", d)
-        })
+        });
     vis.simulation.nodes(vis.storiesForActiveSprint)
-        .on("tick",ticked)
+        .on("tick",ticked);
 
-    d3.selectAll("#inProgress").on("click",function(d){
+    d3.selectAll("#inProgress").on("click",()=>
         vis.simulation.force("x",vis.forceXSPlit)
             .alphaTarget(0.5)
             .restart()
-    })
-    d3.selectAll("#all").on("click",function(d){
+    );
+    d3.selectAll("#all").on("click",()=>
         vis.simulation.force("x",vis.forceXAll)
             .alphaTarget(0.5)
             .restart()
-
-    })
+    );
     function ticked(){
         circles.attr("cx",function(d){
             return d.x
-        }).attr("cy",function(d){
-            return d.y
-        })
+        }).attr("cy",d => d.y)
     }
-}
+};
 
 
 

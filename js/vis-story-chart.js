@@ -1,3 +1,14 @@
+class StoryChart2 {
+    constructor(data, svg) {
+        this._data = data;
+        this._svg = svg;
+        this._storyChart = new StoryChart(this.svg.container.substr(1), this.data);
+    }
+
+    get data() {return this._data;}
+    get svg() {return this._svg;}
+    get storyChart() {return this._storyChart;}
+}
 
 var dateFormatter = d3.timeFormat("%Y-%m-%d");
 var dateParser = d3.timeParse("%Y-%m-%d");
