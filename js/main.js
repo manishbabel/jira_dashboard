@@ -1,3 +1,4 @@
+var eventHandler = {};
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -30,7 +31,7 @@ function visualize(error, jiraData, scrumText, retroData) {
         const svgBurnDown = new Svg("#burn-down-chart", width, height, margin);
         const svgEmployee = new Svg("#employee-chart", width, height, margin);
 
-        const visVelocity = new VelocityChart2(issueStore, svgVelocity);
+        const visVelocity = new VelocityChart2(issueStore, svgVelocity, eventHandler);
         const visStory = new StoryChart2(issueStore, svgStory);
         const visScope = new ScopeChart(issueStore, svgScope, visStory);
         const visRetro = new RetroChart(retroData, svgRetro);
@@ -46,8 +47,16 @@ function visualize(error, jiraData, scrumText, retroData) {
                 "#forecast": [visBurnDown],
                 "#replay": [visEmployee]
         };
-
         const visScrumProcess = new ScrumProcess(issueStore, scrumTextStore, retroStore, actionMapping);
+  //      const visScrumProcess = new ScrumProcess(scrumTextStore, actionMapping);
 
+        //Bind events
+        $(eventHandler).bind("selectedLayerChange", function(event) {
+                visVelocity.onSelectedLayerChange(event);
+        });
+
+        $(eventHandler).bind("selectedMetricChange", function(event) {
+                visVelocity.onSelectedMetricChange(event);
+        });
 }
 
