@@ -15,6 +15,7 @@ class VelocityChart2 {
     get svg() {return this._svg;}
 }
 //references: https://codepen.io/ashokgowtham/pen/LpnHe lab6 https://www.d3-graph-gallery.com/graph/line_cursor.html
+//https://tntvis.github.io/tnt.tooltip/
 
 let defaultLayer = "storyPoints";
 
@@ -39,11 +40,11 @@ VelocityChart.prototype.initVis = function(){
         //Active or closed sprints only (no future)
         return d.state == "CLOSED" || d.state == "ACTIVE";
     }).sort(function (a, b) {
-        return b.endDate - a.endDate;
+        return a.endDate - b.endDate;
     });
 
     //TODO: filter by selected time band
-    vis.displayData = vis.displayData.slice(0, Math.min(vis.displayData.length, 10));
+    vis.displayData = vis.displayData.slice(Math.max(0, vis.displayData.length -10) , vis.displayData.length);
 
     var priorities = [];
     var priorityIds = [];
@@ -104,7 +105,8 @@ VelocityChart.prototype.initVis = function(){
         .range([vis.height, 0]);
 
     vis.xAxis = d3.axisBottom()
-        .scale(vis.x);
+        .scale(vis.x)
+        .tickFormat("");
 
     vis.yAxis = d3.axisLeft()
         .scale(vis.y);
@@ -152,6 +154,9 @@ VelocityChart.prototype.initVis = function(){
 
     // This allows to find the closest X index of the mouse:
     vis.bisect = d3.bisector(d => d.name ).left;
+
+
+
 
     // (Filter, aggregate, modify data)
     vis.wrangleData();
@@ -260,12 +265,98 @@ VelocityChart.prototype.updateVis = function(){
         .style("opacity", 0);
 
     // Create the text that travels along the curve of chart
+    /*
     var lineText = vis.svg
         .append('g')
         .append('text')
         .style("opacity", 0)
         .attr("text-anchor", "left")
-        .attr("alignment-baseline", "middle");
+        .attr("alignment-baseline", "middle")
+        .html("<h1>here</h1>");
+
+    //new tooltip
+    vis.svg.append("svg")
+        .attr("width", 300)
+        .attr("height", 300)
+        .attr("x", 0)
+        .attr("y", 0)
+        .style("fill", "black")
+        .attr("id", "velocity-tooltip");
+
+     */
+    var custom_tooltip = tnt.tooltip()
+        .width(180)
+        .fill (function (d) {
+            // The DOM element is passed as "this"
+            var container = d3.select(this);
+
+            var table = container
+                .append("table")
+                .attr("class", "tnt_zmenu")
+                .attr("border", "solid")
+                .style("width", custom_tooltip.width() + "px");
+
+
+                table
+                    .append("tr")
+                    .attr("class", "tnt_zmenu_header")
+                    .append("th")
+                    .text(d.stackedData[0][d.i].data.name);
+
+            //Legends for the layers
+            var tableLegend = table.selectAll(".tnt_zmenu_row")
+                .data(d.vis.colorScale.domain())
+                .enter();
+            var tableRow = tableLegend
+                .append("tr")
+                .attr("class", "tnt_zmenu_row");
+            var tableColHeader = tableRow
+                .append("td")
+                .style("text-align", "left");
+            tableColHeader
+                .append('rect')
+                .attr("x", 10)
+                .attr("y", (d, i) => i * 20)
+                .attr("width", 10)
+                .attr("height", 10)
+                .style("stroke", "black")
+                .style("stroke-width", 1)
+                .style("fill", e => d.vis.colorScale(e));
+            //the data objects are the fill colors
+            tableColHeader
+                .append('text')
+                .attr("class", "layerLegend")
+                .attr("x", 30) //leave 5 pixel space after the <rect>
+                .attr("y", function(d, i) {
+                    return i * 20;
+                })
+                .attr("dy", "0.8em") //place text one line *below* the x,y point
+                .text(function(e,i) {
+                    var index = d.priorities.length - i -1;
+                    return e;
+                });
+            tableRow
+                .append("td")
+                .style("text-align", "right")
+                .html(function (e,i) {
+
+                    return d.stackedData[i][d.i][1] - d.stackedData[i][d.i][0];
+                    //d.stackedData[i][d.i].data.name
+                })
+
+/*
+                table
+                    .append("tr")
+                    .attr("class", "tnt_zmenu_row")
+                    .append("td")
+                    .style("text-align", "center")
+                    .html("hello");
+
+ */
+
+        });
+
+
 
     // Create a rect on top of the svg area: this rectangle recovers mouse position
     vis.svg
@@ -276,9 +367,9 @@ VelocityChart.prototype.updateVis = function(){
         .attr('height', vis.height)
         .on('mouseover', function () {
             vertline.style("opacity", 1);
-            lineText.style("opacity",1);
+            //lineText.style("opacity",1);
         })
-        .on('mousemove', function() {
+        .on('mousemove', function(d) {
             // recover coordinate we need
             var i = findClosestPoint(vis.xRange,d3.mouse(this)[0]);
             vertline
@@ -286,29 +377,53 @@ VelocityChart.prototype.updateVis = function(){
                 .attr("y1", vis.y(vis.stackedData[vis.stackedData.length -1][i][1]))
                 .attr("x2", vis.x(vis.stackedData[0][i].data.name))
                 .attr("y2", vis.height);
+            /*
             lineText
-                .html(vis.stackedData[0][i].data.name)
+                .html(table)
+                //.html(vis.stackedData[0][i].data.name)
                 .attr("x", vis.x(vis.stackedData[0][i].data.name) -100)
                 .attr("y", 0)
                 .attr("class", "label value-label");
+             */
+            /*
+            var obj = {};
+            obj.header = vis.stackedData[0][i].data.name;
+            obj.rows = [];
+            obj.rows.push({
+                "label" : "type",
+                "value" : "10"
+            });
+            tooltip.table()
+                .width(180)
+                .call (this, obj);
+             */
+            custom_tooltip.call(this, { "stackedData":vis.stackedData,
+                "i": i, "colorScale": vis.colorScale, "priorities": vis.priorities,
+            "vis": vis});
         })
         .on('mouseout', function(){
             vertline.style("opacity", 0);
-            lineText.style("opacity", 0);
+            //lineText.style("opacity", 0);
         });
 
-
     // Call axis functions with the new domain
+
     vis.svg.select(".x-axis").call(vis.xAxis)
+
         .selectAll("text")
         .attr("class", "x-axis")
-        .attr("y", 25)
-        .attr("x", -38)
+         .attr("y", 25)
+        //.attr("x", -38)
         .attr("dy", ".35em")
-        .attr("transform", "rotate(25)")
-        .style("text-anchor", "start");
+        //.attr("transform", "rotate(25)")
+        .style("text-anchor", "start")
+        .text(function (d, i) {
+        return "Sprint " + i;
+    });
+
       //  .selectAll("text")
        // .text(vis.xAxisText);
+
     vis.svg.select(".y-axis").call(vis.yAxis);
 
     //Legends for the layers
