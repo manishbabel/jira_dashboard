@@ -1,6 +1,8 @@
 //to be used when only displaying velocity chart
 
 var issueStore;
+var velocityChart;
+var eventHandler = {};
 
 queue()
     .defer(d3.json, "data/CFX-data-scrubbed.json")
@@ -9,5 +11,13 @@ queue()
 
 function dataLoaded(error, jiraData) {
     issueStore = new IssueStore(jiraData);
-    new VelocityChart("vis-velocity", issueStore);
+    velocityChart = new VelocityChart("vis-velocity", issueStore);
+
+    $(eventHandler).bind("selectedLayerChange", function(event) {
+        velocityChart.onSelectedLayerChange(event);
+    });
+
+    $(eventHandler).bind("selectedMetricChange", function(event) {
+        velocityChart.onSelectedMetricChange(event);
+    });
 }
