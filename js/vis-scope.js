@@ -8,7 +8,6 @@ class ScopeChart {
         this.eventHandler = eventHandler;
         this.initVis();
         $(eventHandler).bind("selectionChanged", function(event, d) {
-            console.log("eventtriggeered",d);
             visStory2.storyChart.onSelectionChange(d);
         });
     }
@@ -18,7 +17,6 @@ class ScopeChart {
 
     initVis(){
         var vis = this;
-        const diameter = 600;
         vis.margin = { top: 60, right: 60, bottom: 60, left: 60 };
         vis.width = 600;
         vis.height = 400;
@@ -36,7 +34,7 @@ class ScopeChart {
                 return 400
             }
 
-        }).strength(0.05)
+        }).strength(0.06)
         vis.forceXAll = d3.forceX(vis.width/2).strength(0.05)
         var forceCollide = d3.forceCollide(function(d){
             return  vis.radiusScale(d.storyPoints)+5
@@ -54,13 +52,14 @@ class ScopeChart {
         vis.activeSprint = vis.displayData.filter((d)=> d.state == "ACTIVE");
         vis.activeSprint= vis.activeSprint[0];
         vis.storiesForActiveSprint = vis.data.getIssuesForSprint(vis.activeSprint["id"]);
+        console.log("stories",vis.storiesForActiveSprint)
+        vis.status = [{name:"Resolved",x:150},
+            {name:"In Progress",x:400}]
         vis.updateVis();
     }
 
-//TODO Manish:  Leverage Enter, Update, Exit pattern so that when
-// the Watch Replay button is pressed and calls updataVis, the vis re-renders
     updateVis = function (value){
-        const vis = this
+        var vis = this
         // console.log('vis.storiesForActiveSprint',vis.storiesForActiveSprint)
         vis.defs.selectAll(".scrum-pattern")
             .data(vis.storiesForActiveSprint).enter()
@@ -78,7 +77,6 @@ class ScopeChart {
             .attr("preserveAspectRatio","xMidYMid slice")
             .attr("xlink:href",function(d,i) {
                 return "img/"+i+".png"
-                // return d.fields.assignee.avatarUrls["16x16"]
             });
         const circles = vis.svgElem.selectAll(".bubble")
             .data(vis.storiesForActiveSprint)
@@ -92,20 +90,35 @@ class ScopeChart {
         vis.simulation.nodes(vis.storiesForActiveSprint)
             .on("tick",ticked);
 
-        d3.selectAll("#inProgress").on("click",()=>
+        d3.selectAll("#status").on("click.title",()=>
             vis.simulation.force("x",vis.forceXSPlit)
                 .alphaTarget(0.5)
                 .restart()
         );
-        d3.selectAll("#all").on("click",()=>
+        d3.selectAll("#status").on("click",function (){showStatusTitles(vis.status)});
+        d3.selectAll("#all").on("click.title",()=>
             vis.simulation.force("x",vis.forceXAll)
                 .alphaTarget(0.5)
                 .restart()
         );
+        d3.selectAll("#all").on("click",function (){showStatusTitles([])});
         function ticked(){
             circles.attr("cx",function(d){
                 return d.x
             }).attr("cy",d => d.y)
+        }
+       function showStatusTitles(split) {
+            var titles = vis.svgElem.selectAll('.title')
+                .data(split);
+
+            titles.enter(titles).append('text')
+                .attr('class', 'title')
+                .merge(titles).transition().duration(1000)
+                .attr('x', function (d) { return d.x })
+                .attr('y', 20)
+                .attr('text-anchor', 'middle')
+                .text(function (d) { return d.name; });
+           titles.exit().remove()
         }
     }
 }
