@@ -4,25 +4,43 @@
 //references: https://wesbos.com/template-strings-html/
 
 class VelocityChart2 {
-    constructor(data, svg) {
+    constructor(data, svg, eventHandler) {
         this._data = data;
         this._svg = svg;
-        this._velocityChart = new VelocityChart(this.svg.container.substr(1), this.data);
+        this._eventHandler = eventHandler;
+        this._velocityChart = new VelocityChart(this.svg.container.substr(1), this.data, eventHandler);
     }
 
     get data() {return this._data;}
 
     get svg() {return this._svg;}
+
+    get eventHandler() {return this._eventHandler;}
 }
 //references: https://codepen.io/ashokgowtham/pen/LpnHe lab6 https://www.d3-graph-gallery.com/graph/line_cursor.html
 //https://tntvis.github.io/tnt.tooltip/
 
-let defaultLayer = "storyPoints";
+
+//constants
+const defaultLayer = "storyPoints";
+const maxSprints = 10;
+
+//count metrics
+const totalStoryPoints = "totalSprintStoryPoints";
+const completedStoryPoints = "completedSprintStoryPoints";
+const issueCount = "issueSprintCount";
+
+//layers
+const priorityLayer = "priority";
+const issueTypeLayer = "issueType";
+const componentLayer = "components";
 
 
-VelocityChart = function(_parentElement, _issueStore){
+
+VelocityChart = function(_parentElement, _issueStore, _eventHandler){
     this.parentElement = _parentElement;
     this.issueStore = _issueStore;
+    this.eventHandler = _eventHandler;
 
     this.initVis();
 }
@@ -44,10 +62,17 @@ VelocityChart.prototype.initVis = function(){
     });
 
     //TODO: filter by selected time band
-    vis.displayData = vis.displayData.slice(Math.max(0, vis.displayData.length -10) , vis.displayData.length);
+    vis.startingSprint = Math.max(0, vis.displayData.length - maxSprints);
+    vis.displayData = vis.displayData.slice(vis.startingSprint , vis.displayData.length);
+
 
     var priorities = [];
     var priorityIds = [];
+    var issueTypeIds = [];
+    var issueTypes = [];
+    console.log(vis.displayData);
+    var componentIds = [];
+    var components = ["None"];
 
     //pre-process data
     vis.displayData.forEach(function (sprint) {
@@ -60,22 +85,92 @@ VelocityChart.prototype.initVis = function(){
                 priorities.push(issue.fields.priority.name);
                 priorityIds[issue.fields.priority.id] = issue.fields.priority.name;
             }
+            if(! issueTypeIds[issue.fields.issuetype.id]) {
+                issueTypes.push(issue.fields.issuetype.name);
+                issueTypeIds[issue.fields.issuetype.id] = issue.fields.issuetype.name;
+            }
+
+            issue.fields.components.forEach(function (component) {
+                if(! componentIds[component.id]) {
+                    components.push(component.name);
+                    componentIds[component.id] = component.name;
+                }
+            });
         })
     });
     vis.priorities = priorities;
+    vis.issueTypes = issueTypes;
+    vis.components = components;
 
     //calculate sum of story points per sprint
     vis.displayData.forEach(function (sprint) {
+
+        sprint[totalStoryPoints] = {};
+        sprint[totalStoryPoints][priorityLayer] = {};
+        sprint[totalStoryPoints][componentLayer] = {};
+        sprint[totalStoryPoints][issueTypeLayer] = {};
+        sprint[issueCount] = {};
+        sprint[issueCount][priorityLayer] = {};
+        sprint[issueCount][componentLayer] = {};
+        sprint[issueCount][issueTypeLayer] = {};
+        sprint[completedStoryPoints] = {};
+        sprint[completedStoryPoints][priorityLayer] = {};
+        sprint[completedStoryPoints][componentLayer] = {};
+        sprint[completedStoryPoints][issueTypeLayer] = {};
+
         priorities.forEach(function (priority) {
-           sprint[priority] = 0;
+
+           sprint[priority] = 0; //TODO remove this
+            sprint[totalStoryPoints][priorityLayer][priority] = 0;
+            sprint[completedStoryPoints][priorityLayer][priority] = 0;
+            sprint[issueCount][priorityLayer][priority] = 0;
+        });
+        issueTypes.forEach(function (issueType) {
+            sprint[totalStoryPoints][issueTypeLayer] [issueType] = 0;
+            sprint[completedStoryPoints][issueTypeLayer] [issueType] = 0;
+            sprint[issueCount][issueTypeLayer][issueType] = 0;
+        });
+
+        components.forEach(function (component) {
+            sprint[totalStoryPoints][componentLayer][component] = 0;
+            sprint[completedStoryPoints][componentLayer][component] = 0;
+            sprint[issueCount][componentLayer][component] = 0;
         });
         sprint.issues.forEach(function (issue) {
-            sprint[issue.fields.priority.name] += issue.storyPoints;
+            sprint[issue.fields.priority.name] += issue.storyPoints; //TODO remove
+            //Total Story Points
+            sprint[totalStoryPoints][priorityLayer][issue.fields.priority.name] += issue.storyPoints;
+            sprint[totalStoryPoints][issueTypeLayer][issue.fields.issuetype.name] += issue.storyPoints;
+
+            //Completed Story Points
+            if(issue.isResolved) {
+                sprint[completedStoryPoints][priorityLayer][issue.fields.priority.name] += issue.storyPoints;
+                sprint[completedStoryPoints][issueTypeLayer][issue.fields.issuetype.name] += issue.storyPoints;
+            }
+
+            //Issue Count
+            sprint[issueCount][priorityLayer][issue.fields.priority.name] += 1
+            sprint[issueCount][issueTypeLayer][issue.fields.issuetype.name] += 1;
+
+            //Components
+            if(issue.fields.components.length == 0) {
+                sprint[totalStoryPoints][componentLayer]["None"] += issue.storyPoints;
+                if(issue.isResolved) sprint[completedStoryPoints][componentLayer]["None"] += issue.storyPoints;
+                sprint[issueCount][componentLayer]["None"] += 1;
+            } else {
+                issue.fields.components.forEach(function (component) {
+                    sprint[totalStoryPoints][componentLayer][component.name] += issue.storyPoints;
+                    if(issue.isResolved) sprint[completedStoryPoints][componentLayer][component.name] += issue.storyPoints;
+                    sprint[issueCount][componentLayer][component.name] += 1;
+                })
+            }
         });
+        if(sprint.state == "ACTIVE") vis.activeSprint = sprint;
     });
+    console.log(vis.displayData);
 
     //initialize SVG drawing area
-    vis.margin = { top: 40, right: 60, bottom: 60, left: 60 };
+    vis.margin = { top: 40, right: 65, bottom: 60, left: 60 };
 
     vis.width = $("#vis-velocity-chart").width() - vis.margin.left - vis.margin.right,
         vis.height = 400 - vis.margin.top - vis.margin.bottom;
@@ -264,26 +359,6 @@ VelocityChart.prototype.updateVis = function(){
         .attr("stroke-width", "1")
         .style("opacity", 0);
 
-    // Create the text that travels along the curve of chart
-    /*
-    var lineText = vis.svg
-        .append('g')
-        .append('text')
-        .style("opacity", 0)
-        .attr("text-anchor", "left")
-        .attr("alignment-baseline", "middle")
-        .html("<h1>here</h1>");
-
-    //new tooltip
-    vis.svg.append("svg")
-        .attr("width", 300)
-        .attr("height", 300)
-        .attr("x", 0)
-        .attr("y", 0)
-        .style("fill", "black")
-        .attr("id", "velocity-tooltip");
-
-     */
     var custom_tooltip = tnt.tooltip()
         .width(180)
         .fill (function (d) {
@@ -342,18 +417,7 @@ VelocityChart.prototype.updateVis = function(){
 
                     return d.stackedData[i][d.i][1] - d.stackedData[i][d.i][0];
                     //d.stackedData[i][d.i].data.name
-                })
-
-/*
-                table
-                    .append("tr")
-                    .attr("class", "tnt_zmenu_row")
-                    .append("td")
-                    .style("text-align", "center")
-                    .html("hello");
-
- */
-
+                });
         });
 
 
@@ -377,26 +441,7 @@ VelocityChart.prototype.updateVis = function(){
                 .attr("y1", vis.y(vis.stackedData[vis.stackedData.length -1][i][1]))
                 .attr("x2", vis.x(vis.stackedData[0][i].data.name))
                 .attr("y2", vis.height);
-            /*
-            lineText
-                .html(table)
-                //.html(vis.stackedData[0][i].data.name)
-                .attr("x", vis.x(vis.stackedData[0][i].data.name) -100)
-                .attr("y", 0)
-                .attr("class", "label value-label");
-             */
-            /*
-            var obj = {};
-            obj.header = vis.stackedData[0][i].data.name;
-            obj.rows = [];
-            obj.rows.push({
-                "label" : "type",
-                "value" : "10"
-            });
-            tooltip.table()
-                .width(180)
-                .call (this, obj);
-             */
+
             custom_tooltip.call(this, { "stackedData":vis.stackedData,
                 "i": i, "colorScale": vis.colorScale, "priorities": vis.priorities,
             "vis": vis});
@@ -413,16 +458,17 @@ VelocityChart.prototype.updateVis = function(){
         .selectAll("text")
         .attr("class", "x-axis")
          .attr("y", 25)
-        //.attr("x", -38)
+        .attr("x", -20)
         .attr("dy", ".35em")
         //.attr("transform", "rotate(25)")
         .style("text-anchor", "start")
         .text(function (d, i) {
-        return "Sprint " + i;
+            var curSprint = "Sprint " + (i + vis.startingSprint);
+            if(d == vis.activeSprint.name) curSprint += "(Active)";
+            return curSprint;
     });
 
-      //  .selectAll("text")
-       // .text(vis.xAxisText);
+
 
     vis.svg.select(".y-axis").call(vis.yAxis);
 
@@ -453,6 +499,14 @@ VelocityChart.prototype.updateVis = function(){
             var index = vis.priorities.length - i -1;
             return d;
         });
+}
+
+VelocityChart.prototype.onSelectedLayerChange = function(event) {
+    console.log("Selected layer changed: " + event);
+}
+
+VelocityChart.prototype.onSelectedMetricChange = function(event){
+    console.log("Selected metric changed: " + event);
 }
 
 
@@ -496,7 +550,7 @@ const velocityHtml = `
 <div class="container">
     <div class="row">
         <div class="col-md-2">
-            <select class="select" id="velocitySelect">
+            <select class="select" id="velocitySelect" onchange="myFunction()">
                 ${velocitySelect.map(function (option) {
                     return `<option value=${option.value} ${option.selected ? "selected" : ""}>${option.displayName}</option>`
                 }).join('')}
