@@ -20,8 +20,8 @@ class ScopeChart {
         var vis = this;
         const diameter = 600;
         vis.margin = { top: 60, right: 60, bottom: 60, left: 60 };
-        vis.width = 500;
-        vis.height = 600;
+        vis.width = 600;
+        vis.height = 400;
         vis.svgElem = d3.select("#" + vis.parentElement).append("svg")
             .attr("width",  vis.width  )
             .attr("height",  vis.height  );
@@ -30,10 +30,10 @@ class ScopeChart {
         vis.radiusScale = d3.scaleSqrt().domain([0,11]).range([20,60]);
         vis.forceXSPlit = d3.forceX(function(d){
             if(d.isResolved == true){
-                return 100
+                return 150
             }
             else{
-                return 700
+                return 400
             }
 
         }).strength(0.05)
@@ -54,58 +54,83 @@ class ScopeChart {
         vis.activeSprint = vis.displayData.filter((d)=> d.state == "ACTIVE");
         vis.activeSprint= vis.activeSprint[0];
         vis.storiesForActiveSprint = vis.data.getIssuesForSprint(vis.activeSprint["id"]);
+        vis.status = [{name:"Resolved",x:150},
+            {name:"In Progress",x:400}]
+
         vis.updateVis();
     }
 
-//TODO Manish:  Leverage Enter, Update, Exit pattern so that when
-// the Watch Replay button is pressed and calls updataVis, the vis re-renders
-    updateVis = function (value){
-        const vis = this
+    updateVis = function (value) {
+        var vis = this
         // console.log('vis.storiesForActiveSprint',vis.storiesForActiveSprint)
         vis.defs.selectAll(".scrum-pattern")
             .data(vis.storiesForActiveSprint).enter()
             .append("pattern")
-            .attr("class","scrum-pattern")
-            .attr("id",function(d){
+            .attr("class", "scrum-pattern")
+            .attr("id", function (d) {
                 return d.id
             })
-            .attr("height","100%")
-            .attr("width","100%")
-            .attr("patternContentUnits","objectBoundingBox")
+            .attr("height", "100%")
+            .attr("width", "100%")
+            .attr("patternContentUnits", "objectBoundingBox")
             .append("image")
-            .attr("height","1")
-            .attr("width","1")
-            .attr("preserveAspectRatio","xMidYMid slice")
-            .attr("xlink:href",function(d,i) {
-                return "img/"+i+".png"
-                // return d.fields.assignee.avatarUrls["16x16"]
+            .attr("height", "1")
+            .attr("width", "1")
+            .attr("preserveAspectRatio", "xMidYMid slice")
+            .attr("xlink:href", function (d, i) {
+                return "img/" + i + ".png"
             });
         const circles = vis.svgElem.selectAll(".bubble")
             .data(vis.storiesForActiveSprint)
             .enter().append("circle")
-            .attr("class","bubble")
-            .attr("r",d => vis.radiusScale(d.storyPoints))
-            .attr("fill", d => ("url(#"+d.id+")"))
-            .on("click",function(d){
+            .attr("class", "bubble")
+            .attr("r", d => vis.radiusScale(d.storyPoints))
+            .attr("fill", d => ("url(#" + d.id + ")"))
+            .on("click", function (d) {
                 $(vis.eventHandler).trigger("selectionChanged", d)
             });
         vis.simulation.nodes(vis.storiesForActiveSprint)
-            .on("tick",ticked);
+            .on("tick", ticked);
 
-        d3.selectAll("#inProgress").on("click",()=>
-            vis.simulation.force("x",vis.forceXSPlit)
+        d3.selectAll("#status").on("click.title", () =>
+            vis.simulation.force("x", vis.forceXSPlit)
                 .alphaTarget(0.5)
                 .restart()
         );
-        d3.selectAll("#all").on("click",()=>
-            vis.simulation.force("x",vis.forceXAll)
+        d3.selectAll("#status").on("click", function () {
+            showStatusTitles(vis.status)
+        });
+        d3.selectAll("#all").on("click.title", () =>
+            vis.simulation.force("x", vis.forceXAll)
                 .alphaTarget(0.5)
                 .restart()
         );
-        function ticked(){
-            circles.attr("cx",function(d){
+        d3.selectAll("#all").on("click", function () {
+            showStatusTitles([])
+        });
+
+        function ticked() {
+            circles.attr("cx", function (d) {
                 return d.x
-            }).attr("cy",d => d.y)
+            }).attr("cy", d => d.y)
+        }
+
+        function showStatusTitles(split) {
+            var titles = vis.svgElem.selectAll('.title')
+                .data(split);
+
+            titles.enter(titles).append('text')
+                .attr('class', 'title')
+                .merge(titles).transition().duration(1000)
+                .attr('x', function (d) {
+                    return d.x
+                })
+                .attr('y', 20)
+                .attr('text-anchor', 'middle')
+                .text(function (d) {
+                    return d.name;
+                });
+            titles.exit().remove()
         }
     }
 }
