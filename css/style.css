@@ -113,6 +113,10 @@
     fill: lightgray;
 }
 
+.title {
+    font-weight: bold;
+}
+
 
 .PT_Serif{
     font-family: 'PT Serif', serif;
