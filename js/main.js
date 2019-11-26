@@ -51,12 +51,12 @@ function visualize(error, jiraData, scrumText, retroData) {
   //      const visScrumProcess = new ScrumProcess(scrumTextStore, actionMapping);
 
         //Bind events
-        $(eventHandler).bind("selectedLayerChange", function(event) {
-                visVelocity.onSelectedLayerChange(event);
+        $(eventHandler).bind("selectedLayerChange", function(event, selection) {
+                visVelocity.onSelectedLayerChange(selection);
         });
 
-        $(eventHandler).bind("selectedMetricChange", function(event) {
-                visVelocity.onSelectedMetricChange(event);
+        $(eventHandler).bind("selectedMetricChange", function(event, selection) {
+                visVelocity.onSelectedMetricChange(selection);
         });
 }
 
