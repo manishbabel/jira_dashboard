@@ -13,11 +13,10 @@ class RetroChart {
     get svg(){return this._svg;}
 }
 
-//TODO Kevin cut and paste your latest from here down.  You can please leave RetroChart.
 /*
  * LineChart - Object constructor function
- * @param _parentElement 	-- the HTML element in which to draw the visualization
- * @param _data						-- the actual data: perDayData
+ * @param _parentElement    -- the HTML element in which to draw the visualization
+ * @param _data                     -- the actual data: perDayData
  */
 
 LineChart = function(_parentElement, _data){
@@ -37,10 +36,21 @@ LineChart.prototype.initVis = function(){
     var vis = this;
 
     // SVG margin convention
-    vis.margin = { top: 50, right: 0, bottom: 30, left: 50 };
+    vis.margin = { top: 70, right: 60, bottom: 50, left: 60 };
 
-    vis.width = 400 - vis.margin.left - vis.margin.right,
-        vis.height = 350 - vis.margin.top - vis.margin.bottom;
+    vis.width = 600 - vis.margin.left - vis.margin.right,
+        vis.height = 400 - vis.margin.top - vis.margin.bottom;
+
+    // Clip paths
+    d3.select("#" + vis.parentElement)
+        .append("defs")
+        .append("clipPath")
+        .attr("id", "clip")
+        .append("rect")
+        .attr("width", vis.width)
+        .attr("height", vis.height)
+        .attr("x", 0)
+        .attr("y", 0);
 
     // Categories
     vis.metrics = d3.keys(vis.data[0]);
@@ -67,6 +77,9 @@ LineChart.prototype.initVis = function(){
         .attr("height", vis.height + vis.margin.top + vis.margin.bottom)
         .append("g")
         .attr("transform", "translate(" + vis.margin.left + "," + vis.margin.top + ")");
+
+    vis.svg.append('g')
+        .attr("clip-path", "url(#clip)");
 
     // Scales and axes
     vis.x = d3.scaleLinear()
@@ -145,7 +158,8 @@ LineChart.prototype.initVis = function(){
         .append("g")
         .attr("class", function(d){
             var cat = d3.select(this.parentNode.parentNode).attr("class").split(" ")[1];
-            return "dotG " + cat;
+            var tot = d.reduce(function(a,b){ return a+b; });
+            return "dotG " + cat + " " + tot/d.length;
         })
         .attr("transform", function(d,i){
             return "translate(" + vis.x(i) + ",0)";
@@ -161,14 +175,31 @@ LineChart.prototype.initVis = function(){
             var cat = d3.select(this.parentNode.parentNode.parentNode).attr("class").split(" ")[1];
             return "spots " + cat;
         })
-        .attr("cy", function(d){ return vis.y(d); })
+        .attr("cy", function(d){
+            var mean = d3.select(this.parentNode).attr("class").split(" ")[2];
+            return vis.y(mean); })
         .attr("r", 5)
         .attr("fill", function(d,i){ return vis.color(d3.select(this).attr("class").split(" ")[1]); })
         .on("click", function(){
             var cat = d3.select(this).attr("class").split(" ")[1];
-            $(".dotG." + cat).hide();
-            $(".lines." + cat).show();
-            $(".dots." + cat).show();
+            d3.select(".fit." + cat)
+                .transition()
+                .duration(1000)
+                .attr("x2", function(data){ return vis.x(data[0]); })
+                .attr("y2", function(data){ return vis.y(data[2]); });
+            $(".fit." + cat).delay(1000).hide(0);
+            $(".title." + cat).text(cat + " - Average Rating");
+            d3.selectAll(".spots." + cat)
+                .transition()
+                .duration(1000)
+                .attr("cy", function(d){
+                    var mean = d3.select(this.parentNode).attr("class").split(" ")[2];
+                    return vis.y(mean);
+                });
+            $(".lines." + cat).delay(1000).show(0);
+            $(".dots." + cat).delay(1000).show(0);
+            $(".dotG." + cat).delay(1000).hide(0);
+
         });
 
     // Create path, circles, and legend for each metric
@@ -205,7 +236,7 @@ LineChart.prototype.initVis = function(){
         .attr("r", 5)
         .attr("fill", function(d,i){ return vis.color(d3.select(this).attr("class").split(" ")[1]); })
         .on("mouseover", function(d,i){
-            d3.select(this).attr("r", 8);
+            //d3.select(this).attr("r", 8);
         })
         .on("mouseout", function(d,i){
             d3.select(this).attr("r", 5);
@@ -218,12 +249,47 @@ LineChart.prototype.initVis = function(){
         })
         .on("click", function(){
             var cat = d3.select(this).attr("class").split(" ")[1];
+            $(".fit." + cat).show();
+            d3.select(".fit." + cat)
+                .transition()
+                .duration(1000)
+                .attr("x2", function(data){ return vis.x(data[1]); })
+                .attr("y2", function(data){ return vis.y(data[3]); });
+            $(".title." + cat).text(cat + " - Individual Rating");
             $(".dotG." + cat).show();
+            d3.selectAll(".spots." + cat)
+                .transition()
+                .duration(1000)
+                .attr("cy", function(d){ return vis.y(d); });
             $(".lines." + cat).hide();
             $(".dots." + cat).hide();
         });
-    ;
 
+    vis.svg
+        .append("text")
+        .attr("class", function(d){
+            return "title " + d3.keys(d)[0];
+        })
+        .attr("text-anchor", "start")
+        .attr("y", -vis.margin.top/2)
+        .attr("x", 0)
+        .text(function(d){ return d3.keys(d)[0] + " - Average Rating"; })
+        .style("fill", function(d){ return vis.color(d3.keys(d)[0]) });
+
+    vis.svg.append("line")
+        .attr("class", function(d){
+            return "fit " + d3.keys(d)[0];
+        })
+        .datum(function(d){
+            return vis.regress(d[d3.keys(d)[0]]);
+        })
+        .attr("x1", function(data){ return vis.x(data[0])})
+        .attr("x2", function(data){ return vis.x(data[0])})
+        .attr("y1", function(data){ return vis.y(data[2]); })
+        .attr("y2", function(data){ return vis.y(data[2]); })
+        .style("display", "none")
+        .attr("stroke", "black")
+        .attr("stroke-width", 3);
 
     // (Filter, aggregate, modify data)
     vis.wrangleData();
@@ -275,29 +341,22 @@ LineChart.prototype.regress = function(feedback){
     var x_bar = x.reduce(function(a,b){ return a+b; }) / n;
     var y_bar = y.reduce(function(a,b){ return a+b; }) / n;
 
-    console.log(x_bar)
-    console.log(y_bar)
     var divisor = 0;
     var dividend = 0;
     for (var i = 0; i < n; i++) {
         xr = x[i] - x_bar;
         yr = y[i] - y_bar;
         divisor += xr * yr;
-        dividend += xr * xr;;
-        console.log(xr)
-        console.log(yr)
-
+        dividend += xr * xr;
     }
 
     var b1 = divisor / dividend;
     var b0 = y_bar - (b1 * x_bar);
 
-    return [b0, b1];
+    return [0, n-1, b0, b1*(n-1)+b0];
 };
 
 /*
-* Small multiples?
-* Explode into dotplot
 * Regression line
 * lineVis.svg.append("line").attr("x1", lineVis.x(0)).attr("x2", lineVis.x(36)).attr("y1", lineVis.y(b0)).attr("y2", lineVis.y(b1*36+b0)).attr("stroke", "black")
 *
