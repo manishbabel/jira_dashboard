@@ -1,4 +1,58 @@
 
+
+/* Styles for double underlines and their tooltips*/
+
+ul {
+    list-style-position: initial;
+}
+
+.doubleUnderline {
+    text-decoration-line: underline;
+    text-decoration-style: double;
+}
+
+.sad-bullet{
+    padding-left: 20px;
+    margin-left: 40px;
+}
+
+.w3-tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+}
+
+.w3-tooltip .w3-tooltiptext {
+    visibility: hidden;
+    width: 500px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    top: 150%;
+    left: 50%;
+    margin-left: -60px;
+}
+
+.w3-tooltip .w3-tooltiptext::after {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent black transparent;
+}
+
+.w3-tooltip:hover .w3-tooltiptext {
+    visibility: visible;
+}
+
+/*================================================*/
 #overview {
     background-color: white;
     padding: 20px;
