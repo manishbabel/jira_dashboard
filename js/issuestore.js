@@ -45,18 +45,20 @@
  *
  */
 
-let sprintField = "customfield_10401";
-let storyPointField = "customfield_10003";
+const defaultSprintField = "customfield_10401";
+const defaultStoryPointField = "customfield_10003";
 let parseDate = d3.timeParse("%Y-%m-%dT%H:%M:%S.%L%Z");
 
 class IssueStore {
-    constructor(_data) {
+    constructor(_data, _sprintField, _storyPointField) {
 
         if (_data.issues == null) {
             console.error("Expected issues object");
             return;
         }
         this.issues = _data.issues;
+        this.sprintField = typeof _sprintField !== 'undefined' ? _sprintField : defaultSprintField;
+        this.storyPointField = typeof _storyPointField !== 'undefined' ? _storyPointField : defaultStoryPointField;
 
         this.initStore();
     }
@@ -68,12 +70,12 @@ class IssueStore {
         const sprintMap = [];
 
         self.issues.forEach(function (issue) {
-            var sprints = issue.fields[sprintField];
+            var sprints = issue.fields[self.sprintField];
             if(sprints != null) {
                 sprints.forEach(function (sprint, index) {
                     var deserializedSprint = deserializeSprint(sprint);
                     //update the sprint to be the deserianlized version of the sprint
-                    issue.fields[sprintField][index] = deserializedSprint;
+                    issue.fields[self.sprintField][index] = deserializedSprint;
 
                     //If this is the first time seeing a particular sprint
                     if (! sprintMap[deserializedSprint.id]) {
@@ -88,7 +90,7 @@ class IssueStore {
             //deserialize dates
             deserializeIssueDates(issue);
             //setup issue helper functions
-            setIssueHelperProperties(issue);
+            setIssueHelperProperties(issue, self.storyPointField);
         });
 
         self.sprints = allSprints;
@@ -113,26 +115,38 @@ class IssueStore {
 function deserializeSprint(s) {
     if (s == null) return null;
 
-    const id= s.match(/id=(\d+)/);
-    const rapidViewId= s.match(/rapidViewId=(\d+)/);
-    const state = s.match(/state=(\w+)/);
-    const name = s.match(/name=(.+),startDate/);
-    const startDate = s.match(/startDate=(.+),endDate/);
-    const endDate = s.match(/endDate=(.+),completeDate/);
-    const completeDate = s.match(/completeDate=(.+),sequence/);
-    const sequence = s.match(/sequence=(\d+)/);
-    const goal = s.match(/goal=(.+)]/);
+    var sprintData = s.match(/com.atlassian.greenhopper.service.sprint.Sprint@.*\[id=(\d+),rapidViewId=(\d+),state=([A-Z]+),name=(.*),goal=(.*),startDate=(.*),endDate=(.*),completeDate=(.*),sequence=(\d+)\]/);
+    if (sprintData != null) {
+        return { id: sprintData[1] != null ? +sprintData[1] : null,
+            rapidViewId: sprintData[2] != null ? +sprintData[2] : null,
+            state: sprintData[3] != null ? sprintData[3] : null,
+            name: sprintData[4] != null ? sprintData[4] : null,
+            goal: sprintData[5] != null && sprintData[5].length != 0 ? sprintData[5] : null,
+            startDate: sprintData[6] != null ? parseDate(sprintData[6]) : null,
+            endDate: sprintData[7] != null ? parseDate(sprintData[7]) : null,
+            completeDate: sprintData[8] != null ? parseDate(sprintData[8]) : null,
+            sequence: sprintData[9] != null ? +sprintData[9] : null
+        };
+    }
+    sprintData = s.match(/com.atlassian.greenhopper.service.sprint.Sprint@.*\[id=(\d+),rapidViewId=(\d+),state=([A-Z]+),name=(.*),startDate=(.*),endDate=(.*),completeDate=(.*),sequence=(\d+),goal=(.*)\]/);
+    if (sprintData != null) {
 
-    return { id:id && id[1] ? +id[1] : null,
-        rapidViewId: rapidViewId && rapidViewId[1] ? +rapidViewId[1] : null,
-        state: state && state[1] ? state[1] : null,
-        name: name && name[1] ? name[1] : null,
-        startDate:startDate && startDate[1] ? parseDate(startDate[1]) : null,
-        endDate:endDate && endDate[1] ? parseDate(endDate[1]) : null,
-        completeDate:completeDate && completeDate[1] ? parseDate(completeDate[1]) : null,
-        sequence:sequence && sequence[1] ? +sequence[1] : null,
-        goal:goal && goal[1] ? goal[1] : null
-    };
+        return { id: sprintData[1] != null ? +sprintData[1] : null,
+            rapidViewId: sprintData[2] != null ? +sprintData[2] : null,
+            state: sprintData[3] != null ? sprintData[3] : null,
+            name: sprintData[4] != null ? sprintData[4] : null,
+            startDate: sprintData[5] != null ? parseDate(sprintData[5]) : null,
+            endDate: sprintData[6] != null ? parseDate(sprintData[6]) : null,
+            completeDate: sprintData[7] != null ? parseDate(sprintData[7]) : null,
+            sequence: sprintData[8] != null ? +sprintData[8] : null,
+            goal: sprintData[9] != null && sprintData[9].length != 0 ? sprintData[9] : null
+        };
+    }
+    if(sprintData == null) {
+        console.log("fake!!");
+        console.log(s);
+        return null;
+    }
 }
 
 function deserializeIssueDates(issue) {
@@ -152,7 +166,7 @@ function deserializeIssueDates(issue) {
 	
 }
 
-function setIssueHelperProperties(issue) {
+function setIssueHelperProperties(issue, storyPointField) {
     issue.storyPoints =  issue.fields[storyPointField] != null ? issue.fields[storyPointField] : 0 ;
     issue.isResolved = issue.fields["resolution"] != null;
 }
