@@ -20,8 +20,8 @@ class ScopeChart {
         var vis = this;
         const diameter = 600;
         vis.margin = { top: 60, right: 60, bottom: 60, left: 60 };
-        vis.width = 600;
-        vis.height = 400;
+        vis.width = 700;
+        vis.height = 700;
         vis.svgElem = d3.select("#" + vis.parentElement).append("svg")
             .attr("width",  vis.width  )
             .attr("height",  vis.height  );
@@ -78,7 +78,7 @@ class ScopeChart {
             .attr("width", "1")
             .attr("preserveAspectRatio", "xMidYMid slice")
             .attr("xlink:href", function (d, i) {
-                return "img/" + i + ".png"
+                return "img1.png"
             });
         const circles = vis.svgElem.selectAll(".bubble")
             .data(vis.storiesForActiveSprint)
