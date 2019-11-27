@@ -1,16 +1,17 @@
 var eventHandler = {};
+const useSampleData = false;
 
 document.addEventListener("DOMContentLoaded", () => {
 
     queue()
-        .defer(d3.json, "data/CFX-data-scrubbed.json")
+        .defer(d3.json, (useSampleData ? "data/CFX-data-scrubbed.json" : "data/JV-11-26-19.json"))
         .defer(d3.json, "data/scrum-process.json")
         .defer(d3.json, "data/metrics.json")
         .await(visualize);
 });
 
-function visualize(error, jiraData, scrumText, retroData) {
-        const issueStore = new IssueStore(jiraData);
+function visualize(error, jiraData, scrumText, retroData, test) {
+        const issueStore = (useSampleData ? new IssueStore(jiraData) : new IssueStore(jiraData, "customfield_10020", "customfield_10028" )) ;
         const scrumTextStore = new ScrumTextStore(scrumText);
         const retroStore = new RetroStore(retroData);
 
