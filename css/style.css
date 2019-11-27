@@ -1,6 +1,7 @@
 
 
-/* Styles for double underlines and their tooltips*/
+/* Styles from W3 Schools for double underlines and their tooltips*/
+/* https://www.w3schools.com/css/tryit.asp?filename=trycss_tooltip_arrow_top */
 
 ul {
     list-style-position: initial;
@@ -9,11 +10,6 @@ ul {
 .doubleUnderline {
     text-decoration-line: underline;
     text-decoration-style: double;
-}
-
-.sad-bullet{
-    padding-left: 20px;
-    margin-left: 40px;
 }
 
 .w3-tooltip {
@@ -25,11 +21,11 @@ ul {
 .w3-tooltip .w3-tooltiptext {
     visibility: hidden;
     width: 500px;
-    background-color: black;
-    color: #fff;
+    background-color: darkred;
+    color: antiquewhite;
     text-align: center;
     border-radius: 6px;
-    padding: 5px 0;
+    padding: 10px;
     position: absolute;
     z-index: 1;
     top: 150%;
@@ -41,11 +37,11 @@ ul {
     content: "";
     position: absolute;
     bottom: 100%;
-    left: 50%;
+    left: 10%;
     margin-left: -5px;
     border-width: 5px;
     border-style: solid;
-    border-color: transparent transparent black transparent;
+    border-color: transparent transparent darkred transparent;
 }
 
 .w3-tooltip:hover .w3-tooltiptext {
