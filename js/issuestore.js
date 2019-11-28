@@ -5,6 +5,9 @@
  * getSprints: returns all sprints
  * getIssues: returns all issues
  * getIssuesForSprint(<sprint object> or <sprint id>): returns all issues associated with a sprint
+ * getBacklogUrl: returns the url for the backlog in Jira
+ * getStoryPointField: returns the field ID (string) of the field used for story points. Example: customfield_10003
+ * getSprintUrlForSprint(<sprint object> or <sprint id>): returns the url of the sprint in Jira
  */
 
 /**
@@ -18,7 +21,7 @@
  * goal: optional string of the goal of the sprint. Example "focus on tech debt"
  * name: name of sprint
  * sequence: positioning of sprint in the board (relative to other sprints)
- * state: state of sprint. Either ACTIVE or CLOSED
+ * state: state of sprint. Either ACTIVE, CLOSED, or FUTURE
  * totalStoryPoints: generated property for sum of story points of all issues in the sprint
  * completedStoryPoints: generated property for sum of story points for COMPLETED issues in the sprint
  */
@@ -47,6 +50,7 @@
 
 const defaultSprintField = "customfield_10401";
 const defaultStoryPointField = "customfield_10003";
+const jiraBaseUrl = "https://cs171-jira.atlassian.net/"
 let parseDate = d3.timeParse("%Y-%m-%dT%H:%M:%S.%L%Z");
 
 class IssueStore {
@@ -109,6 +113,37 @@ class IssueStore {
 
     getSprints() {return this.sprints;}
     getIssues(){return this.issues;}
+    getStoryPointField(){return this.storyPointField;}
+    getBacklogUrl(){
+        if (this.sprints.length <1) return jiraBaseUrl;
+        else return jiraBaseUrl + "secure/RapidBoard.jspa?view=planning.nodetail&rapidView=" + this.sprints[0].rapidViewId;
+    }
+    getSprintUrlForSprint(sprint){
+        var sprintId;
+
+        if(! isNaN(sprint)) sprintId = sprint;
+        else if (sprint.id != null) sprintId = sprint.id;
+        else return jiraBaseUrl;
+
+        const sprintObj = this.getSprints().find(function (d) {
+            return d.id == sprintId;
+        });
+
+        if (sprintObj == null) return jiraBaseUrl;
+
+        switch (sprintObj.state) {
+            case "FUTURE":
+                return jiraBaseUrl + "secure/RapidBoard.jspa?view=planning.nodetail&rapidView=" + sprintObj.rapidViewId;
+                break;
+            case "ACTIVE":
+                return jiraBaseUrl + "secure/RapidBoard.jspa?rapidView=" + sprintObj.rapidViewId;
+                break;
+            case "CLOSED":
+                return jiraBaseUrl + "secure/RapidBoard.jspa?rapidView="+ sprintObj.rapidViewId
+                    + "&view=reporting&chart=sprintRetrospective&sprint=" + sprintObj.id;
+                break;
+        }
+    }
 
 }
 
