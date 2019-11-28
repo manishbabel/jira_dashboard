@@ -1,7 +1,10 @@
 //TODO: DAVID Merge Velocity Chart into VelocityChart2 structure
 //TODO:  Use the svg object passed from VelocityChart2 instead of creating another
 
-//references: https://wesbos.com/template-strings-html/
+//references: https://wesbos.com/template-strings-html/ https://tntvis.github.io/tnt.tooltip/
+// https://codepen.io/ashokgowtham/pen/LpnHe lab6 https://www.d3-graph-gallery.com/graph/line_cursor.html
+// https://d3-legend.susielu.com/
+
 
 class VelocityChart2 {
     constructor(data, svg, eventHandler) {
@@ -24,10 +27,8 @@ class VelocityChart2 {
         this._velocityChart.onSelectedMetricChange(selection);
     }
 
-
 }
-//references: https://codepen.io/ashokgowtham/pen/LpnHe lab6 https://www.d3-graph-gallery.com/graph/line_cursor.html
-//https://tntvis.github.io/tnt.tooltip/
+
 
 
 //constants
@@ -60,8 +61,6 @@ VelocityChart.prototype.initVis = function(){
 
     //inject template html
     document.getElementById(vis.parentElement).innerHTML = velocityHtml;
-
-
 
     //initialize initial data
     //TODO: filter by selected time band
@@ -233,10 +232,8 @@ VelocityChart.prototype.initVis = function(){
         .attr("class", "y-axis axis");
 
     // Initialize stack layout
-    vis.colorScale = d3.scaleOrdinal(d3.schemeCategory20);
+    vis.colorScale = d3.scaleOrdinal();
     vis.colorScale.domain(vis.layer);
-
-
 
     // TO-DO: Tooltip placeholder
     vis.svg.append("text")
@@ -263,9 +260,6 @@ VelocityChart.prototype.initVis = function(){
         $(vis.eventHandler).trigger("selectedLayerChange", d3.select("#velocityLayersSelect").property("value"));
     });
 
-
-
-
     // (Filter, aggregate, modify data)
     vis.wrangleData();
 };
@@ -276,6 +270,11 @@ VelocityChart.prototype.initVis = function(){
 
 VelocityChart.prototype.wrangleData = function(){
     const vis = this;
+    vis.colorScale.range(d3.schemeCategory20.filter(function (d,i) {
+        //needed as the legend needs the domain and range lengths to match
+        return i < vis.layer.length;
+    }));
+    vis.colorScale.domain(vis.layer);
 
     const stack = d3.stack()
         .keys(vis.colorScale.domain())
@@ -283,7 +282,7 @@ VelocityChart.prototype.wrangleData = function(){
             //console.log(d);
             //console.log(d[vis.currentMetric][vis.currentLayer])
             return d[vis.currentMetric][vis.currentLayer][key];
-        })
+        });
 
     // Stack data
     vis.stackedData = stack(vis.displayData);
@@ -298,8 +297,6 @@ VelocityChart.prototype.wrangleData = function(){
     // Update the visualization
     vis.updateVis();
 };
-
-
 
 /*
  * The drawing function - should use the D3 update sequence (enter, update, exit)
@@ -321,9 +318,11 @@ VelocityChart.prototype.updateVis = function(){
     const dataCategories = vis.colorScale.domain();
 
 // Draw the layers
-    const categories = vis.svg.selectAll(".area")
+    var categories = vis.svg.selectAll(".area")
         .data(vis.stackedData);
     //.data(vis.displayData);
+
+    categories.exit().remove();
 
     categories.enter().append("path")
         .attr("class", "area")
@@ -335,52 +334,8 @@ VelocityChart.prototype.updateVis = function(){
         .attr("d", function(d) {
             return vis.area(d);
         });
-    /*.on("mouseover", function(d,i) {
-        vis.svg.select("#layer-name").text(d.key);
-    });
-
-     */
 
     categories.exit().remove();
-
-    //TODO re-add dots
-    /*
-    const dataPoints = {};
-    //draw points
-    var points = vis.svg.selectAll('.dots')
-        .data(vis.stackedData)
-        .enter()
-        .append("g")
-        .attr("class", "dots")
-        .attr("d", function(d) { return vis.area(d.values); })
-        .attr("clip-path", "url(#clip)");
-
-    var dots = points.selectAll('.dot')
-        .data(function(d){
-            const a = [];
-            d.forEach(function(point,i){
-                a.push({'index': index, 'point': point});
-            });
-            return a;
-        })
-        .enter()
-        .append('circle')
-        .attr('class','dot')
-        .merge(points)
-        .attr("r", 1.5)
-        .attr('fill', function(d,i){
-            return '#000000';
-        })
-        .attr("transform", function(d) {
-            var key = vis.x(d.point.data.name);
-            dataPoints[key] = dataPoints[key] || [];
-            dataPoints[key].push(d);
-            return "translate(" + vis.x(d.point.data.name) + "," + vis.y(d.point[1]) + ")"; }
-        );
-
-    dots.exit().remove();
-
-     */
 
     //goal: something like http://nvd3.org/examples/stackedArea.html
 
@@ -393,75 +348,6 @@ VelocityChart.prototype.updateVis = function(){
         .attr("stroke-width", "1")
         .style("opacity", 0);
 
-    // Create the text that travels along the curve of chart
-    /*
-    const lineText = vis.svg
-        .append('g')
-        .append('text')
-        .style("opacity", 0)
-        .attr("text-anchor", "left")
-        .attr("alignment-baseline", "middle");
-    var custom_tooltip = tnt.tooltip()
-        .width(180)
-        .fill (function (d) {
-            // The DOM element is passed as "this"
-            var container = d3.select(this);
-
-            var table = container
-                .append("table")
-                .attr("class", "tnt_zmenu")
-                .attr("border", "solid")
-                .style("width", custom_tooltip.width() + "px");
-
-
-                table
-                    .append("tr")
-                    .attr("class", "tnt_zmenu_header")
-                    .append("th")
-                    .text(d.stackedData[0][d.i].data.name);
-
-            //Legends for the layers
-            var tableLegend = table.selectAll(".tnt_zmenu_row")
-                .data(d.vis.colorScale.domain())
-                .enter();
-            var tableRow = tableLegend
-                .append("tr")
-                .attr("class", "tnt_zmenu_row");
-            var tableColHeader = tableRow
-                .append("td")
-                .style("text-align", "left");
-            tableColHeader
-                .append('rect')
-                .attr("x", 10)
-                .attr("y", (d, i) => i * 20)
-                .attr("width", 10)
-                .attr("height", 10)
-                .style("stroke", "black")
-                .style("stroke-width", 1)
-                .style("fill", e => d.vis.colorScale(e));
-            //the data objects are the fill colors
-            tableColHeader
-                .append('text')
-                .attr("class", "layerLegend")
-                .attr("x", 30) //leave 5 pixel space after the <rect>
-                .attr("y", function(d, i) {
-                    return i * 20;
-                })
-                .attr("dy", "0.8em") //place text one line *below* the x,y point
-                .text(function(e,i) {
-                    var index = vis.layer.length - i -1;
-                    return e;
-                });
-            tableRow
-                .append("td")
-                .style("text-align", "right")
-                .html(function (e,i) {
-                    return d.stackedData[i][d.i][1] - d.stackedData[i][d.i][0];
-                    //d.stackedData[i][d.i].data.name
-                });
-        });
-
-     */
     var custom_tooltip = function(d) {
         var obj = {};
         obj.header = d.vis.stackedData[0][d.i].data.name;
@@ -475,8 +361,6 @@ VelocityChart.prototype.updateVis = function(){
             .call (this, obj);
     };
 
-
-
     // Create a rect on top of the svg area: this rectangle recovers mouse position
     vis.svg
         .append('rect')
@@ -486,7 +370,6 @@ VelocityChart.prototype.updateVis = function(){
         .attr('height', vis.height)
         .on('mouseover', function () {
             vertline.style("opacity", 1);
-            //lineText.style("opacity",1);
         })
         .on('mousemove', function(d) {
             // recover coordinate we need
@@ -497,17 +380,10 @@ VelocityChart.prototype.updateVis = function(){
                 .attr("x2", vis.x(vis.stackedData[0][i].data.name))
                 .attr("y2", vis.height);
 
-            //TODO: remove unneeded stuff
-            /*
-            custom_tooltip.call(this, { "stackedData":vis.stackedData,
-                "i": i, "colorScale": vis.colorScale,
-            "vis": vis});
-             */
             custom_tooltip.call(this, {"vis":vis, "i":i});
         })
         .on('mouseout', function(){
             vertline.style("opacity", 0);
-            //lineText.style("opacity", 0);
         });
 
     // Call axis functions with the new domain
@@ -522,12 +398,10 @@ VelocityChart.prototype.updateVis = function(){
         //.attr("transform", "rotate(25)")
         .style("text-anchor", "start")
         .text(function (d, i) {
-            var curSprint = "Sprint " + (i + vis.startingSprint);
+            var curSprint = "Sprint " + (i + vis.startingSprint + 1);
             if(d == vis.activeSprint.name) curSprint += "(Active)";
             return curSprint;
         });
-
-
 
     vis.svg.select(".y-axis").call(vis.yAxis);
 
@@ -536,52 +410,15 @@ VelocityChart.prototype.updateVis = function(){
 
     var legend = d3.legendColor()
         .shapeWidth(30)
+        .orient("horizontal")
+        .scale(vis.colorScale)
         .cells(vis.layer.length)
-        //.orient("verticle")
-        .scale(vis.colorScale);
+        .shapePadding(40)
+        .labelAlign("start");
 
-    d3.select(".visLegend").attr("transform", "translate(10,0)");
+    d3.select(".visLegend").attr("transform", "translate(0,-35)");
     vis.svg.select(".visLegend")
         .call(legend);
-
-
-
-
-    /*
-    //Legends for the layers
-    var lineLegend = vis.svg.selectAll('g.layerLegend')
-        .data(vis.colorScale.domain())
-        .enter()
-        .append('g').attr('class', 'layerLegend');
-    var lines = lineLegend
-        .merge(lineLegend)
-        .append('rect')
-
-        .attr("x", 10)
-        .attr("y", (d, i) => i * 20)
-        .attr("width", 10)
-        .attr("height", 10)
-        .style("stroke", "black")
-        .style("stroke-width", 1)
-        .style("fill", d => vis.colorScale(d));
-    lines.exit().remove();
-    //the data objects are the fill colors
-    lineLegend
-        .append('text')
-        .attr("class", "layerLegend")
-        .merge(lineLegend)
-        .attr("x", 30) //leave 5 pixel space after the <rect>
-        .attr("y", function(d, i) {
-            return i * 20;
-        })
-        .attr("dy", "0.8em") //place text one line *below* the x,y point
-        .text(function(d,i) {
-            const index = vis.layer.length - i -1;
-            return d;
-        });
-    lines.exit().remove();
-
-     */
 };
 
 VelocityChart.prototype.onSelectedLayerChange = function(selection) {
@@ -601,7 +438,6 @@ VelocityChart.prototype.onSelectedLayerChange = function(selection) {
             vis.currentLayer = issueTypeLayer;
             break;
     }
-    vis.colorScale.domain(vis.layer);
 
     vis.wrangleData();
 
