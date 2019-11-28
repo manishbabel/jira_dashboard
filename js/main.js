@@ -19,12 +19,6 @@ function visualize(error, jiraData, scrumText, retroData, test) {
         console.log(scrumTextStore.ceremonies);
         console.log(retroStore.data);
 
-        console.log(issueStore.getStoryPointField());
-        console.log(issueStore.getBacklogUrl());
-        issueStore.getSprints().forEach(function (sprint) {
-                console.log(sprint.name + " " + issueStore.getSprintUrlForSprint(sprint.id));
-        });
-
         const margin = {top: 0, right: 0, bottom: 0, left: 0};
         const marginVelocity = { top: 40, right: 60, bottom: 60, left: 60 };
         const marginScope = { top: 60, right: 60, bottom: 60, left: 60 };
