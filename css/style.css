@@ -253,3 +253,23 @@ footer {
 path.arc:hover {
     opacity: 0.7;
 }
+
+.randomize {
+    float: left;
+    display: block;
+    width: 90px;
+    font-size: 14px;
+    padding: 0.7em 1em;
+    margin: 1em 0.5em;
+    border: 0.01em solid rgb(197,197,197);
+    background-color: rgb(240,240,240);
+    border-radius: 0.1em;
+    color: rgb(30,30,30);
+    text-align: center;
+}
+
+.line {
+    fill: none;
+    stroke: rgb(255,74,27);
+    stroke-width: 1.5px;
+}

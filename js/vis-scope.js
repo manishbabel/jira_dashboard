@@ -18,27 +18,49 @@ class ScopeChart {
 
     initVis(){
         var vis = this;
-        vis.map = {ked358 :"img1.png" ,mab7461 :"img2.png" ,jam7652 :"img3.png" ,admin :"img4.png"};
+        vis.imageMap = {ked358 :"img/1.png" ,mab7461 :"img/2.png" ,jam7652 :"img/3.png" ,admin :"img/4.png"};
 
         const diameter = 600;
         vis.margin = { top: 60, right: 60, bottom: 60, left: 60 };
         vis.width = 800;
-        vis.height = 700;
+        vis.height = 800;
         vis.svgElem = d3.select("#" + vis.parentElement).append("svg")
             .attr("width",  vis.width  )
             .attr("height",  vis.height  );
         vis.defs = vis.svg.svg.append("defs");
         
-        vis.radiusScale = d3.scaleSqrt().domain([0,11]).range([20,60]);
+        vis.radiusScale = d3.scaleSqrt().domain([0,11]).range([30,50]);
         vis.forceXSPlit = d3.forceX(function(d){
-            if(d.isResolved == true){
-                return 150
-            }
-            else{
+            if(d.fields.assignee ==null){
                 return 400
             }
+            else if(d.fields.assignee.key == "ked358"){
+                return 15
+            }
+            else if(d.fields.assignee.key == "mab7461"){
+                return 350
+            }else if(d.fields.assignee.key == "jam7652"){
+                return 670
+            }else if(d.fields.assignee.key == "admin"){
+                return 890
+            }
+
 
         }).strength(0.05)
+        vis.forceYSPlit = d3.forceX(function(d){
+            if(d.fields.assignee ==null){
+                return 200
+            }
+            else if(d.fields.assignee.key == "ked358"){
+                return 20
+            }
+            else if(d.fields.assignee.key == "mab7461"){
+                return 20
+            }else if(d.fields.assignee.key == "jam7652"){
+                return 50
+            }else if(d.fields.assignee.key == "admin"){
+                return 150
+            }}).strength(0.05)
         vis.forceXAll = d3.forceX(vis.width/2).strength(0.05)
         var forceCollide = d3.forceCollide(function(d){
             return  vis.radiusScale(d.storyPoints)+5
@@ -56,6 +78,10 @@ class ScopeChart {
         vis.activeSprint = vis.displayData.filter((d)=> d.state == "ACTIVE");
         vis.activeSprint= vis.activeSprint[0];
         vis.storiesForActiveSprint = vis.data.getIssuesForSprint(vis.activeSprint["id"]);
+        vis.storiesForActiveSprint = vis.storiesForActiveSprint.filter(function(d){
+            // console.log("subtask",d.fields.issuetype.subtask)
+            return d.fields.issuetype.subtask ==false
+        })
         vis.status = [{name:"Resolved",x:150},
             {name:"In Progress",x:400}]
         console.log("csdvcdscds",vis.storiesForActiveSprint)
@@ -65,6 +91,32 @@ class ScopeChart {
     updateVis = function (value) {
         var vis = this
         console.log('vis.storiesForActiveSprint',vis.storiesForActiveSprint)
+
+        // var image1 = vis.svgElem.append("image")
+        //     .attr("xlink:href", "img/img1.jpg")
+        //     .attr("class","image")
+        //     .attr("x",10)
+        //     .attr("y",20)
+        // var image2 = vis.svgElem.append("image")
+        //     .attr("xlink:href", "img/img2.jpg")
+        //     .attr("class","image")
+        //     .attr("x",390)
+        //     .attr("y",20)
+        // var image3 = vis.svgElem.append("image")
+        //     .attr("xlink:href", "img/img3.jpg")
+        //     .attr("class","image")
+        //     .attr("x",650)
+        //     .attr("y",50)
+        //
+        // var image4 = vis.svgElem.append("image")
+        //     .attr("xlink:href", "img/img4.jpg")
+        //     .attr("class","image")
+        //     .attr("x",930)
+        //     .attr("y",150)
+
+
+
+
         vis.defs.selectAll(".scrum-pattern")
             .data(vis.storiesForActiveSprint).enter()
             .append("pattern")
@@ -80,20 +132,71 @@ class ScopeChart {
             .attr("width", "1")
             .attr("preserveAspectRatio", "xMidYMid slice")
             .attr("xlink:href", function (d, i) {
-                return vis.map[d.fields.assignee["name"]]
+                if (d.fields.assignee == null ){
+                    return "img/red.jpeg"
+                }else{
+                     return vis.imageMap[d.fields.assignee["name"]]
+                }
             });
-        const circles = vis.svgElem.selectAll(".bubble")
+        var circles = vis.svgElem.selectAll(".bubble")
             .data(vis.storiesForActiveSprint)
             .enter().append("circle")
             .attr("class", "bubble")
             .attr("r", d => vis.radiusScale(d.storyPoints))
             .attr("fill", d => ("url(#" + d.id + ")"))
+            .attr("stroke",1)
             .on("click", function (d) {
                 $(vis.eventHandler).trigger("selectionChanged", d)
-            });
-        vis.simulation.nodes(vis.storiesForActiveSprint)
-            .on("tick", ticked);
+            }) .call(d3.drag()
+                .on("start", (d) => {
+                    if (!d3.event.active) { vis.simulation.alphaTarget(0.2).restart(); }
+                    d.fx = d.x;
+                    d.fy = d.y;
+                })
+                .on("drag", (d) => {
+                    d.fx = d3.event.x;
+                    d.fy = d3.event.y;
+                })
+                .on("end", (d) => {
+                    if (!d3.event.active) { vis.simulation.alphaTarget(0); }
+                    d.fx = null;
+                    d.fy = null;
+                })
+            ).on ("mouseover",function(d){
+                d3.select(this).style('stroke', 'black');
+                // console.log("mouseover")
+            })
+            .on ("mouseout",function(d){
+            d3.select(this).style('stroke', 'white');
+            // console.log("mouseover")
+        })
 
+
+
+        // .call(d3.zoom().on("zoom", function () {
+            //     vis.svgElem.attr("transform", d3.event.transform)
+            // }))
+            // vis.svgElem.call(d3.zoom().on("zoom", zoom));
+        // function zoom() {
+        //     gX.call(xAxis.scale(d3.event.transform.rescaleX(xScale)));
+        //     gY.call(yAxis.scale(d3.event.transform.rescaleY(yScale)));
+        //
+        //     var new_XScale = d3.event.transform.rescaleX(xScale);
+        //     var new_yScale = d3.event.transform.rescaleY(yScale);
+        //
+        //     circles.attr("cx", function (d) {
+        //         return new_XScale(d.xAxisValue)
+        //     });
+        //     circles.attr("cy", function (d) {
+        //         return new_yScale(d.yAxisValue)
+        //     });
+        // }
+            vis.simulation.nodes(vis.storiesForActiveSprint)
+            .on("tick", ticked);
+        // vis.simulation.force("x", vis.forceXSPlit)
+        //
+        //     .force("y", vis.forceYSPlit)
+        //     .alphaTarget(0.5)
         d3.selectAll("#status").on("click.title", () =>
             vis.simulation.force("x", vis.forceXSPlit)
                 .alphaTarget(0.5)
@@ -120,7 +223,6 @@ class ScopeChart {
         function showStatusTitles(split) {
             var titles = vis.svgElem.selectAll('.title')
                 .data(split);
-
             titles.enter(titles).append('text')
                 .attr('class', 'title')
                 .merge(titles).transition().duration(1000)
