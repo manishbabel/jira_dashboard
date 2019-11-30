@@ -184,7 +184,7 @@ VelocityChart.prototype.initVis = function(){
     vis.currentMetric = totalStoryPoints;
 
     //initialize SVG drawing area
-    vis.margin = { top: 40, right: 65, bottom: 60, left: 60 };
+    vis.margin = { top: 40, right: 65, bottom: 60, left: 320 };
 
     vis.width = $("#vis-velocity-chart").width() - vis.margin.left - vis.margin.right,
         vis.height = 400 - vis.margin.top - vis.margin.bottom;
@@ -231,9 +231,18 @@ VelocityChart.prototype.initVis = function(){
     vis.svg.append("g")
         .attr("class", "y-axis axis");
 
-    // Initialize stack layout
-    vis.colorScale = d3.scaleOrdinal();
-    vis.colorScale.domain(vis.layer);
+    vis.svg
+        .append("g")
+        .append("text")
+        .attr("class", "legend yLegend velocityMetric")
+        .attr("y", 0 - vis.margin.top/2 - 20)
+        .attr("x", 0 - vis.margin.left/2 -35)
+        .attr("transform", "rotate(-90)")
+        .text(function () {
+            return velocitySelect.find(function (d) {
+                return d.value == d3.select("#velocitySelect").property("value");
+            }).displayName;
+        });
 
     // TO-DO: Tooltip placeholder
     vis.svg.append("text")
@@ -259,6 +268,10 @@ VelocityChart.prototype.initVis = function(){
     d3.select("#velocityLayersSelect").on("change", function (change) {
         $(vis.eventHandler).trigger("selectedLayerChange", d3.select("#velocityLayersSelect").property("value"));
     });
+
+    // Initialize stack layout
+    vis.colorScale = d3.scaleOrdinal();
+    vis.colorScale.domain(vis.layer);
 
     // (Filter, aggregate, modify data)
     vis.wrangleData();
@@ -353,11 +366,13 @@ VelocityChart.prototype.updateVis = function(){
         obj.header = d.vis.stackedData[0][d.i].data.name;
         obj.rows = [];
         d.vis.layer.forEach(function (layer, i) {
+            var val = d.vis.stackedData[i][d.i][1] - d.vis.stackedData[i][d.i][0];
+            if (val > 0)
             obj.rows.push({"label":layer, "value":d.vis.stackedData[i][d.i][1] - d.vis.stackedData[i][d.i][0]});
         });
 
         tooltip.table()
-            .width(180)
+            .width(200)
             .call (this, obj);
     };
 
@@ -410,13 +425,14 @@ VelocityChart.prototype.updateVis = function(){
 
     var legend = d3.legendColor()
         .shapeWidth(30)
-        .orient("horizontal")
+        .orient("verticle")
         .scale(vis.colorScale)
         .cells(vis.layer.length)
-        .shapePadding(40)
-        .labelAlign("start");
+        //.shapePadding(40)
+        ;
 
-    d3.select(".visLegend").attr("transform", "translate(0,-35)");
+    d3.select(".visLegend").attr("transform", "translate("+ -vis.margin.left +"-35)");
+
     vis.svg.select(".visLegend")
         .call(legend);
 };
@@ -456,6 +472,12 @@ VelocityChart.prototype.onSelectedMetricChange = function(selection){
             vis.currentMetric = issueCount;
             break;
     }
+    d3.select(".velocityMetric")
+        .text(function () {
+            return velocitySelect.find(function (d) {
+                return d.value == selection;
+            }).displayName;
+        });
     vis.wrangleData();
 }
 
@@ -498,6 +520,13 @@ const breakdownOptions = [
 const velocityHtml = `
 <div class="container">
     <div class="row">
+    <div class="col-md-2">
+            <select class="select" id="velocityLayersSelect">
+                ${breakdownOptions.map(function (option) {
+    return `<option value=${option.value} ${option.selected ? "selected" : ""}>${option.displayName}</option>`
+}).join('')}
+            </select>
+</div>
         <div class="col-md-2">
             <select class="select" id="velocitySelect">
                 ${velocitySelect.map(function (option) {
@@ -506,13 +535,7 @@ const velocityHtml = `
             </select>
         </div>
         <div class="col-md-8"></div>
-        <div class="col-md-2">
-            <select class="select" id="velocityLayersSelect">
-                ${breakdownOptions.map(function (option) {
-    return `<option value=${option.value} ${option.selected ? "selected" : ""}>${option.displayName}</option>`
-}).join('')}
-            </select>
-</div>
+        
     </div>
     <div class="row">
         <div class="col-md-12" id="vis-velocity-chart"></div>
