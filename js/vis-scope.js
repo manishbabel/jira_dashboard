@@ -47,14 +47,14 @@ class ScopeChart {
                 return 20
             }
             else if(d.fields.assignee.key == "ked358"){
-                return 100
+                return 130
             }
             else if(d.fields.assignee.key == "mab7461"){
-                return 270
+                return 290
             }else if(d.fields.assignee.key == "jam7652"){
-                return 460
+                return 470
             }else if(d.fields.assignee.key == "admin"){
-                return 650
+                return 660
             }
 
 
@@ -214,7 +214,7 @@ class ScopeChart {
             .attr("preserveAspectRatio", "xMidYMid slice")
             .attr("xlink:href", function (d, i) {
                 if (d.fields.assignee == null ){
-                    return "img/red.jpeg"
+                    return "img/ee.jpeg"
                 }else{
                      return vis.imageMap[d.fields.assignee["name"]]
                 }
