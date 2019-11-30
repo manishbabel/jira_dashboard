@@ -4,7 +4,7 @@ const useSampleData = false;
 document.addEventListener("DOMContentLoaded", () => {
 
     queue()
-        .defer(d3.json, (useSampleData ? "data/CFX-data-scrubbed.json" : "data/JV-11-26-19.json"))
+        .defer(d3.json, (useSampleData ? "data/CFX-data-scrubbed.json" : "data/JV-11-28-19.json"))
         .defer(d3.json, "data/scrum-process.json")
         .defer(d3.json, "data/metrics.json")
         .await(visualize);

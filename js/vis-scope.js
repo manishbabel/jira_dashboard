@@ -18,7 +18,9 @@ class ScopeChart {
 
     initVis(){
         var vis = this;
-        vis.imageMap = {ked358 :"img/1.png" ,mab7461 :"img/2.png" ,jam7652 :"img/3.png" ,admin :"img/4.png"};
+        vis.imageMap = {ked358 :"img/aa.png" ,mab7461 :"img/bb.png" ,jam7652 :"img/cc.png" ,admin :"img/dd.png"};
+        var border=1;
+        var bordercolor='black';
 
         const diameter = 600;
         vis.margin = { top: 60, right: 60, bottom: 60, left: 60 };
@@ -26,44 +28,40 @@ class ScopeChart {
         vis.height = 800;
         vis.svgElem = d3.select("#" + vis.parentElement).append("svg")
             .attr("width",  vis.width  )
-            .attr("height",  vis.height  );
+            .attr("height",  vis.height  )
+            .attr("border",border)
+        var borderPath = vis.svgElem.append("rect")
+            .attr("x", 0)
+            .attr("y", 0)
+            .attr("height", vis.height)
+            .attr("width", vis.width)
+            .style("stroke", bordercolor)
+            .style("fill", "none")
+            .style("stroke-width", border);
+
         vis.defs = vis.svg.svg.append("defs");
         
-        vis.radiusScale = d3.scaleSqrt().domain([0,11]).range([30,50]);
+        vis.radiusScale = d3.scaleSqrt().domain([0,11]).range([10,30]);
         vis.forceXSPlit = d3.forceX(function(d){
             if(d.fields.assignee ==null){
-                return 400
+                return 20
             }
             else if(d.fields.assignee.key == "ked358"){
-                return 15
+                return 100
             }
             else if(d.fields.assignee.key == "mab7461"){
-                return 350
+                return 270
             }else if(d.fields.assignee.key == "jam7652"){
-                return 670
+                return 460
             }else if(d.fields.assignee.key == "admin"){
-                return 890
+                return 650
             }
 
 
         }).strength(0.05)
-        vis.forceYSPlit = d3.forceX(function(d){
-            if(d.fields.assignee ==null){
-                return 200
-            }
-            else if(d.fields.assignee.key == "ked358"){
-                return 20
-            }
-            else if(d.fields.assignee.key == "mab7461"){
-                return 20
-            }else if(d.fields.assignee.key == "jam7652"){
-                return 50
-            }else if(d.fields.assignee.key == "admin"){
-                return 150
-            }}).strength(0.05)
         vis.forceXAll = d3.forceX(vis.width/2).strength(0.05)
         var forceCollide = d3.forceCollide(function(d){
-            return  vis.radiusScale(d.storyPoints)+5
+            return  vis.radiusScale(d.storyPoints)+2
         })
         vis.simulation = d3.forceSimulation()
             .force("x",vis.forceXAll)
@@ -84,7 +82,7 @@ class ScopeChart {
         })
         vis.status = [{name:"Resolved",x:150},
             {name:"In Progress",x:400}]
-        console.log("csdvcdscds",vis.storiesForActiveSprint)
+        console.log("displayData",vis.displayData)
         vis.updateVis();
     }
 
@@ -92,28 +90,111 @@ class ScopeChart {
         var vis = this
         console.log('vis.storiesForActiveSprint',vis.storiesForActiveSprint)
 
-        // var image1 = vis.svgElem.append("image")
-        //     .attr("xlink:href", "img/img1.jpg")
-        //     .attr("class","image")
-        //     .attr("x",10)
-        //     .attr("y",20)
-        // var image2 = vis.svgElem.append("image")
-        //     .attr("xlink:href", "img/img2.jpg")
-        //     .attr("class","image")
-        //     .attr("x",390)
-        //     .attr("y",20)
-        // var image3 = vis.svgElem.append("image")
-        //     .attr("xlink:href", "img/img3.jpg")
-        //     .attr("class","image")
-        //     .attr("x",650)
-        //     .attr("y",50)
-        //
-        // var image4 = vis.svgElem.append("image")
-        //     .attr("xlink:href", "img/img4.jpg")
-        //     .attr("class","image")
-        //     .attr("x",930)
-        //     .attr("y",150)
+        var image1 = vis.svgElem.append("image")
+            .attr("xlink:href", "img/a.jpg")
+            .attr("class","image")
+            .attr("x",60)
+            .attr("y",450)
+        vis.svgElem.append("text")
+            .attr("class", "PT_Serif_original")
+            .attr("text-anchor", "middle")
+            .attr("x", 130)
+            .attr("y", 600)
+            .attr("stroke","#8dd3c7")
+            .text("Kevin");
 
+        var image2 = vis.svgElem.append("image")
+            .attr("xlink:href", "img/b.jpg")
+            .attr("class","image")
+            .attr("x",220)
+            .attr("y",450)
+        vis.svgElem.append("text")
+            .attr("class", "PT_Serif_original")
+            .attr("text-anchor", "middle")
+            .attr("x", 290)
+            .attr("y", 600)
+            .attr("stroke","#fb8072")
+            .text("Manish");
+
+        var image3 = vis.svgElem.append("image")
+            .attr("xlink:href", "img/c.jpg")
+            .attr("class","image")
+            .attr("x",420)
+            .attr("y",450)
+        vis.svgElem.append("text")
+            .attr("class", "PT_Serif_original")
+            .attr("text-anchor", "middle")
+            .attr("x", 490)
+            .attr("y", 600)
+            .attr("stroke","#b3de69")
+            .text("James");
+
+
+        var image4 = vis.svgElem.append("image")
+            .attr("xlink:href", "img/d.jpg")
+            .attr("class","image")
+            .attr("x",600)
+            .attr("y",450)
+        vis.svgElem.append("text")
+            .attr("class", "PT_Serif_original")
+            .attr("text-anchor", "middle")
+            .attr("x", 670)
+            .attr("y", 600)
+            .attr("stroke","#bebada")
+
+            .text("David");
+
+
+        // vis.svgElem.append("text")
+        //     .attr("class", "PT_Serif")
+        //     .attr("text-anchor", "middle")
+        //     .attr("x", vis.width/2)
+        //     .attr("y", 40)
+        //     .attr("stroke","black")
+        //     // .attr("stroke-width","8px")
+        //     .text("Scrum Team");
+
+        vis.svgElem.append("text")
+            .attr("class", "PT_Serif_Small")
+            // .attr("text-anchor", "end")
+            .attr("x", 100)
+            .attr("y", 50)
+            .attr("stroke","black")
+            // .attr("stroke-width","8px")
+            .text("Scrum Team - Who is working on what? Click on work item bubbles ");
+
+        vis.svgElem.append("text")
+            .attr("class", "story-text1")
+            // .attr("text-anchor", "end")
+            .attr("x", 30)
+            .attr("y", 90)
+            .attr("font-family", "Solway")
+            .attr("font-size", "14px")
+            // .attr("stroke","black")
+            // .attr("stroke-width","8px")
+            .text("");
+
+        vis.svgElem.append("text")
+            .attr("class", "story-text2")
+            // .attr("text-anchor", "end")
+            .attr("x", 30)
+            .attr("y", 110)
+            .attr("font-family", "Solway")
+            .attr("font-size", "14px")
+            // .attr("stroke","black")
+            // .attr("stroke-width","8px")
+            .text("");
+
+        vis.svgElem.append("text")
+            .attr("class", "story-text3")
+            // .attr("text-anchor", "end")
+            .attr("x", 30)
+            .attr("y", 130)
+            .attr("font-family", "Solway")
+            .attr("font-size", "14px")
+            // .attr("stroke","black")
+            // .attr("stroke-width","8px")
+            .text("");
 
 
 
@@ -137,32 +218,55 @@ class ScopeChart {
                 }else{
                      return vis.imageMap[d.fields.assignee["name"]]
                 }
-            });
+            })
+            .attr("fill","orange")
         var circles = vis.svgElem.selectAll(".bubble")
             .data(vis.storiesForActiveSprint)
             .enter().append("circle")
             .attr("class", "bubble")
             .attr("r", d => vis.radiusScale(d.storyPoints))
+            // .attr("fill","orange")
             .attr("fill", d => ("url(#" + d.id + ")"))
             .attr("stroke",1)
             .on("click", function (d) {
+                console.log("d",d)
+                var outputStr = ""
+                var storydesc=""
+                if (d.fields.summary == null ){
+                    storydesc = ""
+                }else{
+                    storydesc = "Goal of this story is to "+d.fields.summary
+                }
+                if (d.fields.assignee == null ){
+                    outputStr = "This story is unassigned"
+                }else{
+                    outputStr = d.fields.assignee.displayName + " is working on this story"
+                }
+                d3.select(".story-text1").text(outputStr)
+                d3.select(".story-text2").text( "This story is of "+d.storyPoints+" points.")
+                d3.select(".story-text3").text(storydesc)
+
                 $(vis.eventHandler).trigger("selectionChanged", d)
-            }) .call(d3.drag()
-                .on("start", (d) => {
-                    if (!d3.event.active) { vis.simulation.alphaTarget(0.2).restart(); }
-                    d.fx = d.x;
-                    d.fy = d.y;
-                })
-                .on("drag", (d) => {
-                    d.fx = d3.event.x;
-                    d.fy = d3.event.y;
-                })
-                .on("end", (d) => {
-                    if (!d3.event.active) { vis.simulation.alphaTarget(0); }
-                    d.fx = null;
-                    d.fy = null;
-                })
-            ).on ("mouseover",function(d){
+
+            })
+
+            // .call(d3.drag()
+            //     .on("start", (d) => {
+            //         if (!d3.event.active) { vis.simulation.alphaTarget(0.2).restart(); }
+            //         d.fx = d.x;
+            //         d.fy = d.y;
+            //     })
+            //     .on("drag", (d) => {
+            //         d.fx = d3.event.x;
+            //         d.fy = d3.event.y;
+            //     })
+            //     .on("end", (d) => {
+            //         if (!d3.event.active) { vis.simulation.alphaTarget(0); }
+            //         d.fx = null;
+            //         d.fy = null;
+            //     })
+            // )
+            .on ("mouseover",function(d){
                 d3.select(this).style('stroke', 'black');
                 // console.log("mouseover")
             })
@@ -193,26 +297,26 @@ class ScopeChart {
         // }
             vis.simulation.nodes(vis.storiesForActiveSprint)
             .on("tick", ticked);
-        // vis.simulation.force("x", vis.forceXSPlit)
-        //
-        //     .force("y", vis.forceYSPlit)
-        //     .alphaTarget(0.5)
-        d3.selectAll("#status").on("click.title", () =>
-            vis.simulation.force("x", vis.forceXSPlit)
-                .alphaTarget(0.5)
-                .restart()
-        );
-        d3.selectAll("#status").on("click", function () {
-            showStatusTitles(vis.status)
-        });
-        d3.selectAll("#all").on("click.title", () =>
-            vis.simulation.force("x", vis.forceXAll)
-                .alphaTarget(0.5)
-                .restart()
-        );
-        d3.selectAll("#all").on("click", function () {
-            showStatusTitles([])
-        });
+        vis.simulation.force("x", vis.forceXSPlit)
+
+
+            .alphaTarget(0.5)
+        // d3.selectAll("#status").on("click.title", () =>
+        //     vis.simulation.force("x", vis.forceXSPlit)
+        //         .alphaTarget(0.5)
+        //         .restart()
+        // );
+        // d3.selectAll("#status").on("click", function () {
+        //     showStatusTitles(vis.status)
+        // });
+        // d3.selectAll("#all").on("click.title", () =>
+        //     vis.simulation.force("x", vis.forceXAll)
+        //         .alphaTarget(0.5)
+        //         .restart()
+        // );
+        // d3.selectAll("#all").on("click", function () {
+        //     showStatusTitles([])
+        // });
 
         function ticked() {
             circles.attr("cx", function (d) {

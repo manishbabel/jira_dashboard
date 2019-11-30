@@ -90,7 +90,7 @@ ul {
     font-family:"avenir next", Arial, sans-serif;
     padding: 6px;
     background: rgba(0, 0, 0, 0.6);
-    color: #FFA500;
+    color: white;
     border-radius: 1px;
     pointer-events: none;
 }
@@ -146,9 +146,18 @@ ul {
     fill: black;
 }
 
+.PT_Serif_original{
+    font-family: 'PT Serif', serif;
 
+}
 .PT_Serif{
     font-family: 'PT Serif', serif;
+    font-size: 22px;
+}
+
+.PT_Serif_Small{
+    font-family: 'PT Serif', serif;
+    font-size: 18px;
 }
 
 .x-axis, .y-axis, .layerLegend {
@@ -270,6 +279,18 @@ path.arc:hover {
 
 .line {
     fill: none;
-    stroke: rgb(255,74,27);
-    stroke-width: 1.5px;
+    stroke: #fdb462;
+    stroke-width: 5px;
+}
+.x-axis{
+    stroke: #fb8072;
+    font-family: 'PT Serif', serif;
+}
+@font-face {
+    font-family: 'Solway';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: local('Solway Regular'), local('Solway-Regular'), url(https://fonts.gstatic.com/s/solway/v1/AMOQz46Cs2uTAOCmhXo8sOUcUw.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
