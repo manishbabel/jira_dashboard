@@ -240,7 +240,13 @@ class ScopeChart {
                 if (d.fields.assignee == null ){
                     outputStr = "This story is unassigned"
                 }else{
-                    outputStr = d.fields.assignee.displayName + " is working on this story"
+                    if(d.isResolved ==true){
+                        outputStr = d.fields.assignee.displayName + " completed this story"
+
+                    }else{
+                        outputStr = d.fields.assignee.displayName + " is working on this story"
+
+                    }
                 }
                 d3.select(".story-text1").text(outputStr)
                 d3.select(".story-text2").text( "This story is of "+d.storyPoints+" points.")

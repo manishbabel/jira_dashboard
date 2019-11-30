@@ -63,6 +63,10 @@ EmployeeChart.prototype.wrangleData = function () {
 
     vis.activeSprint = vis.displayData.filter(d => d.state == "ACTIVE")[0];
     vis.currentSprint = vis.data.getIssuesForSprint(vis.activeSprint["id"]);
+    vis.currentSprint = vis.currentSprint.filter(function(d){
+        // console.log("kkkkkk",d)
+        return d.fields.issuetype.subtask ==false
+    })
     vis.dataset = [];
     vis.currentSprint.forEach(function (d,i) {
         const startDate = new Date(dateFormatter(d.fields.created))
@@ -75,7 +79,7 @@ EmployeeChart.prototype.wrangleData = function () {
 
         let status = d.fields.status.name;
         let stateName = "";
-
+        console.log('currentSprint',vis.currentSprint)
         switch(status) {
             case "Closed":
                 status= 1;
@@ -125,14 +129,23 @@ EmployeeChart.prototype.wrangleData = function () {
                 vis.dataset.push({name:"Manish Babel"+i,state:status,statusName:stateName,time:timeSpent,key:i})
             }
         } else {
+            var initials =""
             if (d.isResolved ==true){
-                vis.dataset.push({name:d.fields.assignee.displayName,state:status,statusName:stateName,time:timeSpent,key:d.fields.assignee.key+i})
+                var initialName = (d.fields.assignee.displayName)
+                initialName =initialName.split(' ')
+                console.log("initialName",initialName)
+                if (initialName.length > 1) {
+                    initials += initialName[0].substring(0, 1).toUpperCase() + initialName[1].substring(0, 1).toUpperCase();
+                }
+            console.log(initials)
+                vis.dataset.push({name:initials,state:status,statusName:stateName,time:timeSpent,key:d.fields.assignee.key+i})
             }
             else{
-                vis.dataset.push({name:d.fields.assignee.displayName,state:status,statusName:stateName,time:timeSpent,key:d.fields.assignee.key+i})
+                vis.dataset.push({name:initials,state:status,statusName:stateName,time:timeSpent,key:d.fields.assignee.key+i})
             }
         }
     });
+
     vis.dataset.sort(function(a,b){
         return a.time-b.time
     });
