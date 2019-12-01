@@ -4,7 +4,7 @@ const useSampleData = false;
 document.addEventListener("DOMContentLoaded", () => {
 
     queue()
-        .defer(d3.json, (useSampleData ? "data/CFX-data-scrubbed.json" : "data/JV-11-29-19.json"))
+        .defer(d3.json, (useSampleData ? "data/CFX-data-scrubbed.json" : "data/JV-11-30-19.json"))
         .defer(d3.json, "data/scrum-process.json")
         .defer(d3.json, "data/metrics.json")
         .await(visualize);
@@ -20,7 +20,7 @@ function visualize(error, jiraData, scrumText, retroData, test) {
         console.log(retroStore.data);
 
         const margin = {top: 0, right: 0, bottom: 0, left: 0};
-        const marginVelocity = { top: 40, right: 65, bottom: 60, left: 320 };
+        const marginVelocity = { top: 40, right: 65, bottom: 60, left: 60 };
         const marginScope = { top: 60, right: 60, bottom: 60, left: 60 };
         const marginRetro = { top: 70, right: 60, bottom: 50, left: 60 };
         const width = 800;
@@ -53,7 +53,8 @@ function visualize(error, jiraData, scrumText, retroData, test) {
   //      const visScrumProcess = new ScrumProcess(scrumTextStore, actionMapping);
 
         //Bind events
-        $(eventHandler).bind("selectedLayerChange", function(event, selection) {
+        $(eventHandler).bind("selectedIssuePropertyChange", function(event, selection) {
+                issueStore.onSelectedIssuePropertyChange(selection);
                 visVelocity.onSelectedLayerChange(selection);
         });
 

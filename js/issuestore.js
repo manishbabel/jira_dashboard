@@ -50,7 +50,16 @@
 
 const defaultSprintField = "customfield_10401";
 const defaultStoryPointField = "customfield_10003";
-const jiraBaseUrl = "https://cs171-jira.atlassian.net/"
+const jiraBaseUrl = "https://cs171-jira.atlassian.net/";
+//count metrics
+const totalStoryPoints = "totalSprintStoryPoints";
+const completedStoryPoints = "completedSprintStoryPoints";
+const issueCount = "issueSprintCount";
+
+//layers
+const priorityLayer = "priority";
+const issueTypeLayer = "issueType";
+const componentLayer = "components";
 let parseDate = d3.timeParse("%Y-%m-%dT%H:%M:%S.%L%Z");
 
 class IssueStore {
@@ -72,6 +81,12 @@ class IssueStore {
 
         const allSprints = [];
         const sprintMap = [];
+        var priorities = [];
+        var priorityIds = [];
+        var issueTypeIds = [];
+        var issueTypes = [];
+        var componentIds = [];
+        var components = ["None"];
 
         self.issues.forEach(function (issue) {
             var sprints = issue.fields[self.sprintField];
@@ -95,16 +110,116 @@ class IssueStore {
             deserializeIssueDates(issue);
             //setup issue helper functions
             setIssueHelperProperties(issue, self.storyPointField);
+
+            //get all possible values for priority, issuetype, and component
+            if(! priorityIds[issue.fields.priority.id]) {
+                priorities.push(issue.fields.priority.name);
+                priorityIds[issue.fields.priority.id] = issue.fields.priority.name;
+            }
+            if(! issueTypeIds[issue.fields.issuetype.id]) {
+                issueTypes.push(issue.fields.issuetype.name);
+                issueTypeIds[issue.fields.issuetype.id] = issue.fields.issuetype.name;
+            }
+
+            issue.fields.components.forEach(function (component) {
+                if(! componentIds[component.id]) {
+                    components.push(component.name);
+                    componentIds[component.id] = component.name;
+                }
+            });
+
         });
 
         self.sprints = allSprints;
         self.sprintMap = sprintMap;
+        self.priorities = priorities;
+        self.issueTypes = issueTypes;
+        self.components = components;
 
-        //setup sprint helper functions
+        //setup sprint helper functions and data beakdown
+
+
+
         allSprints.forEach(function (sprint) {
-            setSprintHelperProperties(sprint, self.getIssuesForSprint(sprint));
+            var sprintIssues = self.getIssuesForSprint(sprint);
+            setSprintHelperProperties(sprint, sprintIssues);
+            sprint.issues = sprintIssues;
+
+            //calculate sum of story points per sprint
+            sprint[totalStoryPoints] = {};
+            sprint[totalStoryPoints][priorityLayer] = {};
+            sprint[totalStoryPoints][componentLayer] = {};
+            sprint[totalStoryPoints][issueTypeLayer] = {};
+            sprint[issueCount] = {};
+            sprint[issueCount][priorityLayer] = {};
+            sprint[issueCount][componentLayer] = {};
+            sprint[issueCount][issueTypeLayer] = {};
+            sprint[completedStoryPoints] = {};
+            sprint[completedStoryPoints][priorityLayer] = {};
+            sprint[completedStoryPoints][componentLayer] = {};
+            sprint[completedStoryPoints][issueTypeLayer] = {};
+
+            priorities.forEach(function (priority) {
+
+                sprint[priority] = 0; //TODO remove this
+                sprint[totalStoryPoints][priorityLayer][priority] = 0;
+                sprint[completedStoryPoints][priorityLayer][priority] = 0;
+                sprint[issueCount][priorityLayer][priority] = 0;
+            });
+            issueTypes.forEach(function (issueType) {
+                sprint[totalStoryPoints][issueTypeLayer] [issueType] = 0;
+                sprint[completedStoryPoints][issueTypeLayer] [issueType] = 0;
+                sprint[issueCount][issueTypeLayer][issueType] = 0;
+            });
+
+            components.forEach(function (component) {
+                sprint[totalStoryPoints][componentLayer][component] = 0;
+                sprint[completedStoryPoints][componentLayer][component] = 0;
+                sprint[issueCount][componentLayer][component] = 0;
+            });
+            sprint.issues.forEach(function (issue) {
+                sprint[issue.fields.priority.name] += issue.storyPoints; //TODO remove
+                //Total Story Points
+                sprint[totalStoryPoints][priorityLayer][issue.fields.priority.name] += issue.storyPoints;
+                sprint[totalStoryPoints][issueTypeLayer][issue.fields.issuetype.name] += issue.storyPoints;
+
+                //Completed Story Points
+                if(issue.isResolved) {
+                    sprint[completedStoryPoints][priorityLayer][issue.fields.priority.name] += issue.storyPoints;
+                    sprint[completedStoryPoints][issueTypeLayer][issue.fields.issuetype.name] += issue.storyPoints;
+                }
+
+                //Issue Count
+                sprint[issueCount][priorityLayer][issue.fields.priority.name] += 1
+                sprint[issueCount][issueTypeLayer][issue.fields.issuetype.name] += 1;
+
+                //Components
+                if(issue.fields.components.length == 0) {
+                    sprint[totalStoryPoints][componentLayer]["None"] += issue.storyPoints;
+                    if(issue.isResolved) sprint[completedStoryPoints][componentLayer]["None"] += issue.storyPoints;
+                    sprint[issueCount][componentLayer]["None"] += 1;
+                } else {
+                    issue.fields.components.forEach(function (component) {
+                        sprint[totalStoryPoints][componentLayer][component.name] += issue.storyPoints;
+                        if(issue.isResolved) sprint[completedStoryPoints][componentLayer][component.name] += issue.storyPoints;
+                        sprint[issueCount][componentLayer][component.name] += 1;
+                    })
+                }
+            });
+            if(sprint.state == "ACTIVE") self.activeSprint = sprint;
         });
+
+        self.selectedIssueProperty = self.priorities;
     };
+
+    get priorities() { return this._priorities;}
+    set priorities(priorities) {this._priorities = priorities;}
+    get issueTypes() { return this._issueTypes;}
+    set issueTypes(issueTypes) {this._issueTypes = issueTypes;}
+    get components() { return this._components;}
+    set components(components) {this._components = components;}
+    get selectedIssueProperty() {return this._selectedIssueProperty;}
+    set selectedIssueProperty(selectedIssueProperty) {this._selectedIssueProperty = selectedIssueProperty;}
 
     getIssuesForSprint (sprint) {
         //look up by passed ID or passed object
@@ -141,6 +256,20 @@ class IssueStore {
             case "CLOSED":
                 return jiraBaseUrl + "secure/RapidBoard.jspa?rapidView="+ sprintObj.rapidViewId
                     + "&view=reporting&chart=sprintRetrospective&sprint=" + sprintObj.id;
+                break;
+        }
+    }
+
+    onSelectedIssuePropertyChange (selection) {
+        switch(selection) {
+            case "priorities":
+                this.selectedIssueProperty = this.priorities;
+                break;
+            case "components":
+                this.selectedIssueProperty = this.components;
+                break;
+            case "issueType":
+                this.selectedIssueProperty = this.issueTypes;
                 break;
         }
     }
