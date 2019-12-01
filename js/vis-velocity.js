@@ -78,8 +78,8 @@ VelocityChart.prototype.initVis = function(){
     vis.currentLayer = priorityLayer;
     vis.currentMetric = totalStoryPoints;
 
-    vis.width = $("#vis-velocity-chart").width() - vis.margin.left - vis.margin.right,
-        vis.height = 400 - vis.margin.top - vis.margin.bottom;
+    vis.width = $("#vis-velocity-chart").width() - vis.margin.left - vis.margin.right;
+    vis.height = 400 - vis.margin.top - vis.margin.bottom;
 
 
     vis.svg = d3.select("#vis-velocity-chart").append("svg")
@@ -159,8 +159,8 @@ VelocityChart.prototype.initVis = function(){
     vis.colorScale.domain(vis.issueStore.selectedIssueProperty);
 
     //Add selection object
-    var metricSvg = new Svg("#velocityIssuePropertySelection", 200,vis.height,{top: 0, right: 0, bottom: 0, left: 0});
-    var issuePropertyControl = new IssuePropertyControl(vis.data, metricSvg, d3.schemeCategory20, vis.eventHandler, vis.issueStore);
+    const metricSvg = new Svg("#velocityIssuePropertySelection", 200,vis.height,{top: 0, right: 0, bottom: 0, left: 0});
+    const issuePropertyControl = new IssuePropertyControl(vis.data, metricSvg, d3.schemeCategory20, vis.eventHandler, vis.issueStore);
     //Fin
 
     //add triggers
@@ -254,7 +254,7 @@ VelocityChart.prototype.updateVis = function(){
         obj.header = d.vis.stackedData[0][d.i].data.name;
         obj.rows = [];
         d.vis.issueStore.selectedIssueProperty.forEach(function (layer, i) {
-            var val = d.vis.stackedData[i][d.i][1] - d.vis.stackedData[i][d.i][0];
+            const val = d.vis.stackedData[i][d.i][1] - d.vis.stackedData[i][d.i][0];
             if (val > 0)
             obj.rows.push({"label":layer, "value":d.vis.stackedData[i][d.i][1] - d.vis.stackedData[i][d.i][0]});
         });
@@ -274,7 +274,7 @@ VelocityChart.prototype.updateVis = function(){
         .on('mouseover', function () {
             vertline.style("opacity", 1);
         })
-        .on('mousemove', function(d) {
+        .on('mousemove', function() {
             // recover coordinate we need
             const i = findClosestPoint(vis.xRange,d3.mouse(this)[0]);
             vertline
@@ -301,7 +301,7 @@ VelocityChart.prototype.updateVis = function(){
         //.attr("transform", "rotate(25)")
         .style("text-anchor", "start")
         .text(function (d, i) {
-            var curSprint = "Sprint " + (i + vis.startingSprint + 1);
+            let curSprint = "Sprint " + (i + vis.startingSprint + 1);
             if(d == vis.issueStore.activeSprint.name) curSprint += "(Active)";
             return curSprint;
         });
