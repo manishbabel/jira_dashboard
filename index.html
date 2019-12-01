@@ -69,8 +69,9 @@
             </i>, and
             <i class ="doubleUnderline w3-tooltip">nonvisual
               <span class="w3-tooltiptext">
-                Jira relies primarily on text and there are no interactive visualizations to provide
-                insights, i.e., Jira is better at the "what" than the "so what"
+                Jira relies primarily on text.  Visualizations are in a separate section
+                outside the daily flow.  Moreover, they do not provide
+                direct insights, i.e., Jira is better at the "what" than the "so what"
               </span>
             </i>.
           </h5>
@@ -320,6 +321,7 @@
 
             <!-- Velocity Card -->
             <div class="col-xl-3 col-md-3 mb-4">
+              <a href="https://cs171-jira.atlassian.net/secure/RapidBoard.jspa?projectKey=JV&rapidView=1&view=reporting&chart=velocityChart">
               <div class="card border-left-success shadow h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
@@ -333,10 +335,12 @@
                   </div>
                 </div>
               </div>
+              </a>
             </div>
 
             <!-- Burn Down Card -->
             <div class="col-xl-3 col-md-3 mb-4">
+              <a href="https://cs171-jira.atlassian.net/secure/RapidBoard.jspa?rapidView=1&projectKey=JV&view=reporting&chart=burndownChart&sprint=4">
               <div class="card border-left-success shadow h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
@@ -359,10 +363,12 @@
                   </div>
                 </div>
               </div>
+              </a>
             </div>
 
             <!-- Blockers Card -->
             <div class="col-xl-3 col-md-3 mb-4">
+              <a href="https://cs171-jira.atlassian.net/browse/JV-171?jql=project%20%3D%20JV%20AND%20sprint%20in%20(4%2C%205)%20AND%20status%20%3D%20%22BLOCKED%22">
               <div class="card border-left-danger shadow h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
@@ -376,6 +382,7 @@
                   </div>
                 </div>
               </div>
+              </a>
             </div>
           </div>
 
