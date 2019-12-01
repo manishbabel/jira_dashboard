@@ -4,7 +4,7 @@ const useSampleData = false;
 document.addEventListener("DOMContentLoaded", () => {
 
     queue()
-        .defer(d3.json, (useSampleData ? "data/CFX-data-scrubbed.json" : "data/JV-11-29-19.json"))
+        .defer(d3.json, (useSampleData ? "data/CFX-data-scrubbed.json" : "data/JV-11-30-19.json"))
         .defer(d3.json, "data/scrum-process.json")
         .defer(d3.json, "data/metrics.json")
         .await(visualize);
@@ -53,7 +53,6 @@ function visualize(error, jiraData, scrumText, retroData, test) {
 
         //Bind events
         $(eventHandler).bind("selectedIssuePropertyChange", function(event, selection) {
-                console.log("yep");
                 issueStore.onSelectedIssuePropertyChange(selection);
                 visVelocity.onSelectedLayerChange(selection);
         });
