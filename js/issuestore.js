@@ -208,6 +208,8 @@ class IssueStore {
             });
             if(sprint.state == "ACTIVE") self.activeSprint = sprint;
         });
+
+        self.selectedIssueProperty = self.priorities;
     };
 
     get priorities() { return this._priorities;}
@@ -216,6 +218,8 @@ class IssueStore {
     set issueTypes(issueTypes) {this._issueTypes = issueTypes;}
     get components() { return this._components;}
     set components(components) {this._components = components;}
+    get selectedIssueProperty() {return this._selectedIssueProperty;}
+    set selectedIssueProperty(selectedIssueProperty) {this._selectedIssueProperty = selectedIssueProperty;}
 
     getIssuesForSprint (sprint) {
         //look up by passed ID or passed object
@@ -252,6 +256,20 @@ class IssueStore {
             case "CLOSED":
                 return jiraBaseUrl + "secure/RapidBoard.jspa?rapidView="+ sprintObj.rapidViewId
                     + "&view=reporting&chart=sprintRetrospective&sprint=" + sprintObj.id;
+                break;
+        }
+    }
+
+    onSelectedIssuePropertyChange (selection) {
+        switch(selection) {
+            case "priorities":
+                this.selectedIssueProperty = this.priorities;
+                break;
+            case "components":
+                this.selectedIssueProperty = this.components;
+                break;
+            case "issueType":
+                this.selectedIssueProperty = this.issueTypes;
                 break;
         }
     }

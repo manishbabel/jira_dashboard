@@ -70,16 +70,12 @@ VelocityChart.prototype.initVis = function(){
     vis.displayData = vis.displayData.slice(vis.startingSprint , vis.displayData.length);
 
 
-
-
-
     //set default layer
-    vis.layer = vis.priorities;
     vis.currentLayer = priorityLayer;
     vis.currentMetric = totalStoryPoints;
 
     //initialize SVG drawing area
-    vis.margin = { top: 40, right: 65, bottom: 60, left: 320 };
+    vis.margin = { top: 40, right: 65, bottom: 60, left: 60 };
 
     vis.width = $("#vis-velocity-chart").width() - vis.margin.left - vis.margin.right,
         vis.height = 400 - vis.margin.top - vis.margin.bottom;
@@ -131,7 +127,7 @@ VelocityChart.prototype.initVis = function(){
         .append("text")
         .attr("class", "legend yLegend velocityMetric")
         .attr("y", 0 - vis.margin.top/2 - 20)
-        .attr("x", 0 - vis.margin.left/2 -35)
+        .attr("x", 0 - vis.margin.left/2 -170)
         .attr("transform", "rotate(-90)")
         .text(function () {
             return velocitySelect.find(function (d) {
@@ -156,17 +152,21 @@ VelocityChart.prototype.initVis = function(){
     // This allows to find the closest X index of the mouse:
     vis.bisect = d3.bisector(d => d.name ).left;
 
+    // Initialize stack layout
+    vis.colorScale = d3.scaleOrdinal();
+    vis.colorScale.domain(vis.issueStore.selectedIssueProperty);
+
+    //Add selection object
+    var metricSvg = new Svg("#velocityIssuePropertySelection", 200,vis.height,{top: 0, right: 0, bottom: 0, left: 0});
+    var issuePropertyControl = new IssuePropertyControl(vis.data, metricSvg, d3.schemeCategory20, vis.eventHandler, vis.issueStore);
+
+    //Fin
+
     //add triggers
     d3.select("#velocitySelect").on("change", function () {
         $(vis.eventHandler).trigger("selectedMetricChange", d3.select("#velocitySelect").property("value"));
     });
-    d3.select("#velocityLayersSelect").on("change", function (change) {
-        $(vis.eventHandler).trigger("selectedLayerChange", d3.select("#velocityLayersSelect").property("value"));
-    });
 
-    // Initialize stack layout
-    vis.colorScale = d3.scaleOrdinal();
-    vis.colorScale.domain(vis.layer);
 
     // (Filter, aggregate, modify data)
     vis.wrangleData();
@@ -180,9 +180,9 @@ VelocityChart.prototype.wrangleData = function(){
     const vis = this;
     vis.colorScale.range(d3.schemeCategory20.filter(function (d,i) {
         //needed as the legend needs the domain and range lengths to match
-        return i < vis.layer.length;
+        return i < vis.issueStore.selectedIssueProperty.length;
     }));
-    vis.colorScale.domain(vis.layer);
+    vis.colorScale.domain(vis.issueStore.selectedIssueProperty);
 
     const stack = d3.stack()
         .keys(vis.colorScale.domain())
@@ -237,15 +237,13 @@ VelocityChart.prototype.updateVis = function(){
         .merge(categories)
         .transition(1000)
         .style("fill", function(d,i) {
-            return vis.colorScale(vis.layer[i]);
+            return vis.colorScale(vis.issueStore.selectedIssueProperty[i]);
         })
         .attr("d", function(d) {
             return vis.area(d);
         });
 
     categories.exit().remove();
-
-    //goal: something like http://nvd3.org/examples/stackedArea.html
 
     // Create the line that travels along the curve of chart
     var vertline = vis.svg
@@ -260,7 +258,7 @@ VelocityChart.prototype.updateVis = function(){
         var obj = {};
         obj.header = d.vis.stackedData[0][d.i].data.name;
         obj.rows = [];
-        d.vis.layer.forEach(function (layer, i) {
+        d.vis.issueStore.selectedIssueProperty.forEach(function (layer, i) {
             var val = d.vis.stackedData[i][d.i][1] - d.vis.stackedData[i][d.i][0];
             if (val > 0)
             obj.rows.push({"label":layer, "value":d.vis.stackedData[i][d.i][1] - d.vis.stackedData[i][d.i][0]});
@@ -316,20 +314,8 @@ VelocityChart.prototype.updateVis = function(){
     vis.svg.select(".y-axis").call(vis.yAxis);
 
     //color legend
-    var legendOffset = vis.margin.left + vis.width - 32 * vis.layer.length;
+    var legendOffset = vis.margin.left + vis.width - 32 * vis.issueStore.selectedIssueProperty.length;
 
-    var legend = d3.legendColor()
-        .shapeWidth(30)
-        .orient("verticle")
-        .scale(vis.colorScale)
-        .cells(vis.layer.length)
-        //.shapePadding(40)
-        ;
-
-    d3.select(".visLegend").attr("transform", "translate("+ -vis.margin.left +"-35)");
-
-    vis.svg.select(".visLegend")
-        .call(legend);
 };
 
 VelocityChart.prototype.onSelectedLayerChange = function(selection) {
@@ -337,15 +323,12 @@ VelocityChart.prototype.onSelectedLayerChange = function(selection) {
 
     switch(selection) {
         case "priorities":
-            vis.layer = vis.priorities;
             vis.currentLayer = priorityLayer;
             break;
         case "components":
-            vis.layer = vis.components;
             vis.currentLayer = componentLayer;
             break;
         case "issueType":
-            vis.layer = vis.issueTypes;
             vis.currentLayer = issueTypeLayer;
             break;
     }
@@ -406,34 +389,25 @@ const velocitySelect = [
     {value: "issueCount", displayName: "Issue Count"}
 ];
 
-const breakdownOptions = [
-    {value: "priorities", displayName: "Priorities", selected:true},
-    {value: "components", displayName: "Components"},
-    {value: "issueType", displayName: "Issue Type"}
-];
+
 
 const velocityHtml = `
 <div class="container">
     <div class="row">
-    <div class="col-md-2">
-            <select class="select" id="velocityLayersSelect">
-                ${breakdownOptions.map(function (option) {
-    return `<option value=${option.value} ${option.selected ? "selected" : ""}>${option.displayName}</option>`
-}).join('')}
-            </select>
-</div>
-        <div class="col-md-2">
-            <select class="select" id="velocitySelect">
+    <div class="col-md-2" id="velocityIssuePropertySelection"></div>
+    <div class="col-md-1"></div>
+        <div class="col-md-9" >
+        <div class="row">
+            <select class="select col-md-22" id="velocitySelect">
                 ${velocitySelect.map(function (option) {
     return `<option value=${option.value} ${option.selected ? "selected" : ""}>${option.displayName}</option>`
 }).join('')}
             </select>
         </div>
-        <div class="col-md-8"></div>
-        
-    </div>
-    <div class="row">
+        <div class="row">
         <div class="col-md-12" id="vis-velocity-chart"></div>
+        </div>
+        </div>
     </div>
 </div>
 </div>

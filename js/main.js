@@ -52,7 +52,9 @@ function visualize(error, jiraData, scrumText, retroData, test) {
   //      const visScrumProcess = new ScrumProcess(scrumTextStore, actionMapping);
 
         //Bind events
-        $(eventHandler).bind("selectedLayerChange", function(event, selection) {
+        $(eventHandler).bind("selectedIssuePropertyChange", function(event, selection) {
+                console.log("yep");
+                issueStore.onSelectedIssuePropertyChange(selection);
                 visVelocity.onSelectedLayerChange(selection);
         });
 
