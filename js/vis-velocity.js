@@ -36,21 +36,15 @@ const defaultLayer = "storyPoints";
 const maxSprints = 10;
 
 //count metrics
-const totalStoryPoints = "totalSprintStoryPoints";
-const completedStoryPoints = "completedSprintStoryPoints";
-const issueCount = "issueSprintCount";
-
-//layers
-const priorityLayer = "priority";
-const issueTypeLayer = "issueType";
-const componentLayer = "components";
-
 
 
 VelocityChart = function(_parentElement, _issueStore, _eventHandler){
     this.parentElement = _parentElement;
     this.issueStore = _issueStore;
     this.eventHandler = _eventHandler;
+    this.priorities = _issueStore.priorities;
+    this.issueTypes = _issueStore.issueTypes;
+    this.components = _issueStore.components;
 
     this.initVis();
 }
@@ -76,107 +70,8 @@ VelocityChart.prototype.initVis = function(){
     vis.displayData = vis.displayData.slice(vis.startingSprint , vis.displayData.length);
 
 
-    var priorities = [];
-    var priorityIds = [];
-    var issueTypeIds = [];
-    var issueTypes = [];
-    var componentIds = [];
-    var components = ["None"];
 
-    //pre-process data
-    vis.displayData.forEach(function (sprint) {
-        //set the issues of each sprint
-        sprint.issues = vis.issueStore.getIssuesForSprint(sprint);
 
-        //get all possible priorities
-        sprint.issues.forEach(function (issue) {
-            if(! priorityIds[issue.fields.priority.id]) {
-                priorities.push(issue.fields.priority.name);
-                priorityIds[issue.fields.priority.id] = issue.fields.priority.name;
-            }
-            if(! issueTypeIds[issue.fields.issuetype.id]) {
-                issueTypes.push(issue.fields.issuetype.name);
-                issueTypeIds[issue.fields.issuetype.id] = issue.fields.issuetype.name;
-            }
-
-            issue.fields.components.forEach(function (component) {
-                if(! componentIds[component.id]) {
-                    components.push(component.name);
-                    componentIds[component.id] = component.name;
-                }
-            });
-        })
-    });
-    vis.priorities = priorities;
-    vis.issueTypes = issueTypes;
-    vis.components = components;
-
-    //calculate sum of story points per sprint
-    vis.displayData.forEach(function (sprint) {
-
-        sprint[totalStoryPoints] = {};
-        sprint[totalStoryPoints][priorityLayer] = {};
-        sprint[totalStoryPoints][componentLayer] = {};
-        sprint[totalStoryPoints][issueTypeLayer] = {};
-        sprint[issueCount] = {};
-        sprint[issueCount][priorityLayer] = {};
-        sprint[issueCount][componentLayer] = {};
-        sprint[issueCount][issueTypeLayer] = {};
-        sprint[completedStoryPoints] = {};
-        sprint[completedStoryPoints][priorityLayer] = {};
-        sprint[completedStoryPoints][componentLayer] = {};
-        sprint[completedStoryPoints][issueTypeLayer] = {};
-
-        priorities.forEach(function (priority) {
-
-            sprint[priority] = 0; //TODO remove this
-            sprint[totalStoryPoints][priorityLayer][priority] = 0;
-            sprint[completedStoryPoints][priorityLayer][priority] = 0;
-            sprint[issueCount][priorityLayer][priority] = 0;
-        });
-        issueTypes.forEach(function (issueType) {
-            sprint[totalStoryPoints][issueTypeLayer] [issueType] = 0;
-            sprint[completedStoryPoints][issueTypeLayer] [issueType] = 0;
-            sprint[issueCount][issueTypeLayer][issueType] = 0;
-        });
-
-        components.forEach(function (component) {
-            sprint[totalStoryPoints][componentLayer][component] = 0;
-            sprint[completedStoryPoints][componentLayer][component] = 0;
-            sprint[issueCount][componentLayer][component] = 0;
-        });
-        sprint.issues.forEach(function (issue) {
-            sprint[issue.fields.priority.name] += issue.storyPoints; //TODO remove
-            //Total Story Points
-            sprint[totalStoryPoints][priorityLayer][issue.fields.priority.name] += issue.storyPoints;
-            sprint[totalStoryPoints][issueTypeLayer][issue.fields.issuetype.name] += issue.storyPoints;
-
-            //Completed Story Points
-            if(issue.isResolved) {
-                sprint[completedStoryPoints][priorityLayer][issue.fields.priority.name] += issue.storyPoints;
-                sprint[completedStoryPoints][issueTypeLayer][issue.fields.issuetype.name] += issue.storyPoints;
-            }
-
-            //Issue Count
-            sprint[issueCount][priorityLayer][issue.fields.priority.name] += 1
-            sprint[issueCount][issueTypeLayer][issue.fields.issuetype.name] += 1;
-
-            //Components
-            if(issue.fields.components.length == 0) {
-                sprint[totalStoryPoints][componentLayer]["None"] += issue.storyPoints;
-                if(issue.isResolved) sprint[completedStoryPoints][componentLayer]["None"] += issue.storyPoints;
-                sprint[issueCount][componentLayer]["None"] += 1;
-            } else {
-                issue.fields.components.forEach(function (component) {
-                    sprint[totalStoryPoints][componentLayer][component.name] += issue.storyPoints;
-                    if(issue.isResolved) sprint[completedStoryPoints][componentLayer][component.name] += issue.storyPoints;
-                    sprint[issueCount][componentLayer][component.name] += 1;
-                })
-            }
-        });
-        if(sprint.state == "ACTIVE") vis.activeSprint = sprint;
-    });
-    //console.log(vis.displayData);
 
     //set default layer
     vis.layer = vis.priorities;
@@ -414,7 +309,7 @@ VelocityChart.prototype.updateVis = function(){
         .style("text-anchor", "start")
         .text(function (d, i) {
             var curSprint = "Sprint " + (i + vis.startingSprint + 1);
-            if(d == vis.activeSprint.name) curSprint += "(Active)";
+            if(d == vis.issueStore.activeSprint.name) curSprint += "(Active)";
             return curSprint;
         });
 
