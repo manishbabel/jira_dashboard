@@ -83,8 +83,8 @@
           <h5>
             The ScrumSee tool helps teams follow the scrum process and
             highlights actionable insights about the health of their team and their sprints.
-            ScrumSee leverages the universal Scrum diagram to perfectly model the full
-            Scrum process and it encourages to explore with interactive visualizations.
+            ScrumSee leverages the universal Scrum diagram to model the full
+            Scrum process and it encourages the team to explore with interactive visualizations.
           </h5>
 
         </header>
@@ -99,90 +99,6 @@
               <i class="fas fa-glasses fa-sm text-black-50"></i>&nbsp ScrumSee
             </h1>
           </div>
-
-          <!-- Content Row -->
-          <div class="row">
-
-            <!-- Goal Card -->
-            <div class="col-xl-3 col-md-3 mb-4">
-              <div class="card border-left-primary shadow h-100 py-2">
-                <div class="card-body">
-                  <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-
-                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Sprint Target Goal</div>
-                      <div id="sprint-goal" class="h5 mb-0 font-weight-bold text-gray-800"></div>
-                    </div>
-                    <div class="col-auto">
-                      <i class="fas fa-bullseye fa-2x text-gray-300"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Velocity Card -->
-            <div class="col-xl-3 col-md-3 mb-4">
-              <div class="card border-left-success shadow h-100 py-2">
-                <div class="card-body">
-                  <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Velocity</div>
-                      <div id="scrum-velocity" class="h5 mb-0 font-weight-bold text-gray-800">story points</div>
-                    </div>
-                    <div class="col-auto">
-                      <i class="fas fa-tachometer-alt fa-2x text-gray-300"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Burn Down Card -->
-            <div class="col-xl-3 col-md-3 mb-4">
-              <div class="card border-left-success shadow h-100 py-2">
-                <div class="card-body">
-                  <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Burn Down</div>
-                      <div class="row no-gutters align-items-center">
-                        <div class="col-auto">
-                          <div id="scrum-burndown-pct" class="h5 mb-0 mr-3 font-weight-bold text-gray-800"></div>
-                        </div>
-                        <div class="col">
-                          <div class="progress progress-sm mr-2">
-                            <div id="burn-down-progress" class="progress-bar bg-success" role="progressbar" style="width: 0" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-auto">
-                      <i class="fas fa-fire fa-2x text-gray-300"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Blockers Card -->
-            <div class="col-xl-3 col-md-3 mb-4">
-              <div class="card border-left-danger shadow h-100 py-2">
-                <div class="card-body">
-                  <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Blockers</div>
-                      <div id="total-blockers" class="h5 mb-0 font-weight-bold text-gray-800"></div>
-                    </div>
-                    <div class="col-auto">
-                      <i class="fas fa-hand-paper fa-2x text-gray-300"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-            <!-- Content Row -->
 
           <div class="row">
 
@@ -378,6 +294,90 @@
               </div>
             </div>
         </div>
+
+          <!-- Content Row -->
+
+          <!-- Content Row -->
+          <div class="row">
+
+            <!-- Goal Card -->
+            <div class="col-xl-3 col-md-3 mb-4">
+              <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+
+                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Sprint Target Goal</div>
+                      <div id="sprint-goal" class="h5 mb-0 font-weight-bold text-gray-800"></div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-bullseye fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Velocity Card -->
+            <div class="col-xl-3 col-md-3 mb-4">
+              <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Velocity</div>
+                      <div id="scrum-velocity" class="h5 mb-0 font-weight-bold text-gray-800">story points</div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-tachometer-alt fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Burn Down Card -->
+            <div class="col-xl-3 col-md-3 mb-4">
+              <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Burn Down</div>
+                      <div class="row no-gutters align-items-center">
+                        <div class="col-auto">
+                          <div id="scrum-burndown-pct" class="h5 mb-0 mr-3 font-weight-bold text-gray-800"></div>
+                        </div>
+                        <div class="col">
+                          <div class="progress progress-sm mr-2">
+                            <div id="burn-down-progress" class="progress-bar bg-success" role="progressbar" style="width: 0" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-fire fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Blockers Card -->
+            <div class="col-xl-3 col-md-3 mb-4">
+              <div class="card border-left-danger shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Blockers</div>
+                      <div id="total-blockers" class="h5 mb-0 font-weight-bold text-gray-800"></div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-hand-paper fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
           <!-- Content Row -->
 
