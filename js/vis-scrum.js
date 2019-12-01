@@ -34,8 +34,10 @@ class ScrumProcess {
 
         if (averageHappiness < 0){
            retroElem.className += " fa-sad-tear";
+           retroElem.style.color = "darkred";
         } else {
             retroElem.className += " fa-smile-beam";
+            retroElem.style.color = "darkgreen";
         }
     }
 

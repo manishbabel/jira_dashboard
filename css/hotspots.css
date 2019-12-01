@@ -38,10 +38,9 @@ p { margin: 0; }
     padding-top: 20px;
     padding-bottom: 20px;
     padding-left: 10px;
-    padding-right: 10px;
-    color: darkred; background: white;
+    padding-right: 10px
 }
-#b-retrospective:hover { color: white; background: darkred; }
+#b-retrospective:hover {background: white; }
 
 #b-sprint { top: 44%; left: 46%;
             padding-top: 76px; padding-bottom: 76px;
