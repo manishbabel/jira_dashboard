@@ -76,6 +76,10 @@ class ScrumProcess {
 
     setClickHandlers() {
 
+        document.querySelector("#b-product-backlog").onclick = () => {
+            window.open("https://cs171-jira.atlassian.net/secure/RapidBoard.jspa?rapidView=1&projectKey=JV&view=planning&selectedIssue=JV-122&epics=visible", "_blank")
+        };
+
         const visualizations = document.querySelectorAll(".viz");
         visualizations.forEach( viz => { viz.style.display = "none";});
 

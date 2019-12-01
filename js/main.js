@@ -20,15 +20,16 @@ function visualize(error, jiraData, scrumText, retroData, test) {
         console.log(retroStore.data);
 
         const margin = {top: 0, right: 0, bottom: 0, left: 0};
-        const marginVelocity = { top: 40, right: 60, bottom: 60, left: 60 };
+        const marginVelocity = { top: 40, right: 65, bottom: 60, left: 320 };
         const marginScope = { top: 60, right: 60, bottom: 60, left: 60 };
+        const marginRetro = { top: 70, right: 60, bottom: 50, left: 60 };
         const width = 800;
         const height = 200;
 
-        const svgVelocity = new Svg("#velocity-chart", width, height, marginVelocity);
+        const svgVelocity = new Svg("#velocity-chart", -1, 400, marginVelocity);
         const svgScope = new Svg("#scope-chart", width/2, height, marginScope);
         const svgStory = new Svg("#story-chart", width/2, height, margin);
-        const svgRetro = new Svg("#retrospective-chart", width, height, margin);
+        const svgRetro = new Svg("#retrospective-chart", 600, 400, marginRetro);
         const svgBurnDown = new Svg("#burn-down-chart", width, height, margin);
         const svgEmployee = new Svg("#employee-chart", width, height, margin);
 

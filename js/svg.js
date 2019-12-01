@@ -1,6 +1,11 @@
 class Svg {
     constructor(container, width, height, margin) {
         this.margin = margin;
+
+        if (width == -1) {
+            width = $(container).width();
+        }
+
         this.width = width - this.margin.left - this.margin.right;
         this.height = height - this.margin.top - this.margin.bottom;
         this.container = container;

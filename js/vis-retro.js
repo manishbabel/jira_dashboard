@@ -6,7 +6,7 @@ class RetroChart {
     constructor(data, svg) {
         this._data = data;
         this._svg = svg;
-        this._lineChart = new LineChart(this.svg.container.substr(1), data);
+        this._lineChart = new LineChart(this.svg.container.substr(1), data, this.svg);
     }
 
     get data(){return this._data;}
@@ -19,10 +19,11 @@ class RetroChart {
  * @param _data                     -- the actual data: perDayData
  */
 
-LineChart = function(_parentElement, _data){
+LineChart = function(_parentElement, _data, svgObj){
     this.parentElement = _parentElement;
     this.data = _data;
     this.filteredData = this.data;
+    this.svgObj = svgObj;
 
     this.initVis();
 };
@@ -33,13 +34,13 @@ LineChart = function(_parentElement, _data){
  */
 
 LineChart.prototype.initVis = function(){
-    var vis = this;
+    let vis = this;
 
     // SVG margin convention
     vis.margin = { top: 70, right: 60, bottom: 50, left: 60 };
 
-    vis.width = 600 - vis.margin.left - vis.margin.right,
-        vis.height = 400 - vis.margin.top - vis.margin.bottom;
+    vis.width = 600 - vis.margin.left - vis.margin.right;
+    vis.height = 400 - vis.margin.top - vis.margin.bottom;
 
     // Clip paths
     d3.select("#" + vis.parentElement)
@@ -72,7 +73,7 @@ LineChart.prototype.initVis = function(){
         .selectAll(".smallChart")
         .data(vis.splitData).enter()
         .append("svg")
-        .attr("class", function(d){ return "smallChart " + d3.keys(d)[0]; })
+        .attr("class", d => "smallChart " + d3.keys(d)[0])
         .attr("width", vis.width + vis.margin.left + vis.margin.right)
         .attr("height", vis.height + vis.margin.top + vis.margin.bottom)
         .append("g")
@@ -166,17 +167,15 @@ LineChart.prototype.initVis = function(){
         })
         .style("display", "none")
         .selectAll(".dots")
-        .data(function(d){
-            return d;
-        })
+        .data(d => d)
         .enter()
         .append("circle")
-        .attr("class", function(d){
-            var cat = d3.select(this.parentNode.parentNode.parentNode).attr("class").split(" ")[1];
+        .attr("class", function(){
+            let cat = d3.select(this.parentNode.parentNode.parentNode).attr("class").split(" ")[1];
             return "spots " + cat;
         })
-        .attr("cy", function(d){
-            var mean = d3.select(this.parentNode).attr("class").split(" ")[2];
+        .attr("cy", function(){
+            let mean = d3.select(this.parentNode).attr("class").split(" ")[2];
             return vis.y(mean); })
         .attr("r", 5)
         .attr("fill", function(d,i){ return vis.color(d3.select(this).attr("class").split(" ")[1]); })
@@ -193,7 +192,7 @@ LineChart.prototype.initVis = function(){
                 .transition()
                 .duration(1000)
                 .attr("cy", function(d){
-                    var mean = d3.select(this.parentNode).attr("class").split(" ")[2];
+                    let mean = d3.select(this.parentNode).attr("class").split(" ")[2];
                     return vis.y(mean);
                 });
             $(".lines." + cat).delay(1000).show(0);
@@ -205,32 +204,32 @@ LineChart.prototype.initVis = function(){
     // Create path, circles, and legend for each metric
     vis.svg.append("path")
         .datum(function(d){
-            var cat = d3.keys(d)[0];
+            let cat = d3.keys(d)[0];
             return d[cat]
         })
-        .attr("class", function(d){
-            var cat = d3.select(this.parentNode.parentNode).attr("class").split(" ")[1];
+        .attr("class", function(){
+            let cat = d3.select(this.parentNode.parentNode).attr("class").split(" ")[1];
             return "lines " + cat;
         })
         .attr("stroke-width", 2)
         .attr("fill", "none")
-        .attr("stroke", function(d,i){ return vis.color(d3.select(this).attr("class").split(" ")[1]); })
+        .attr("stroke", function(){ return vis.color(d3.select(this).attr("class").split(" ")[1]); })
         .attr("d", vis.line);
 
     vis.svg.selectAll(".dots")
         .data(function(d){
-            var cat = d3.keys(d)[0];
+            let cat = d3.keys(d)[0];
             return d[cat];
         })
         .enter()
         .append("circle")
         .attr("class", function(d){
-            var cat = d3.select(this.parentNode.parentNode).attr("class").split(" ")[1];
+            let cat = d3.select(this.parentNode.parentNode).attr("class").split(" ")[1];
             return "dots " + cat;
         })
         .attr("cx", function(d,i){ return vis.x(i); })
         .attr("cy", function(d,j){
-            var tot = d.reduce(function(a,b){ return a+b; });
+            let tot = d.reduce(function(a,b){ return a+b; });
             return vis.y(tot/d.length)
         })
         .attr("r", 5)
@@ -248,7 +247,7 @@ LineChart.prototype.initVis = function(){
             $(".dots").attr("opacity", 1);
         })
         .on("click", function(){
-            var cat = d3.select(this).attr("class").split(" ")[1];
+            let cat = d3.select(this).attr("class").split(" ")[1];
             $(".fit." + cat).show();
             d3.select(".fit." + cat)
                 .transition()
@@ -301,7 +300,7 @@ LineChart.prototype.initVis = function(){
  */
 
 LineChart.prototype.wrangleData = function(){
-    var vis = this;
+    let vis = this;
 
     // Update the visualization
     vis.updateVis();
@@ -313,12 +312,12 @@ LineChart.prototype.wrangleData = function(){
  */
 
 LineChart.prototype.updateVis = function(){
-    var vis = this;
+    const vis = this;
 };
 
 
 LineChart.prototype.onSelectionChange = function(selectionStart, selectionEnd){
-    var vis = this;
+    const vis = this;
 
     // Filter original unfiltered data depending on selected time period (brush)
     vis.filteredData = vis.data.filter(function(d){
@@ -329,29 +328,29 @@ LineChart.prototype.onSelectionChange = function(selectionStart, selectionEnd){
 };
 
 LineChart.prototype.regress = function(feedback){
-    var vis = this;
+    const vis = this;
 
-    var n = feedback.length;
-    var y = feedback.map(function(data){
-        var tot = data.reduce(function(a,b){ return a+b });
+    let n = feedback.length;
+    let y = feedback.map(function(data){
+        let tot = data.reduce(function(a,b){ return a+b });
         return tot / data.length;
     });
-    var x = d3.range(n);
+    let x = d3.range(n);
 
-    var x_bar = x.reduce(function(a,b){ return a+b; }) / n;
-    var y_bar = y.reduce(function(a,b){ return a+b; }) / n;
+    let x_bar = x.reduce(function(a,b){ return a+b; }) / n;
+    let y_bar = y.reduce(function(a,b){ return a+b; }) / n;
 
-    var divisor = 0;
-    var dividend = 0;
-    for (var i = 0; i < n; i++) {
+    let divisor = 0;
+    let dividend = 0;
+    for (let i = 0; i < n; i++) {
         xr = x[i] - x_bar;
         yr = y[i] - y_bar;
         divisor += xr * yr;
         dividend += xr * xr;
     }
 
-    var b1 = divisor / dividend;
-    var b0 = y_bar - (b1 * x_bar);
+    const b1 = divisor / dividend;
+    const b0 = y_bar - (b1 * x_bar);
 
     return [0, n-1, b0, b1*(n-1)+b0];
 };
