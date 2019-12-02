@@ -1,14 +1,17 @@
 //TODO: DAVID Merge Velocity Chart into VelocityChart2 structure
 //TODO:  Use the svg object passed from VelocityChart2 instead of creating another
 
-//references: https://wesbos.com/template-strings-html/
+//references: https://wesbos.com/template-strings-html/ https://tntvis.github.io/tnt.tooltip/
+// https://codepen.io/ashokgowtham/pen/LpnHe lab6 https://www.d3-graph-gallery.com/graph/line_cursor.html
+// https://d3-legend.susielu.com/
+
 
 class VelocityChart2 {
     constructor(data, svg, eventHandler) {
         this._data = data;
         this._svg = svg;
         this._eventHandler = eventHandler;
-        this._velocityChart = new VelocityChart(this.svg.container.substr(1), this.data, eventHandler);
+        this._velocityChart = new VelocityChart(this.svg.container.substr(1), this.data, eventHandler, this.svg);
     }
 
     get data() {return this._data;}
@@ -16,38 +19,44 @@ class VelocityChart2 {
     get svg() {return this._svg;}
 
     get eventHandler() {return this._eventHandler;}
+
+    onSelectedLayerChange(selection) {
+        this._velocityChart.onSelectedLayerChange(selection);
+    }
+    onSelectedMetricChange(selection) {
+        this._velocityChart.onSelectedMetricChange(selection);
+    }
+
 }
-//references: https://codepen.io/ashokgowtham/pen/LpnHe lab6 https://www.d3-graph-gallery.com/graph/line_cursor.html
-//https://tntvis.github.io/tnt.tooltip/
+
 
 
 //constants
-const defaultLayer = "storyPoints";
+//const defaultLayer = "storyPoints";
 const maxSprints = 10;
 
 //count metrics
-const totalStoryPoints = "totalSprintStoryPoints";
-const completedStoryPoints = "completedSprintStoryPoints";
-const issueCount = "issueSprintCount";
-
-//layers
-const priorityLayer = "priority";
-const issueTypeLayer = "issueType";
-const componentLayer = "components";
 
 
-
-VelocityChart = function(_parentElement, _issueStore, _eventHandler){
+VelocityChart = function(_parentElement, _issueStore, _eventHandler, svgObj){
     this.parentElement = _parentElement;
     this.issueStore = _issueStore;
     this.eventHandler = _eventHandler;
+    this.svg = svgObj.svg;
+    this.margin = svgObj.margin;
+    this.height = svgObj.height;
+    this.width = svgObj.width;
+
+    this.priorities = _issueStore.priorities;
+    this.issueTypes = _issueStore.issueTypes;
+    this.components = _issueStore.components;
 
     this.initVis();
-}
+};
 
 VelocityChart.prototype.initVis = function(){
-    var vis = this;
-    var processingData = true;
+    const vis = this;
+    //let processingData = true;
 
     //inject template html
     document.getElementById(vis.parentElement).innerHTML = velocityHtml;
@@ -65,115 +74,13 @@ VelocityChart.prototype.initVis = function(){
     vis.startingSprint = Math.max(0, vis.displayData.length - maxSprints);
     vis.displayData = vis.displayData.slice(vis.startingSprint , vis.displayData.length);
 
+    //set default layer
+    vis.currentLayer = priorityLayer;
+    vis.currentMetric = totalStoryPoints;
 
-    var priorities = [];
-    var priorityIds = [];
-    var issueTypeIds = [];
-    var issueTypes = [];
-    console.log(vis.displayData);
-    var componentIds = [];
-    var components = ["None"];
+    vis.width = $("#vis-velocity-chart").width() - vis.margin.left - vis.margin.right;
+    vis.height = 400 - vis.margin.top - vis.margin.bottom;
 
-    //pre-process data
-    vis.displayData.forEach(function (sprint) {
-        //set the issues of each sprint
-        sprint.issues = vis.issueStore.getIssuesForSprint(sprint);
-
-        //get all possible priorities
-        sprint.issues.forEach(function (issue) {
-            if(! priorityIds[issue.fields.priority.id]) {
-                priorities.push(issue.fields.priority.name);
-                priorityIds[issue.fields.priority.id] = issue.fields.priority.name;
-            }
-            if(! issueTypeIds[issue.fields.issuetype.id]) {
-                issueTypes.push(issue.fields.issuetype.name);
-                issueTypeIds[issue.fields.issuetype.id] = issue.fields.issuetype.name;
-            }
-
-            issue.fields.components.forEach(function (component) {
-                if(! componentIds[component.id]) {
-                    components.push(component.name);
-                    componentIds[component.id] = component.name;
-                }
-            });
-        })
-    });
-    vis.priorities = priorities;
-    vis.issueTypes = issueTypes;
-    vis.components = components;
-
-    //calculate sum of story points per sprint
-    vis.displayData.forEach(function (sprint) {
-
-        sprint[totalStoryPoints] = {};
-        sprint[totalStoryPoints][priorityLayer] = {};
-        sprint[totalStoryPoints][componentLayer] = {};
-        sprint[totalStoryPoints][issueTypeLayer] = {};
-        sprint[issueCount] = {};
-        sprint[issueCount][priorityLayer] = {};
-        sprint[issueCount][componentLayer] = {};
-        sprint[issueCount][issueTypeLayer] = {};
-        sprint[completedStoryPoints] = {};
-        sprint[completedStoryPoints][priorityLayer] = {};
-        sprint[completedStoryPoints][componentLayer] = {};
-        sprint[completedStoryPoints][issueTypeLayer] = {};
-
-        priorities.forEach(function (priority) {
-
-           sprint[priority] = 0; //TODO remove this
-            sprint[totalStoryPoints][priorityLayer][priority] = 0;
-            sprint[completedStoryPoints][priorityLayer][priority] = 0;
-            sprint[issueCount][priorityLayer][priority] = 0;
-        });
-        issueTypes.forEach(function (issueType) {
-            sprint[totalStoryPoints][issueTypeLayer] [issueType] = 0;
-            sprint[completedStoryPoints][issueTypeLayer] [issueType] = 0;
-            sprint[issueCount][issueTypeLayer][issueType] = 0;
-        });
-
-        components.forEach(function (component) {
-            sprint[totalStoryPoints][componentLayer][component] = 0;
-            sprint[completedStoryPoints][componentLayer][component] = 0;
-            sprint[issueCount][componentLayer][component] = 0;
-        });
-        sprint.issues.forEach(function (issue) {
-            sprint[issue.fields.priority.name] += issue.storyPoints; //TODO remove
-            //Total Story Points
-            sprint[totalStoryPoints][priorityLayer][issue.fields.priority.name] += issue.storyPoints;
-            sprint[totalStoryPoints][issueTypeLayer][issue.fields.issuetype.name] += issue.storyPoints;
-
-            //Completed Story Points
-            if(issue.isResolved) {
-                sprint[completedStoryPoints][priorityLayer][issue.fields.priority.name] += issue.storyPoints;
-                sprint[completedStoryPoints][issueTypeLayer][issue.fields.issuetype.name] += issue.storyPoints;
-            }
-
-            //Issue Count
-            sprint[issueCount][priorityLayer][issue.fields.priority.name] += 1
-            sprint[issueCount][issueTypeLayer][issue.fields.issuetype.name] += 1;
-
-            //Components
-            if(issue.fields.components.length == 0) {
-                sprint[totalStoryPoints][componentLayer]["None"] += issue.storyPoints;
-                if(issue.isResolved) sprint[completedStoryPoints][componentLayer]["None"] += issue.storyPoints;
-                sprint[issueCount][componentLayer]["None"] += 1;
-            } else {
-                issue.fields.components.forEach(function (component) {
-                    sprint[totalStoryPoints][componentLayer][component.name] += issue.storyPoints;
-                    if(issue.isResolved) sprint[completedStoryPoints][componentLayer][component.name] += issue.storyPoints;
-                    sprint[issueCount][componentLayer][component.name] += 1;
-                })
-            }
-        });
-        if(sprint.state == "ACTIVE") vis.activeSprint = sprint;
-    });
-    console.log(vis.displayData);
-
-    //initialize SVG drawing area
-    vis.margin = { top: 40, right: 65, bottom: 60, left: 60 };
-
-    vis.width = $("#vis-velocity-chart").width() - vis.margin.left - vis.margin.right,
-        vis.height = 400 - vis.margin.top - vis.margin.bottom;
 
     vis.svg = d3.select("#vis-velocity-chart").append("svg")
         .attr("width", vis.width + vis.margin.left + vis.margin.right)
@@ -187,6 +94,10 @@ VelocityChart.prototype.initVis = function(){
         .append("rect")
         .attr("width", vis.width)
         .attr("height", vis.height);
+
+    vis.svg.append("g")
+        .attr("class", "visLegend");
+
 
     // Scales and axes
     vis.xRange = splitRange([0, vis.width], vis.displayData.length);
@@ -213,25 +124,18 @@ VelocityChart.prototype.initVis = function(){
     vis.svg.append("g")
         .attr("class", "y-axis axis");
 
-    // Initialize stack layout
-    vis.colorScale = d3.scaleOrdinal(d3.schemeCategory20);
-    vis.colorScale.domain(vis.priorities);
-    const stack = d3.stack()
-        .keys(vis.colorScale.domain());
-
-    // Stack data
-    vis.stackedData = stack(vis.displayData);
-
-    // Stacked area layout
-    vis.area = d3.area()
-        .curve(d3.curveLinear)
-        .x(function(d) {
-            return vis.x(d.data.name); })
-        .y0(function(d) {
-            return vis.y(d[0]); })
-        .y1(function(d) {
-            return vis.y(d[1]); });
-
+    vis.svg
+        .append("g")
+        .append("text")
+        .attr("class", "legend yLegend velocityMetric")
+        .attr("y", 0 - vis.margin.top/2 - 20)
+        .attr("x", 0 - vis.margin.left/2 -170)
+        .attr("transform", "rotate(-90)")
+        .text(function () {
+            return velocitySelect.find(function (d) {
+                return d.value == d3.select("#velocitySelect").property("value");
+            }).displayName;
+        });
 
     // TO-DO: Tooltip placeholder
     vis.svg.append("text")
@@ -250,8 +154,19 @@ VelocityChart.prototype.initVis = function(){
     // This allows to find the closest X index of the mouse:
     vis.bisect = d3.bisector(d => d.name ).left;
 
+    // Initialize stack layout
+    vis.colorScale = d3.scaleOrdinal();
+    vis.colorScale.domain(vis.issueStore.selectedIssueProperty);
 
+    //Add selection object
+    const metricSvg = new Svg("#velocityIssuePropertySelection", 200,vis.height,{top: 0, right: 0, bottom: 0, left: 0});
+    const issuePropertyControl = new IssuePropertyControl(vis.data, metricSvg, d3.schemeCategory20, vis.eventHandler, vis.issueStore);
+    //Fin
 
+    //add triggers
+    d3.select("#velocitySelect").on("change", function () {
+        $(vis.eventHandler).trigger("selectedMetricChange", d3.select("#velocitySelect").property("value"));
+    });
 
     // (Filter, aggregate, modify data)
     vis.wrangleData();
@@ -263,15 +178,33 @@ VelocityChart.prototype.initVis = function(){
 
 VelocityChart.prototype.wrangleData = function(){
     const vis = this;
+    vis.colorScale.range(d3.schemeCategory20.filter(function (d,i) {
+        //needed as the legend needs the domain and range lengths to match
+        return i < vis.issueStore.selectedIssueProperty.length;
+    }));
+    vis.colorScale.domain(vis.issueStore.selectedIssueProperty);
 
-    // In the first step no data wrangling/filtering needed
-    //vis.displayData = vis.issueStore.getSprints();
+    const stack = d3.stack()
+        .keys(vis.colorScale.domain())
+        .value(function (d,key) {
+            //console.log(d);
+            //console.log(d[vis.currentMetric][vis.currentLayer])
+            return d[vis.currentMetric][vis.currentLayer][key];
+        });
+
+    // Stack data
+    vis.stackedData = stack(vis.displayData);
+
+    // Stacked area layout
+    vis.area = d3.area()
+        .curve(d3.curveLinear)
+        .x(d => vis.x(d.data.name))
+        .y0(d => vis.y(d[0]))
+        .y1(d => vis.y(d[1]));
 
     // Update the visualization
     vis.updateVis();
 };
-
-
 
 /*
  * The drawing function - should use the D3 update sequence (enter, update, exit)
@@ -279,79 +212,36 @@ VelocityChart.prototype.wrangleData = function(){
  */
 
 VelocityChart.prototype.updateVis = function(){
-    var vis = this;
+    const vis = this;
 
     // Update domain
     // Get the maximum of the multi-dimensional array or in other words, get the highest peak of the uppermost layer
-    vis.y.domain([0, d3.max(vis.stackedData, function(d) {
-        return d3.max(d, function(e) {
-            return e[1];
-        });
-    })
-    ]);
+    vis.y.domain([0, d3.max(vis.stackedData, d => d3.max(d, e => e[1]))]);
 
-    const dataCategories = vis.colorScale.domain();
+    //const dataCategories = vis.colorScale.domain();
 
 // Draw the layers
     const categories = vis.svg.selectAll(".area")
         .data(vis.stackedData);
-        //.data(vis.displayData);
+    //.data(vis.displayData);
+
+    categories.exit().remove();
 
     categories.enter().append("path")
         .attr("class", "area")
         .merge(categories)
+        .transition(1000)
         .style("fill", function(d,i) {
-            return vis.colorScale(vis.priorities[i]);
-            //return vis.colorScale("completedStoryPoints");
+            return vis.colorScale(vis.issueStore.selectedIssueProperty[i]);
         })
         .attr("d", function(d) {
             return vis.area(d);
-
-            // TO-DO: Update tooltip text
         });
-    /*.on("mouseover", function(d,i) {
-        vis.svg.select("#layer-name").text(d.key);
-    });
-
-     */
 
     categories.exit().remove();
-    var dataPoints = {};
-    //draw points
-    var points = vis.svg.selectAll('.dots')
-        .data(vis.stackedData)
-        .enter()
-        .append("g")
-        .attr("class", "dots")
-        .attr("d", function(d) { return vis.area(d.values); })
-        .attr("clip-path", "url(#clip)");
-
-    points.selectAll('.dot')
-        .data(function(d, index){
-            const a = [];
-            d.forEach(function(point,i){
-                a.push({'index': index, 'point': point});
-            });
-            return a;
-        })
-        .enter()
-        .append('circle')
-        .attr('class','dot')
-        .attr("r", 1.5)
-        .attr('fill', function(d,i){
-            return '#000000';
-        })
-        .attr("transform", function(d) {
-            var key = vis.x(d.point.data.name);
-            dataPoints[key] = dataPoints[key] || [];
-            dataPoints[key].push(d);
-            return "translate(" + vis.x(d.point.data.name) + "," + vis.y(d.point[1]) + ")"; }
-        );
-
-    //goal: something like http://nvd3.org/examples/stackedArea.html
 
     // Create the line that travels along the curve of chart
-    var vertline = vis.svg
+    const vertline = vis.svg
         .append('g')
         .append('line')
         .style("fill", "none")
@@ -359,68 +249,20 @@ VelocityChart.prototype.updateVis = function(){
         .attr("stroke-width", "1")
         .style("opacity", 0);
 
-    var custom_tooltip = tnt.tooltip()
-        .width(180)
-        .fill (function (d) {
-            // The DOM element is passed as "this"
-            var container = d3.select(this);
-
-            var table = container
-                .append("table")
-                .attr("class", "tnt_zmenu")
-                .attr("border", "solid")
-                .style("width", custom_tooltip.width() + "px");
-
-
-                table
-                    .append("tr")
-                    .attr("class", "tnt_zmenu_header")
-                    .append("th")
-                    .text(d.stackedData[0][d.i].data.name);
-
-            //Legends for the layers
-            var tableLegend = table.selectAll(".tnt_zmenu_row")
-                .data(d.vis.colorScale.domain())
-                .enter();
-            var tableRow = tableLegend
-                .append("tr")
-                .attr("class", "tnt_zmenu_row");
-            var tableColHeader = tableRow
-                .append("td")
-                .style("text-align", "left");
-            tableColHeader
-                .append('rect')
-                .attr("x", 10)
-                .attr("y", (d, i) => i * 20)
-                .attr("width", 10)
-                .attr("height", 10)
-                .style("stroke", "black")
-                .style("stroke-width", 1)
-                .style("fill", e => d.vis.colorScale(e));
-            //the data objects are the fill colors
-            tableColHeader
-                .append('text')
-                .attr("class", "layerLegend")
-                .attr("x", 30) //leave 5 pixel space after the <rect>
-                .attr("y", function(d, i) {
-                    return i * 20;
-                })
-                .attr("dy", "0.8em") //place text one line *below* the x,y point
-                .text(function(e,i) {
-                    var index = d.priorities.length - i -1;
-                    return e;
-                });
-            tableRow
-                .append("td")
-                .style("text-align", "right")
-                .html(function (e,i) {
-
-                    return d.stackedData[i][d.i][1] - d.stackedData[i][d.i][0];
-                    //d.stackedData[i][d.i].data.name
-                });
+    const custom_tooltip = function(d) {
+        let obj = {};
+        obj.header = d.vis.stackedData[0][d.i].data.name;
+        obj.rows = [];
+        d.vis.issueStore.selectedIssueProperty.forEach(function (layer, i) {
+            const val = d.vis.stackedData[i][d.i][1] - d.vis.stackedData[i][d.i][0];
+            if (val > 0)
+            obj.rows.push({"label":layer, "value":d.vis.stackedData[i][d.i][1] - d.vis.stackedData[i][d.i][0]});
         });
 
-
+        tooltip.table()
+            .width(200)
+            .call (this, obj);
+    };
 
     // Create a rect on top of the svg area: this rectangle recovers mouse position
     vis.svg
@@ -431,24 +273,20 @@ VelocityChart.prototype.updateVis = function(){
         .attr('height', vis.height)
         .on('mouseover', function () {
             vertline.style("opacity", 1);
-            //lineText.style("opacity",1);
         })
-        .on('mousemove', function(d) {
+        .on('mousemove', function() {
             // recover coordinate we need
-            var i = findClosestPoint(vis.xRange,d3.mouse(this)[0]);
+            const i = findClosestPoint(vis.xRange,d3.mouse(this)[0]);
             vertline
                 .attr("x1", vis.x(vis.stackedData[0][i].data.name))
                 .attr("y1", vis.y(vis.stackedData[vis.stackedData.length -1][i][1]))
                 .attr("x2", vis.x(vis.stackedData[0][i].data.name))
                 .attr("y2", vis.height);
 
-            custom_tooltip.call(this, { "stackedData":vis.stackedData,
-                "i": i, "colorScale": vis.colorScale, "priorities": vis.priorities,
-            "vis": vis});
+            custom_tooltip.call(this, {"vis":vis, "i":i});
         })
         .on('mouseout', function(){
             vertline.style("opacity", 0);
-            //lineText.style("opacity", 0);
         });
 
     // Call axis functions with the new domain
@@ -457,71 +295,75 @@ VelocityChart.prototype.updateVis = function(){
 
         .selectAll("text")
         .attr("class", "x-axis")
-         .attr("y", 25)
+        .attr("y", 25)
         .attr("x", -20)
         .attr("dy", ".35em")
         //.attr("transform", "rotate(25)")
         .style("text-anchor", "start")
         .text(function (d, i) {
-            var curSprint = "Sprint " + (i + vis.startingSprint);
-            if(d == vis.activeSprint.name) curSprint += "(Active)";
+            let curSprint = "Sprint " + (i + vis.startingSprint + 1);
+            if(d == vis.issueStore.activeSprint.name) curSprint += "(Active)";
             return curSprint;
-    });
-
-
+        });
 
     vis.svg.select(".y-axis").call(vis.yAxis);
 
-    //Legends for the layers
-    var lineLegend = vis.svg.selectAll('g.layerLegend')
-        .data(vis.colorScale.domain())
-        .enter()
-        .append('g').attr('class', 'layerLegend');
-    lineLegend
-        .append('rect')
-        .attr("x", 10)
-        .attr("y", (d, i) => i * 20)
-        .attr("width", 10)
-        .attr("height", 10)
-        .style("stroke", "black")
-        .style("stroke-width", 1)
-        .style("fill", d => vis.colorScale(d));
-    //the data objects are the fill colors
-    lineLegend
-        .append('text')
-        .attr("class", "layerLegend")
-        .attr("x", 30) //leave 5 pixel space after the <rect>
-        .attr("y", function(d, i) {
-            return i * 20;
-        })
-        .attr("dy", "0.8em") //place text one line *below* the x,y point
-        .text(function(d,i) {
-            var index = vis.priorities.length - i -1;
-            return d;
+};
+
+VelocityChart.prototype.onSelectedLayerChange = function(selection) {
+    const vis = this;
+
+    switch(selection) {
+        case "priorities":
+            vis.currentLayer = priorityLayer;
+            break;
+        case "components":
+            vis.currentLayer = componentLayer;
+            break;
+        case "issueType":
+            vis.currentLayer = issueTypeLayer;
+            break;
+    }
+
+    vis.wrangleData();
+
+};
+
+VelocityChart.prototype.onSelectedMetricChange = function(selection){
+    const vis = this;
+    switch(selection) {
+        case "totalStoryPoints":
+            vis.currentMetric = totalStoryPoints;
+            break;
+        case "completedStoryPoints":
+            vis.currentMetric = completedStoryPoints;
+            break;
+        case "issueCount":
+            vis.currentMetric = issueCount;
+            break;
+    }
+    d3.select(".velocityMetric")
+        .text(function () {
+            return velocitySelect.find(function (d) {
+                return d.value == selection;
+            }).displayName;
         });
-}
-
-VelocityChart.prototype.onSelectedLayerChange = function(event) {
-    console.log("Selected layer changed: " + event);
-}
-
-VelocityChart.prototype.onSelectedMetricChange = function(event){
-    console.log("Selected metric changed: " + event);
-}
+    vis.wrangleData();
+};
 
 
 //Function that returns discrete values of a range given start, end, and # of values
 function splitRange(range, n) {
     if(n <=2 ) return range;
-    var increment = (range[1] - range[0])/(n-1);
+    const increment = (range[1] - range[0])/(n-1);
     return d3.range(0,n).map(function (d) {
         return range[0] + d*increment;
     });
 }
 
 function findClosestPoint(range, value) {
-    var result;
-    var min = 10000000;
+    let result;
+    let min = 10000000;
 
     range.forEach(function (d, i) {
         if(Math.abs(d - value) < min) {
@@ -539,34 +381,25 @@ const velocitySelect = [
     {value: "issueCount", displayName: "Issue Count"}
 ];
 
-const breakdownOptions = [
-    {value: "priorities", displayName: "Priorities", selected:true},
-    {value: "components", displayName: "Components"},
-    {value: "issueType", displayName: "Issue Type"},
-    {value: "epic", displayName: "Epic"}
-];
+
 
 const velocityHtml = `
 <div class="container">
     <div class="row">
-        <div class="col-md-2">
-            <select class="select" id="velocitySelect" onchange="myFunction()">
+    <div class="col-md-2" id="velocityIssuePropertySelection"></div>
+    <div class="col-md-1"></div>
+        <div class="col-md-9" >
+        <div class="row">
+            <select class="select col-md-22" id="velocitySelect">
                 ${velocitySelect.map(function (option) {
-                    return `<option value=${option.value} ${option.selected ? "selected" : ""}>${option.displayName}</option>`
-                }).join('')}
+    return `<option value=${option.value} ${option.selected ? "selected" : ""}>${option.displayName}</option>`
+}).join('')}
             </select>
         </div>
-        <div class="col-md-8"></div>
-        <div class="col-md-2">
-            <select class="select" id="velocityLayersSelect">
-                ${breakdownOptions.map(function (option) {
-                     return `<option value=${option.value} ${option.selected ? "selected" : ""}>${option.displayName}</option>`
-                    }).join('')}
-            </select>
-</div>
-    </div>
-    <div class="row">
+        <div class="row">
         <div class="col-md-12" id="vis-velocity-chart"></div>
+        </div>
+        </div>
     </div>
 </div>
 </div>

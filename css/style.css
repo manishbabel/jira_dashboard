@@ -1,3 +1,54 @@
+
+
+/* Styles from W3 Schools for double underlines and their tooltips*/
+/* https://www.w3schools.com/css/tryit.asp?filename=trycss_tooltip_arrow_top */
+
+ul {
+    list-style-position: initial;
+}
+
+.doubleUnderline {
+    text-decoration-line: underline;
+    text-decoration-style: double;
+}
+
+.w3-tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+}
+
+.w3-tooltip .w3-tooltiptext {
+    visibility: hidden;
+    width: 500px;
+    background-color: darkred;
+    color: antiquewhite;
+    text-align: center;
+    border-radius: 6px;
+    padding: 10px;
+    position: absolute;
+    z-index: 1;
+    top: 150%;
+    left: 50%;
+    margin-left: -60px;
+}
+
+.w3-tooltip .w3-tooltiptext::after {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 10%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent darkred transparent;
+}
+
+.w3-tooltip:hover .w3-tooltiptext {
+    visibility: visible;
+}
+
+/*================================================*/
 #overview {
     background-color: white;
     padding: 20px;
@@ -39,7 +90,7 @@
     font-family:"avenir next", Arial, sans-serif;
     padding: 6px;
     background: rgba(0, 0, 0, 0.6);
-    color: #FFA500;
+    color: white;
     border-radius: 1px;
     pointer-events: none;
 }
@@ -95,9 +146,18 @@
     fill: black;
 }
 
+.PT_Serif_original{
+    font-family: 'PT Serif', serif;
 
+}
 .PT_Serif{
     font-family: 'PT Serif', serif;
+    font-size: 22px;
+}
+
+.PT_Serif_Small{
+    font-family: 'PT Serif', serif;
+    font-size: 18px;
 }
 
 .x-axis, .y-axis, .layerLegend {
@@ -111,10 +171,6 @@
 
 .label {
     fill: lightgray;
-}
-
-.title {
-    font-weight: bold;
 }
 
 
@@ -205,4 +261,36 @@ footer {
 
 path.arc:hover {
     opacity: 0.7;
+}
+
+.randomize {
+    float: left;
+    display: block;
+    width: 90px;
+    font-size: 14px;
+    padding: 0.7em 1em;
+    margin: 1em 0.5em;
+    border: 0.01em solid rgb(197,197,197);
+    background-color: rgb(240,240,240);
+    border-radius: 0.1em;
+    color: rgb(30,30,30);
+    text-align: center;
+}
+
+.line {
+    fill: none;
+    stroke: #fdb462;
+    stroke-width: 5px;
+}
+.x-axis{
+    stroke: #fb8072;
+    font-family: 'Solway';
+}
+@font-face {
+    font-family: 'Solway';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: local('Solway Regular'), local('Solway-Regular'), url(https://fonts.gstatic.com/s/solway/v1/AMOQz46Cs2uTAOCmhXo8sOUcUw.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
