@@ -91,7 +91,8 @@ LineChart.prototype.initVis = function(){
         .range([vis.height,0]);
 
     vis.xAxis = d3.axisBottom()
-        .scale(vis.x);
+        .scale(vis.x)
+        .tickFormat(function(d) { return d + 1; });
 
     vis.yAxis = d3.axisLeft()
         .scale(vis.y);
@@ -180,27 +181,7 @@ LineChart.prototype.initVis = function(){
             return vis.y(mean); })
         .attr("r", 5)
         .attr("fill", function(d,i){ return vis.color(d3.select(this).attr("class").split(" ")[1]); })
-        .on("click", function(){
-            var cat = d3.select(this).attr("class").split(" ")[1];
-            d3.select(".fit." + cat)
-                .transition()
-                .duration(1000)
-                .attr("x2", function(data){ return vis.x(data[0]); })
-                .attr("y2", function(data){ return vis.y(data[2]); });
-            $(".fit." + cat).delay(1000).hide(0);
-            $(".title." + cat).text(cat + " - Average Rating");
-            d3.selectAll(".spots." + cat)
-                .transition()
-                .duration(1000)
-                .attr("cy", function(d){
-                    var mean = d3.select(this.parentNode).attr("class").split(" ")[2];
-                    return vis.y(mean);
-                });
-            $(".lines." + cat).delay(1000).show(0);
-            $(".dots." + cat).delay(1000).show(0);
-            $(".dotG." + cat).delay(1000).hide(0);
-
-        });
+        .on("click", unsplit);
 
     // Create path, circles, and legend for each metric
     vis.svg.append("path")
@@ -247,23 +228,59 @@ LineChart.prototype.initVis = function(){
             $(".line").attr("opacity", 1);
             $(".dots").attr("opacity", 1);
         })
-        .on("click", function(){
-            var cat = d3.select(this).attr("class").split(" ")[1];
-            $(".fit." + cat).show();
-            d3.select(".fit." + cat)
-                .transition()
-                .duration(1000)
-                .attr("x2", function(data){ return vis.x(data[1]); })
-                .attr("y2", function(data){ return vis.y(data[3]); });
-            $(".title." + cat).text(cat + " - Individual Rating");
-            $(".dotG." + cat).show();
-            d3.selectAll(".spots." + cat)
-                .transition()
-                .duration(1000)
-                .attr("cy", function(d){ return vis.y(d); });
-            $(".lines." + cat).hide();
-            $(".dots." + cat).hide();
-        });
+        .on("click", split);
+
+    vis.svg
+        .append("rect")
+        .attr("class", function(d){ return "rectangle " + d3.keys(d)[0]; })
+        .attr("width", vis.width)
+        .attr("height", vis.height)
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("opacity", 0)
+        .on("mouseover", split)
+        .on("mouseout", unsplit);
+
+    // Update functions
+    function split(){
+        var cat = d3.select(this).attr("class").split(" ")[1];
+        $(".fit." + cat).show();
+        d3.select(".fit." + cat)
+            .transition()
+            .duration(1000)
+            .attr("x2", function(data){ return vis.x(data[1]); })
+            .attr("y2", function(data){ return vis.y(data[3]); });
+        $(".title." + cat).text(cat + " - Individual Rating");
+        $(".dotG." + cat).show();
+        d3.selectAll(".spots." + cat)
+            .transition()
+            .duration(1000)
+            .attr("cy", function(d){ return vis.y(d); });
+        $(".lines." + cat).hide();
+        $(".dots." + cat).hide();
+    }
+
+    function unsplit(){
+        var cat = d3.select(this).attr("class").split(" ")[1];
+        d3.select(".fit." + cat)
+            .transition()
+            .duration(1000)
+            .attr("x2", function(data){ return vis.x(data[0]); })
+            .attr("y2", function(data){ return vis.y(data[2]); });
+        $(".fit." + cat).delay(1000).hide(0);
+        $(".title." + cat).text(cat + " - Average Rating");
+        d3.selectAll(".spots." + cat)
+            .transition()
+            .duration(1000)
+            .attr("cy", function(d){
+                var mean = d3.select(this.parentNode).attr("class").split(" ")[2];
+                return vis.y(mean);
+            });
+        $(".lines." + cat).delay(1000).show(0);
+        $(".dots." + cat).delay(1000).show(0);
+        $(".dotG." + cat).delay(1000).hide(0);
+
+    }
 
     vis.svg
         .append("text")
