@@ -151,6 +151,65 @@ class ScopeChart {
                 return d.x
             }).attr("cy", d => d.y)
         }
+// Add legend: circles
+
+        var valuesToShow = [0,1, 2, 3,4]
+        var xCircle = 550
+        var xLabel = 620
+        var yCircle = 730
+        vis.svgElem
+            .selectAll("legend")
+            .data(valuesToShow)
+            .enter()
+            .append("circle")
+            .attr("cx", xCircle)
+            .attr("cy", function(d){ return yCircle - vis.radiusScale(d) } )
+            .attr("r", function(d){ return vis.radiusScale(d) })
+            .style("fill", "none")
+            .attr("stroke", "black")
+
+// Add legend: segments
+        vis.svgElem
+            .selectAll("legend")
+            .data(valuesToShow)
+            .enter()
+            .append("line")
+            .attr('x1', function(d,i){ return xCircle + vis.radiusScale(d) } )
+            .attr('x2', xLabel)
+            .attr('y1', function(d,i){ return yCircle - vis.radiusScale(d*(i)) } )
+            .attr('y2', function(d,i){ return yCircle - vis.radiusScale(d*(2*i+7)) } )
+            .attr('stroke', 'black')
+            .style('stroke-dasharray', ('2,2'))
+
+// Add legend: labels
+        vis.svgElem
+            .selectAll("legend")
+            .data(valuesToShow)
+            .enter()
+            .append("text")
+            .attr("class", "PT_Serif_Legend")
+            .attr('x', xLabel)
+            .attr('y', function(d,i){ return yCircle - vis.radiusScale(d*(2*i+7)) } )
+            .text( function(d){ return d } )
+            .style("font-size", 10)
+            .attr('alignment-baseline', 'middle')
+        vis.svgElem.append("rect")
+            .attr("x", 500)
+            .attr("y", 655)
+            .attr("height", 100)
+            .attr("width", 250)
+            .style("stroke", "black")
+            .style("fill", "none")
+            .style("stroke-width", vis.border);
+        vis.svgElem.append("text")
+            .attr("class", "PT_Serif_Legend")
+            // .attr("text-anchor", "end")
+            .attr("x", 630)
+            .attr("y", 700)
+            .attr("stroke", "black")
+            // .attr("stroke-width","8px")
+            .text("Story Points");
+
 
     }
 }
