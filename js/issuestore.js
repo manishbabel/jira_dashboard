@@ -51,6 +51,7 @@
 const defaultSprintField = "customfield_10401";
 const defaultStoryPointField = "customfield_10003";
 const jiraBaseUrl = "https://cs171-jira.atlassian.net/";
+const plumpData = true;
 //count metrics
 const totalStoryPoints = "totalSprintStoryPoints";
 const completedStoryPoints = "completedSprintStoryPoints";
@@ -89,6 +90,8 @@ class IssueStore {
         var components = ["None"];
 
         self.issues.forEach(function (issue) {
+            //skip cancelled issues
+            if(issue.fields.status.name == "Cancelled") return;
             var sprints = issue.fields[self.sprintField];
             if(sprints != null) {
                 sprints.forEach(function (sprint, index) {
@@ -110,6 +113,8 @@ class IssueStore {
             deserializeIssueDates(issue);
             //setup issue helper functions
             setIssueHelperProperties(issue, self.storyPointField);
+            //plump the data
+            if(plumpData) plumpIssue(issue);
 
             //get all possible values for priority, issuetype, and component
             if(! priorityIds[issue.fields.priority.id]) {
