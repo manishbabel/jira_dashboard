@@ -142,7 +142,7 @@ class IssueStore {
         self.components = components;
 
         //setup sprint helper functions and data beakdown
-
+        self.sprints.sort( (a, b)=> a.id - b.id);
 
 
         allSprints.forEach(function (sprint) {
@@ -354,6 +354,7 @@ function setSprintHelperProperties(sprint, sprintIssues) {
     let storyPoints = 0;
     let completedStoryPoints = 0;
     let blockers = 0;
+    let totalAlerts = 0;
     sprintIssues.forEach(function (issue) {
         storyPoints += issue.storyPoints;
         //we want to use completedDate if available
@@ -362,12 +363,17 @@ function setSprintHelperProperties(sprint, sprintIssues) {
             completedStoryPoints += issue.storyPoints;
         }
 
-        if (issue.fields.status.name == "Blocked") {
+        if (issue.fields.status.name === "Blocked") {
             blockers += 1;
+        }
+
+        if (issue.storyPoints == 0) {
+            totalAlerts += 1;
         }
     });
 
     sprint.totalStoryPoints = storyPoints;
     sprint.completedStoryPoints = completedStoryPoints;
     sprint.totalBlockers = blockers;
+    sprint.totalAlerts = totalAlerts;
 }
