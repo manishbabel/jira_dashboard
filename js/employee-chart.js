@@ -79,7 +79,7 @@ EmployeeChart.prototype.wrangleData = function () {
 
         let status = d.fields.status.name;
         let stateName = "";
-        console.log('currentSprint',vis.currentSprint)
+        // console.log('currentSprint',vis.currentSprint)
         switch(status) {
             case "Closed":
                 status= 1;

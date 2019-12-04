@@ -10,7 +10,7 @@ class ScopeChart {
         this.eventHandler = eventHandler;
         this.initVis();
         $(eventHandler).bind("selectionChanged", function(event, d) {
-            console.log("eventtriggeered",d);
+            // console.log("eventtriggeered",d);
             visStory2.storyChart.onSelectionChange(d);
         });
     }
@@ -44,7 +44,7 @@ class ScopeChart {
         //Definitions for svg image
         vis.defs = vis.svg.svg.append("defs");
         // scale to change radius for bubbles based on story size
-        vis.radiusScale = d3.scaleSqrt().domain([0,11]).range([10,30]);
+        vis.radiusScale = d3.scaleSqrt().domain([0, 1, 3, 5, 8]).range([10, 15, 20, 25, 30]);
 
         // cluster groups based on scrum team members.
         // For the current design we have assumed we have 4 team members. This can be extended as needed to dynamically group with team mates
@@ -82,7 +82,7 @@ class ScopeChart {
         const vis = this;
         // get stories for active sprint
         if (vis.sprint_id == "") {
-            console.log("_data",vis._data)
+            // console.log("_data",vis._data)
             vis.storiesForSprint = vis._data.activeSprint.issues
           }else{
             vis.storiesForSprint = vis._data.sprintMap[vis.sprint_id]
@@ -93,12 +93,13 @@ class ScopeChart {
             // console.log("subtask",d.fields.issuetype.subtask)
             return d.fields.issuetype.subtask ==false
         })
-        console.log('vis.storiesForSprint',vis.storiesForSprint)
+        // console.log('vis.storiesForSprint',vis.storiesForSprint)
         vis.updateVis();
     }
 
     updateVis = function (value) {
         var vis = this
+        // vis.radiusScale.domain([0, 1, 3, 5, 8, 13, 21])
 
         displayImagesForScrumTeam(vis);
 
@@ -300,55 +301,25 @@ function generateDynamicText(d) {
 function displayStoryPointsLegend(vis) {
 // Add legend: circles
 
-    var valuesToShow = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-    var xCircle = 500
-    var xLabel = 580
-    var yCircle = 727
-    vis.svgElem
-        .selectAll("legend")
-        .data(valuesToShow)
-        .enter()
-        .append("circle")
-        .attr("cx", xCircle)
-        .attr("cy", function (d) {
-            return yCircle - vis.radiusScale(d)
-        })
-        .attr("r", function (d) {
-            return vis.radiusScale(d)
-        })
-        .style("fill", "none")
-        .attr("stroke", "black")
+    vis.svgElem.append("g")
+        .attr("class", "legendSize")
+        .attr("transform", "translate(450, 730)");
 
-// Add legend: segments
-//         vis.svgElem
-//             .selectAll("legend")
-//             .data(valuesToShow)
-//             .enter()
-//             .append("line")
-//             .attr('x1', function(d,i){ return xCircle + vis.radiusScale(d) } )
-//             .attr('x2', xLabel)
-//             .attr('y1', function(d,i){ return yCircle - vis.radiusScale(d*(i)) } )
-//             .attr('y2', function(d,i){ return yCircle - vis.radiusScale(d*(2*i+7)) } )
-//             .attr('stroke', 'black')
-//             .style('stroke-dasharray', ('2,2'))
+    var legendSize = d3.legendSize()
+        .scale(vis.radiusScale)
+        .shape('circle')
+        .shapePadding(15)
+        .labelOffset(20)
+        .orient('horizontal')
+        .labels([0,1,3,5,8])
 
-// Add legend: labels
-//         vis.svgElem
-//             .selectAll("legend")
-//             .data(valuesToShow)
-//             .enter()
-//             .append("text")
-//             .attr("class", "PT_Serif_Legend")
-//             .attr('x', xLabel)
-//             .attr('y', function(d,i){ return yCircle - vis.radiusScale(d*(3*i)) } )
-//             .text( function(d){ return d } )
-//             .style("font-size", 10)
-//             .attr('alignment-baseline', 'middle')
-    vis.svgElem.append("rect")
+    vis.svgElem.select(".legendSize")
+        .call(legendSize);
+     vis.svgElem.append("rect")
         .attr("x", 450)
         .attr("y", 650)
-        .attr("height", 100)
-        .attr("width", 270)
+        .attr("height", 140)
+        .attr("width", 310)
         .style("stroke", "black")
         .style("fill", "none")
         .style("stroke-width", vis.border);
@@ -356,8 +327,8 @@ function displayStoryPointsLegend(vis) {
         .attr("class", "PT_Serif_Legend")
         // .attr("text-anchor", "end")
         .attr("x", 560)
-        .attr("y", 700)
+        .attr("y", 680)
         .attr("stroke", "black")
         // .attr("stroke-width","8px")
-        .text("Story Points (0-11)");
+        .text("Story Points");
 }
