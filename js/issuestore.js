@@ -144,6 +144,11 @@ class IssueStore {
         //setup sprint helper functions and data beakdown
         self.sprints.sort( (a, b)=> a.id - b.id);
 
+        let previousSprintIndex = self.sprints.length - 2;
+        if (previousSprintIndex < 0) {
+            previousSprintIndex = 0
+        }
+        self.previousSprint = self.sprints[previousSprintIndex];
 
         allSprints.forEach(function (sprint) {
             var sprintIssues = self.getIssuesForSprint(sprint);

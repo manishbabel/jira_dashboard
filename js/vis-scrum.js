@@ -14,7 +14,9 @@ class ScrumProcess {
     setStats(){
 
         const sprints = this.issueStore.getSprints();
-        const activeSprint = sprints.filter(d => d.state == "ACTIVE")[0];
+        //const activeSprint = sprints.filter(d => d.state == "ACTIVE")[0];
+        const activeSprint = this.issueStore.activeSprint;
+        const velocity = this.issueStore.previousSprint.completedStoryPoints;
         const committed = activeSprint.totalStoryPoints;
         const completed = activeSprint.completedStoryPoints;
         const burndownPct =  parseFloat(100 * completed / committed).toFixed()+"%";
@@ -22,7 +24,7 @@ class ScrumProcess {
         const averageHappiness = this.retroStore.getSprintHappiness(activeSprint);
         const totalAlerts = activeSprint.totalAlerts;
 
-        document.querySelector("#scrum-velocity").innerText = committed + " story points";
+        document.querySelector("#scrum-velocity").innerText = velocity + " story points";
         document.querySelector("#scrum-burndown-pct").innerText = burndownPct;
         document.querySelector("#burn-down-progress").style = "width: " + burndownPct;
         document.querySelector("#total-blockers").innerText = activeSprint.totalBlockers;
