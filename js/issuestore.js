@@ -59,7 +59,7 @@ const issueCount = "issueSprintCount";
 
 //layers
 const priorityLayer = "priority";
-const issueTypeLayer = "issueType";
+const issueTypeLayer = "issuetype";
 const componentLayer = "components";
 let parseDate = d3.timeParse("%Y-%m-%dT%H:%M:%S.%L%Z");
 
@@ -265,7 +265,7 @@ class IssueStore {
         }
     }
 
-    onSelectedIssuePropertyChange (selection) {
+    onSelectedIssuePropertyChange (selection, callback) {
         switch(selection) {
             case "priorities":
                 this.selectedIssueProperty = this.priorities;
@@ -277,6 +277,16 @@ class IssueStore {
                 this.selectedIssueProperty = this.issueTypes;
                 break;
         }
+        callback();
+    }
+    
+    getSelectedIssuePropertyValue (issue) {
+        if (this.selectedIssueProperty == this.issueTypes) return issue.fields[issueTypeLayer].name;
+        else if (this.selectedIssueProperty == this.components) {
+            if(issue.fields[componentLayer] == null || issue.fields[componentLayer].length == 0) return "None";
+            else return issue.fields[componentLayer][0].name;
+        } else return issue.fields[priorityLayer].name;
+
     }
 
 }

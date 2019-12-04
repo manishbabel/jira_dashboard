@@ -4,7 +4,7 @@ const useSampleData = false;
 document.addEventListener("DOMContentLoaded", () => {
 
     queue()
-        .defer(d3.json, (useSampleData ? "data/CFX-data-scrubbed.json" : "data/JV-12-2-19.json"))
+        .defer(d3.json, (useSampleData ? "data/CFX-data-scrubbed.json" : "data/JV-12-3-19.json"))
         .defer(d3.json, "data/scrum-process.json")
         .defer(d3.json, "data/metrics.json")
         .await(visualize);
@@ -25,6 +25,7 @@ function visualize(error, jiraData, scrumText, retroData, test) {
         const marginRetro = { top: 70, right: 60, bottom: 50, left: 60 };
         const width = 800;
         const height = 200;
+        const colorScheme = d3.schemeCategory20;
 
         const svgVelocity = new Svg("#velocity-chart", -1, 400, marginVelocity);
         const svgScope = new Svg("#scope-chart", width/2, height, marginScope);
@@ -33,9 +34,9 @@ function visualize(error, jiraData, scrumText, retroData, test) {
         const svgBurnDown = new Svg("#burn-down-chart", width, height, margin);
         const svgEmployee = new Svg("#employee-chart", width, height, margin);
 
-        const visVelocity = new VelocityChart2(issueStore, svgVelocity, eventHandler);
+        const visVelocity = new VelocityChart2(issueStore, svgVelocity, colorScheme, eventHandler);
         const visStory = new StoryChart2(issueStore, svgStory);
-        const visScope = new ScopeChart(issueStore, svgScope, visStory,'');
+        const visScope = new ScopeChart(issueStore, svgScope, visStory,'', colorScheme, eventHandler);
         const visRetro = new RetroChart(retroData, svgRetro);
         const visBurnDown = new BurnDownChart(issueStore, svgBurnDown);
         const visEmployee = new EmployeeChart2(issueStore, svgEmployee);
@@ -54,8 +55,10 @@ function visualize(error, jiraData, scrumText, retroData, test) {
 
         //Bind events
         $(eventHandler).bind("selectedIssuePropertyChange", function(event, selection) {
-                issueStore.onSelectedIssuePropertyChange(selection);
-                visVelocity.onSelectedLayerChange(selection);
+                issueStore.onSelectedIssuePropertyChange(selection, function () {
+                        visVelocity.onSelectedLayerChange(selection);
+                        visScope.wrangleData();
+                });
         });
 
         $(eventHandler).bind("selectedMetricChange", function(event, selection) {
