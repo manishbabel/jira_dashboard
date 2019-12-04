@@ -1,16 +1,16 @@
 
 class ScopeChart {
-    constructor(data, svg, visStory2,sprint_id) {
+    constructor(data, svg, visStory2,sprint_id, colorScheme, eventHandler) {
         this._data = data;
         this._svg = svg;
         this.sprint_id = sprint_id
-        const eventHandler = {};
         this.parentElement = this.svg.container.substr(1);
         this.displayData = [];
         this.eventHandler = eventHandler;
+        this.colorScheme = colorScheme;
         this.initVis();
-        $(eventHandler).bind("selectionChanged", function(event, d) {
-            console.log("eventtriggeered",d);
+        $(eventHandler).bind("scopeBubbleSelectionChanged", function(event, d) {
+            //console.log("eventtriggeered",d);
             visStory2.storyChart.onSelectionChange(d);
         });
     }
@@ -46,6 +46,9 @@ class ScopeChart {
         // scale to change radius for bubbles based on story size
         vis.radiusScale = d3.scaleSqrt().domain([0,11]).range([10,30]);
 
+        //create color scale
+        vis.colorScale = d3.scaleOrdinal();
+
         // cluster groups based on scrum team members.
         // For the current design we have assumed we have 4 team members. This can be extended as needed to dynamically group with team mates
         vis.forceXSPlit = d3.forceX(function(d){
@@ -80,9 +83,10 @@ class ScopeChart {
 
     wrangleData = function (){
         const vis = this;
+
         // get stories for active sprint
         if (vis.sprint_id == "") {
-            console.log("_data",vis._data)
+            //console.log("_data",vis._data)
             vis.storiesForSprint = vis._data.activeSprint.issues
           }else{
             vis.storiesForSprint = vis._data.sprintMap[vis.sprint_id]
@@ -93,7 +97,15 @@ class ScopeChart {
             // console.log("subtask",d.fields.issuetype.subtask)
             return d.fields.issuetype.subtask ==false
         })
-        console.log('vis.storiesForSprint',vis.storiesForSprint)
+        //console.log('vis.storiesForSprint',vis.storiesForSprint)
+
+        //update color scale range
+        vis.colorScale.range(vis.colorScheme.filter(function (d,i) {
+            //needed as the legend needs the domain and range lengths to match
+            return i < vis.data.selectedIssueProperty.length;
+        }));
+        vis.colorScale.domain(vis.data.selectedIssueProperty);
+
         vis.updateVis();
     }
 
@@ -101,7 +113,6 @@ class ScopeChart {
         var vis = this
 
         displayImagesForScrumTeam(vis);
-
         displayTitle(vis);
 
         getImageSVGDef(vis);
@@ -111,12 +122,10 @@ class ScopeChart {
             .enter().append("circle")
             .attr("class", "bubble")
             .attr("r", d => vis.radiusScale(d.storyPoints))
-            .attr("fill", d => ("url(#" + d.id + ")"))
             .attr("stroke",1)
             .on("click", function (d) {
                 generateDynamicText(d);
-               $(vis.eventHandler).trigger("selectionChanged", d)
-
+               $(vis.eventHandler).trigger("scopeBubbleSelectionChanged", d)
             })
             .call(d3.drag()
                 .on("start", (d) => {
@@ -139,7 +148,12 @@ class ScopeChart {
             })
             .on ("mouseout",function(d){
             d3.select(this).style('stroke', 'white');
-        })
+        });
+
+        vis.svgElem.selectAll(".bubble")
+            .attr("fill", function (d) {
+                return vis.colorScale(vis.data.getSelectedIssuePropertyValue(d));
+            });
 
         vis.simulation.nodes(vis.storiesForSprint)
             .on("tick", ticked);
