@@ -20,6 +20,7 @@ class ScrumProcess {
         const burndownPct =  parseFloat(100 * completed / committed).toFixed()+"%";
         const backlogStoryCount = this.issueStore.getIssues().length;
         const averageHappiness = this.retroStore.getSprintHappiness(activeSprint);
+        const totalAlerts = activeSprint.totalAlerts;
 
         document.querySelector("#scrum-velocity").innerText = committed + " story points";
         document.querySelector("#scrum-burndown-pct").innerText = burndownPct;
@@ -29,7 +30,7 @@ class ScrumProcess {
         document.querySelector("#b-sprint-backlog").innerHTML = "Sprint Backlog <br>" + committed + " points";
         document.querySelector("#b-product-increment").innerHTML = "Product Increment <br>" + completed + " points";
         document.querySelector("#b-product-backlog").innerHTML = "Product Backlog <br>" + backlogStoryCount + " stories";
-        document.querySelector("#b-sprint-planning").innerHTML = "Sprint Planning <br>" + "14" + " Alerts";
+        document.querySelector("#b-sprint-planning").innerHTML = "Sprint Planning <br>" + totalAlerts + " Stories <br> unestimated " ;
         const retroElem = document.querySelector("#b-retrospective")
         retroElem.innerText += averageHappiness.toFixed(2);
 
@@ -81,6 +82,14 @@ class ScrumProcess {
 
         document.querySelector("#b-product-backlog").onclick = () => {
             window.open("https://cs171-jira.atlassian.net/secure/RapidBoard.jspa?rapidView=1&projectKey=JV&view=planning&selectedIssue=JV-122&epics=visible", "_blank")
+        };
+
+        document.querySelector("#b-product-increment").onclick = () => {
+            window.open("https://cs171-jira.atlassian.net/issues/?jql=project%20%3D%20JV%20and%20status%20%3D%20Done%20and%20sprint%3D5", "_blank")
+        };
+
+        document.querySelector("#b-sprint-planning").onclick = () => {
+            window.open("https://cs171-jira.atlassian.net/browse/JV-162?jql=project%20%3D%20JV%20and%20sprint%3D5%20and%20%22Story%20Points%22%3Dnull", "_blank")
         };
 
         const visualizations = document.querySelectorAll(".viz");
