@@ -26,7 +26,7 @@ class ScopeChart {
         var bordercolor='black';
         vis.margin = { top: 60, right: 60, bottom: 60, left: 60 };
         vis.width = 800;
-        vis.height = 800;
+        vis.height = 700;
         vis.svgElem = d3.select("#" + vis.parentElement).append("svg")
             .attr("width",  vis.width  )
             .attr("height",  vis.height  )
@@ -54,17 +54,17 @@ class ScopeChart {
         // For the current design we have assumed we have 4 team members. This can be extended as needed to dynamically group with team mates
         vis.forceXSPlit = d3.forceX(function(d){
             if(d.fields.assignee ==null){
-                return 20
+                return 60
             }
             else if(d.fields.assignee.key == "ked358"){
-                return 130
+                return 180
             }
             else if(d.fields.assignee.key == "mab7461"){
-                return 290
+                return 320
             }else if(d.fields.assignee.key == "jam7652"){
-                return 470
+                return 500
             }else if(d.fields.assignee.key == "admin"){
-                return 660
+                return 690
             }
 
 
@@ -77,7 +77,7 @@ class ScopeChart {
         })
         vis.simulation = d3.forceSimulation()
             .force("x",vis.forceXAll)
-            .force("y",d3.forceY(vis.height/2).strength(0.05))
+            .force("y",d3.forceY(vis.height/3.5).strength(0.05))
             .force("collide",forceCollide)
 
         displayStoryPointsLegend(vis);
@@ -123,31 +123,30 @@ class ScopeChart {
             .attr("r", d => vis.radiusScale(d.storyPoints))
             .attr("stroke",1)
             .on("click", function (d) {
-                generateDynamicText(d);
                $(vis.eventHandler).trigger("scopeBubbleSelectionChanged", d)
             })
-            .call(d3.drag()
-                .on("start", (d) => {
-                    if (!d3.event.active) { vis.simulation.alphaTarget(0.2).restart(); }
-                    d.fx = d.x;
-                    d.fy = d.y;
-                })
-                .on("drag", (d) => {
-                    d.fx = d3.event.x;
-                    d.fy = d3.event.y;
-                })
-                .on("end", (d) => {
-                    if (!d3.event.active) { vis.simulation.alphaTarget(0); }
-                    d.fx = null;
-                    d.fy = null;
-                })
-            )
-            .on ("mouseover",function(d){
-                d3.select(this).style('stroke', 'black');
-            })
-            .on ("mouseout",function(d){
-            d3.select(this).style('stroke', 'white');
-        });
+        //     .call(d3.drag()
+        //         .on("start", (d) => {
+        //             if (!d3.event.active) { vis.simulation.alphaTarget(0.2).restart(); }
+        //             d.fx = d.x;
+        //             d.fy = d.y;
+        //         })
+        //         .on("drag", (d) => {
+        //             d.fx = d3.event.x;
+        //             d.fy = d3.event.y;
+        //         })
+        //         .on("end", (d) => {
+        //             if (!d3.event.active) { vis.simulation.alphaTarget(0); }
+        //             d.fx = null;
+        //             d.fy = null;
+        //         })
+        //     )
+        //     .on ("mouseover",function(d){
+        //         d3.select(this).style('stroke', 'black');
+        //     })
+        //     .on ("mouseout",function(d){
+        //     d3.select(this).style('stroke', 'white');
+        // });
 
         vis.svgElem.selectAll(".bubble")
             .attr("fill", function (d) {
@@ -174,50 +173,50 @@ function displayImagesForScrumTeam(vis) {
     var image1 = vis.svgElem.append("image")
         .attr("xlink:href", "img/a.jpg")
         .attr("class", "image")
-        .attr("x", 60)
-        .attr("y", 450)
+        .attr("x", 120)
+        .attr("y", 270)
     vis.svgElem.append("text")
         .attr("class", "PT_Serif_original")
         .attr("text-anchor", "middle")
-        .attr("x", 130)
-        .attr("y", 600)
+        .attr("x", 190)
+        .attr("y", 440)
         .attr("stroke", "#8dd3c7")
         .text("Kevin");
 
     var image2 = vis.svgElem.append("image")
         .attr("xlink:href", "img/b.jpg")
         .attr("class", "image")
-        .attr("x", 220)
-        .attr("y", 450)
+        .attr("x", 250)
+        .attr("y", 270)
     vis.svgElem.append("text")
         .attr("class", "PT_Serif_original")
         .attr("text-anchor", "middle")
-        .attr("x", 290)
-        .attr("y", 600)
+        .attr("x", 320)
+        .attr("y", 440)
         .attr("stroke", "#fb8072")
         .text("Manish");
     var image3 = vis.svgElem.append("image")
         .attr("xlink:href", "img/c.jpg")
         .attr("class", "image")
         .attr("x", 420)
-        .attr("y", 450)
+        .attr("y", 270)
     vis.svgElem.append("text")
         .attr("class", "PT_Serif_original")
         .attr("text-anchor", "middle")
         .attr("x", 490)
-        .attr("y", 600)
+        .attr("y", 440)
         .attr("stroke", "#b3de69")
         .text("James");
     var image4 = vis.svgElem.append("image")
         .attr("xlink:href", "img/d.jpg")
         .attr("class", "image")
-        .attr("x", 600)
-        .attr("y", 450)
+        .attr("x", 590)
+        .attr("y", 270)
     vis.svgElem.append("text")
         .attr("class", "PT_Serif_original")
         .attr("text-anchor", "middle")
-        .attr("x", 670)
-        .attr("y", 600)
+        .attr("x", 660)
+        .attr("y", 440)
         .attr("stroke", "#bebada")
 
         .text("David");
@@ -233,29 +232,7 @@ function displayTitle(vis) {
         // .attr("stroke-width","8px")
         .text("Scrum Team - Who is working on what? Click on work item bubbles ");
 
-    vis.svgElem.append("text")
-        .attr("class", "story-text1 ")
-        .attr("x", 30)
-        .attr("y", 90)
-        .attr("font-family", "Solway")
-        .attr("font-size", "14px")
-        .text("");
 
-    vis.svgElem.append("text")
-        .attr("class", "story-text2")
-        .attr("x", 30)
-        .attr("y", 110)
-        .attr("font-family", "Solway")
-        .attr("font-size", "14px")
-        .text("");
-
-    vis.svgElem.append("text")
-        .attr("class", "story-text3")
-        .attr("x", 30)
-        .attr("y", 130)
-        .attr("font-family", "Solway")
-        .attr("font-size", "14px")
-        .text("");
 }
 
 function getImageSVGDef(vis) {
@@ -283,37 +260,14 @@ function getImageSVGDef(vis) {
         .attr("fill", "orange")
 }
 
-function generateDynamicText(d) {
-    var assigneeDesc = ""
-    var storyDesc = ""
 
-    if (d.fields.summary == null) {
-        storyDesc = ""
-    } else {
-        storyDesc = "Goal of this story is to " + d.fields.summary
-    }
-    if (d.fields.assignee == null) {
-        assigneeDesc = "This story is unassigned"
-    } else {
-        if (d.isResolved == true) {
-            assigneeDesc = d.fields.assignee.displayName + " completed this story"
-
-        } else {
-            assigneeDesc = d.fields.assignee.displayName + " is working on this story"
-
-        }
-    }
-    d3.select(".story-text1").text(assigneeDesc)
-    d3.select(".story-text2").text("This story is of " + d.storyPoints + " points.")
-    d3.select(".story-text3").text(storyDesc)
-}
 
 function displayStoryPointsLegend(vis) {
 // Add legend: circles
 
     vis.svgElem.append("g")
         .attr("class", "legendSize")
-        .attr("transform", "translate(450, 730)");
+        .attr("transform", "translate(450, 530)");
 
     var legendSize = d3.legendSize()
         .scale(vis.radiusScale)
@@ -324,10 +278,15 @@ function displayStoryPointsLegend(vis) {
         .labels([0,1,3,5,8])
 
     vis.svgElem.select(".legendSize")
-        .call(legendSize);
+        .call(legendSize)
+    vis.svgElem.selectAll(".legendSize").each(function(d) {
+        d3.select(this).style("fill", "none")
+        d3.select(this).style("stroke", "black")
+    })
+
      vis.svgElem.append("rect")
         .attr("x", 450)
-        .attr("y", 650)
+        .attr("y", 470)
         .attr("height", 140)
         .attr("width", 310)
         .style("stroke", "black")
@@ -337,7 +296,7 @@ function displayStoryPointsLegend(vis) {
         .attr("class", "PT_Serif_Legend")
         // .attr("text-anchor", "end")
         .attr("x", 560)
-        .attr("y", 680)
+        .attr("y", 640)
         .attr("stroke", "black")
         // .attr("stroke-width","8px")
         .text("Story Points");
