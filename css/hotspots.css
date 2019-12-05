@@ -1,10 +1,10 @@
 /*references */
 /* Hotspots code inspired and adapted from https://codepen.io/jack-taylor89/pen/JeajeL?editors=1100 */
 body { margin: 0 !important; padding: 0 !important; width: 100% !important; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol' !important; }
-.img-container { position: relative; overflow: hidden; height: 45vw; background-image:url("../img/scrum-framework.jpg"); background-size: cover; }
+.img-container { position: relative; overflow: hidden; height: 20vw; background-image:url("../img/scrum-arrows5.png"); background-size: 82%;}
 input { display: none; }
 p { margin: 0; }
-.button { color: white; font-weight: bold; font-size: 1em; background-color: #4e73df; display: block; border-radius: 100%; cursor: pointer; animation: fadein .5s; animation: pulse 1.5s infinite; }
+.button { color: white; font-weight: bold; font-size: 1em; background-color: #4e73df; display: inline; border-radius: 3%; cursor: pointer; animation: fadein .5s; animation: pulse 1.5s infinite; vertical-align: top;}
 .help { color: white; font-weight: bold; font-size: 1em; background-color: #4e73df; display: block; padding: .5% .75%; font-size: x-small; border-radius: 100%; cursor: pointer; animation: fadein .5s; animation: pulse 1.5s infinite; }
 .content { background: white; padding: 1rem 1rem 2rem 1rem; text-align: center; display: none; margin: 10%; border-radius: 8px; box-shadow: 0 4px 2px -2px rgba(211,47,47,0); }
 .cross { font-weight: bold; }
@@ -12,49 +12,65 @@ p { margin: 0; }
 #b-product-backlog,
 #b-sprint-backlog,
 #b-sprint-planning,
-#b-product-increment{
-    padding-top: 4%;
+#b-product-increment,
+#b-retrospective{
+    padding-top: 1%;
     padding-bottom: 4%;
-    padding-left: 1.5%;
-    padding-right: 1.5%;
+    padding-left: .5%;
+    padding-right: .5%;
     position: absolute;
     top: 75%;
+    text-align: center;
 }
+
+#b-retrospective{
+    padding-left: 1.5%;
+    padding-right: 1.5%;
+}
+
+#b-product-backlog-desc,
 #b-product-backlog { left: 1%;}
-#b-sprint-planning { left: 17%;}
-#b-sprint-backlog { left: 30%;}
-#b-product-increment { left: 79%;}
 
+#b-sprint-planning-desc,
+#b-sprint-planning { left: 10.2%;}
 
-#b-po { top: 55%; left: 3%; }
-#b-sm { top: 15%; left: 51%; }
-#b-tm { top: 55%; left: 23%; }
+#b-sprint-backlog,
+#b-sprint-backlog-desc { left: 18.7%;}
 
-#b-daily-scrum { top: 30%; left: 83%;}
+#b-product-increment-desc,
+#b-product-increment { left: 75%;}
 
-#b-retrospective {
-    top: 90%;
-    left: 91%;
-    padding-top: 2%;
-    padding-bottom: 2%;
-    padding-left: 1%;
-    padding-right: 1%
-}
+#b-retrospective-desc,
+#b-retrospective {left: 87%;}
+#b-retrospective {font-size: xx-large;}
 #b-retrospective:hover {background: white; }
 
-#b-sprint { top: 44%; left: 46%;
-            padding-top: 9%; padding-bottom: 9%;
-            padding-left: 5%; padding-right: 5%;
+#b-po,
+#b-sm,
+#b-tm,
+#b-daily-scrum { top: 5%;}
+
+#b-po { left: 2%; }
+#b-sm { left: 6%; }
+#b-tm { left: 10%; }
+#b-daily-scrum { left: 63%;}
+
+#b-sprint { top: 40%; left: 27%;
+            padding-top: 4%; padding-bottom: 8%;
+            padding-left: 4%; padding-right: 4%;
+            border-radius: 100% 100% 0 0;
+            font-size: xx-large;
 }
 
 #b-showcase { top: 55%; left: 93%; }
-#b-retrospective-desc { top: 85%; left: 96%; }
 
-#b-product-increment-desc { top: 72%; left: 80%; }
-#b-product-backlog-desc { top: 72%; left: 1%; }
-#b-sprint-backlog-desc{ top: 72%; left: 31%; }
-#b-sprint-planning-desc{ top: 72%; left: 18%; }
-#b-sprint-desc{ top: 40%; left: 55%; }
+#b-retrospective-desc,
+#b-product-increment-desc,
+#b-product-backlog-desc,
+#b-sprint-backlog-desc,
+#b-sprint-planning-desc{ top: 71%}
+
+#b-sprint-desc{ top: 53%; left: 28%; }
 
 #b-po,
 #b-sm,
@@ -67,7 +83,6 @@ p { margin: 0; }
 #b-product-backlog-desc,
 #b-sprint-backlog-desc,
 #b-sprint-planning-desc,
-#b-retrospective,
 #b-retrospective-desc { position: absolute; }
 
 #input-product-backlog-desc:checked ~ #content-product-backlog-desc,

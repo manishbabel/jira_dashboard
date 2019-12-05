@@ -46,9 +46,7 @@ function visualize(error, jiraData, scrumText, retroData, test) {
                 "#input-sprint-backlog": [visScope, visStory],
                 "#input-product-increment": [visScope, visStory],
                 "#input-retrospective": [visRetro],
-                "#input-sprint": [visVelocity],
-                "#forecast": [visBurnDown],
-                "#replay": [visEmployee]
+                "#input-sprint": [visVelocity]
         };
         const visScrumProcess = new ScrumProcess(issueStore, scrumTextStore, retroStore, actionMapping);
   //      const visScrumProcess = new ScrumProcess(scrumTextStore, actionMapping);

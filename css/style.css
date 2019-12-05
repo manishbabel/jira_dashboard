@@ -1,5 +1,4 @@
 
-
 /* Styles from W3 Schools for double underlines and their tooltips*/
 /* https://www.w3schools.com/css/tryit.asp?filename=trycss_tooltip_arrow_top */
 
@@ -48,7 +47,10 @@ ul {
     visibility: visible;
 }
 
-/*================================================*/
+#sprint-selector {margin-left: 40px; }
+
+#sprint-selector:focus {outline: none;}
+
 #overview {
     background-color: white;
     padding: 20px;
