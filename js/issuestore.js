@@ -8,6 +8,10 @@
  * getBacklogUrl: returns the url for the backlog in Jira
  * getStoryPointField: returns the field ID (string) of the field used for story points. Example: customfield_10003
  * getSprintUrlForSprint(<sprint object> or <sprint id>): returns the url of the sprint in Jira
+ *
+ * IssueStore properties
+ * activeSprint: returns the sprint that has a state of ACTIVE
+ * selectedSprint: returns the sprint that is currently selected
  */
 
 /**
@@ -216,8 +220,13 @@ class IssueStore {
                     })
                 }
             });
-            if(sprint.state == "ACTIVE") self.activeSprint = sprint;
+            if(sprint.state == "ACTIVE") {
+                self.activeSprint = sprint;
+                self.selectedSprint = sprint;
+            }
         });
+
+        if(self.selectedSprint == null) self.selectedSprint = self.allSprints[self.allSprints.length -1 ];
 
         self.selectedIssueProperty = self.priorities;
     };
@@ -230,6 +239,8 @@ class IssueStore {
     set components(components) {this._components = components;}
     get selectedIssueProperty() {return this._selectedIssueProperty;}
     set selectedIssueProperty(selectedIssueProperty) {this._selectedIssueProperty = selectedIssueProperty;}
+    get selectedSprint() {return this._selectedSprint;}
+    set selectedSprint(selectedSprint) {this._selectedSprint = selectedSprint;}
 
     getIssuesForSprint (sprint) {
         //look up by passed ID or passed object
@@ -271,18 +282,29 @@ class IssueStore {
     }
 
     onSelectedIssuePropertyChange (selection, callback) {
+        var self = this;
         switch(selection) {
             case "priorities":
-                this.selectedIssueProperty = this.priorities;
+                self.selectedIssueProperty = self.priorities;
                 break;
             case "components":
-                this.selectedIssueProperty = this.components;
+                self.selectedIssueProperty = self.components;
                 break;
             case "issueType":
-                this.selectedIssueProperty = this.issueTypes;
+                self.selectedIssueProperty = self.issueTypes;
                 break;
         }
         callback();
+    }
+
+    onSelectedSprintChange (selection, callback) {
+        var self = this;
+        //selection = sprint id
+        var newSprint = self.sprints.find((d) => (d.id == selection));
+        if (newSprint != null) {
+            self.selectedSprint = newSprint;
+            callback();
+        }
     }
     
     getSelectedIssuePropertyValue (issue) {

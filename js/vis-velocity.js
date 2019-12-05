@@ -168,6 +168,10 @@ VelocityChart.prototype.initVis = function(){
         $(vis.eventHandler).trigger("selectedMetricChange", d3.select("#velocitySelect").property("value"));
     });
 
+    $(vis.eventHandler).bind("selectedMetricChange", function(event, selection) {
+        vis.onSelectedMetricChange(selection);
+    });
+
     // (Filter, aggregate, modify data)
     vis.wrangleData();
 };
