@@ -13,8 +13,6 @@ class ScrumProcess {
 
     setStats(){
 
-        const sprints = this.issueStore.getSprints();
-        //const activeSprint = sprints.filter(d => d.state == "ACTIVE")[0];
         const activeSprint = this.issueStore.activeSprint;
         const velocity = this.issueStore.previousSprint.completedStoryPoints;
         const committed = activeSprint.totalStoryPoints;
@@ -24,16 +22,18 @@ class ScrumProcess {
         const averageHappiness = this.retroStore.getSprintHappiness(activeSprint);
         const totalAlerts = activeSprint.totalAlerts;
 
+        const arrow = "<i class='fas fa-angle-double-right'></i>";
+
         document.querySelector("#scrum-velocity").innerText = velocity + " story points";
         document.querySelector("#scrum-burndown-pct").innerText = burndownPct;
         document.querySelector("#burn-down-progress").style = "width: " + burndownPct;
         document.querySelector("#total-blockers").innerText = activeSprint.totalBlockers;
         document.querySelector("#sprint-goal").innerText = activeSprint.goal;
-        document.querySelector("#b-sprint-backlog").innerHTML = "Sprint Backlog <br>" + committed + " points";
-        document.querySelector("#b-product-increment").innerHTML = "Product Increment <br>" + completed + " points";
-        document.querySelector("#b-product-backlog").innerHTML = "Product Backlog <br>" + backlogStoryCount + " stories";
-        document.querySelector("#b-sprint-planning").innerHTML = "Sprint Planning <br>" + totalAlerts + " Stories <br> unestimated " ;
-        const retroElem = document.querySelector("#b-retrospective")
+        document.querySelector("#b-sprint-backlog").innerHTML = "Sprint Backlog <br>" + committed + " points <br>" + arrow;
+        document.querySelector("#b-product-increment").innerHTML = "Product Increment <br>" + completed + " points <br>" + arrow;
+        document.querySelector("#b-product-backlog").innerHTML = "Product Backlog <br>" + backlogStoryCount + " stories <br>" + arrow;
+        document.querySelector("#b-sprint-planning").innerHTML = "Sprint Planning <br>" + totalAlerts + " unestimated <br> stories " + arrow;
+        const retroElem = document.querySelector("#b-retrospective");
         retroElem.innerText += averageHappiness.toFixed(2);
 
         if (averageHappiness < 0){
