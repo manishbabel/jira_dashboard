@@ -288,10 +288,7 @@ path.arc:hover {
     stroke: #fdb462;
     stroke-width: 5px;
 }
-.x-axis{
-    stroke: #fb8072;
-    font-family: 'Solway';
-}
+
 @font-face {
     font-family: 'Solway';
     font-style: normal;
