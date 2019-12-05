@@ -57,12 +57,12 @@ class ScopeChart {
                 return 60
             }
             else if(d.fields.assignee.key == "ked358"){
-                return 180
+                return 210
             }
             else if(d.fields.assignee.key == "mab7461"){
-                return 320
+                return 350
             }else if(d.fields.assignee.key == "jam7652"){
-                return 500
+                return 520
             }else if(d.fields.assignee.key == "admin"){
                 return 690
             }
