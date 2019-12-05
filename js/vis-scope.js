@@ -125,28 +125,29 @@ class ScopeChart {
             .on("click", function (d) {
                $(vis.eventHandler).trigger("scopeBubbleSelectionChanged", d)
             })
-        //     .call(d3.drag()
-        //         .on("start", (d) => {
-        //             if (!d3.event.active) { vis.simulation.alphaTarget(0.2).restart(); }
-        //             d.fx = d.x;
-        //             d.fy = d.y;
-        //         })
-        //         .on("drag", (d) => {
-        //             d.fx = d3.event.x;
-        //             d.fy = d3.event.y;
-        //         })
-        //         .on("end", (d) => {
-        //             if (!d3.event.active) { vis.simulation.alphaTarget(0); }
-        //             d.fx = null;
-        //             d.fy = null;
-        //         })
-        //     )
-        //     .on ("mouseover",function(d){
-        //         d3.select(this).style('stroke', 'black');
-        //     })
-        //     .on ("mouseout",function(d){
-        //     d3.select(this).style('stroke', 'white');
-        // });
+            .call(d3.drag()
+                .on("start", (d) => {
+                    if (!d3.event.active) { vis.simulation.alphaTarget(0.2).restart(); }
+                    d.fx = d.x;
+                    d.fy = d.y;
+                })
+                .on("drag", (d) => {
+                    d.fx = d3.event.x;
+                    d.fy = d3.event.y;
+                })
+                .on("end", (d) => {
+                    if (!d3.event.active) { vis.simulation.alphaTarget(0); }
+                    d.fx = null;
+                    d.fy = null;
+                })
+            )
+            .on ("mouseover",function(d){
+                d3.select(this).style('stroke', 'black');
+            })
+            .on ("mouseout",function(d){
+            d3.select(this).style('stroke', 'white');
+        });
+
 
         vis.svgElem.selectAll(".bubble")
             .attr("fill", function (d) {
@@ -170,52 +171,64 @@ class ScopeChart {
 }
 
 function displayImagesForScrumTeam(vis) {
-    var image1 = vis.svgElem.append("image")
-        .attr("xlink:href", "img/a.jpg")
+    var unassigned = vis.svgElem.append("image")
+        .attr("xlink:href", "img/unassigned.png")
         .attr("class", "image")
-        .attr("x", 120)
+        .attr("x", 5)
+        .attr("y", 270)
+    vis.svgElem.append("text")
+        .attr("class", "PT_Serif_original")
+        // .attr("text-anchor", "middle")
+        .attr("x", 40)
+        .attr("y", 440)
+        .attr("stroke", "#fdb462")
+        .text("Un-Assigned");
+    var image1 = vis.svgElem.append("image")
+        .attr("xlink:href", "img/kevin_happy.png")
+        .attr("class", "image")
+        .attr("x", 160)
         .attr("y", 270)
     vis.svgElem.append("text")
         .attr("class", "PT_Serif_original")
         .attr("text-anchor", "middle")
-        .attr("x", 190)
+        .attr("x", 210)
         .attr("y", 440)
         .attr("stroke", "#8dd3c7")
         .text("Kevin");
 
     var image2 = vis.svgElem.append("image")
-        .attr("xlink:href", "img/b.jpg")
+        .attr("xlink:href", "img/manish_happy.png")
         .attr("class", "image")
-        .attr("x", 250)
+        .attr("x", 300)
         .attr("y", 270)
     vis.svgElem.append("text")
         .attr("class", "PT_Serif_original")
         .attr("text-anchor", "middle")
-        .attr("x", 320)
+        .attr("x", 360)
         .attr("y", 440)
         .attr("stroke", "#fb8072")
         .text("Manish");
     var image3 = vis.svgElem.append("image")
-        .attr("xlink:href", "img/c.jpg")
+        .attr("xlink:href", "img/james-happy.png")
         .attr("class", "image")
-        .attr("x", 420)
+        .attr("x", 460)
         .attr("y", 270)
     vis.svgElem.append("text")
         .attr("class", "PT_Serif_original")
         .attr("text-anchor", "middle")
-        .attr("x", 490)
+        .attr("x", 510)
         .attr("y", 440)
         .attr("stroke", "#b3de69")
         .text("James");
     var image4 = vis.svgElem.append("image")
-        .attr("xlink:href", "img/d.jpg")
+        .attr("xlink:href", "img/david_happy.png")
         .attr("class", "image")
-        .attr("x", 590)
+        .attr("x", 620)
         .attr("y", 270)
     vis.svgElem.append("text")
         .attr("class", "PT_Serif_original")
         .attr("text-anchor", "middle")
-        .attr("x", 660)
+        .attr("x", 670)
         .attr("y", 440)
         .attr("stroke", "#bebada")
 
