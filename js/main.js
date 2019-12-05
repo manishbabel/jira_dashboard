@@ -1,4 +1,4 @@
-var eventHandler = {};
+let eventHandler = {};
 const useSampleData = false;
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -49,7 +49,6 @@ function visualize(error, jiraData, scrumText, retroData, test) {
                 "#input-sprint": [visVelocity]
         };
         const visScrumProcess = new ScrumProcess(issueStore, scrumTextStore, retroStore, actionMapping);
-  //      const visScrumProcess = new ScrumProcess(scrumTextStore, actionMapping);
 
         //Bind events
         $(eventHandler).bind("selectedIssuePropertyChange", function(event, selection) {
@@ -60,8 +59,9 @@ function visualize(error, jiraData, scrumText, retroData, test) {
                 $(eventHandler).trigger("selectedSprintChange", 1);
         });
 
-        $(eventHandler).bind("selectedSprintChange", function(event, selection) {
-                issueStore.onSelectedSprintChange(selection, function () {
+        $(eventHandler).bind("selectedSprintChange", (event, selection) => {
+                issueStore.onSelectedSprintChange(selection, ()=> {
+                        alert("sprint selection is " + selection);
                         //todo update scope chart
                         //todo update sprint cards
                 });
