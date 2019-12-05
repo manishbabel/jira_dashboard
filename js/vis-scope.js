@@ -1,7 +1,7 @@
 
 class ScopeChart {
-    constructor(data, svg, visStory2,sprint_id, colorScheme, eventHandler) {
-        this._data = data;
+    constructor(issueStore, svg, visStory2,sprint_id, colorScheme, eventHandler) {
+        this._issueStore = issueStore;
         this._svg = svg;
         this.sprint_id = sprint_id
         this.parentElement = this.svg.container.substr(1);
@@ -16,7 +16,7 @@ class ScopeChart {
         });
     }
 
-    get data(){return this._data;}
+    get issueStore(){return this._issueStore;}
     get svg(){return this._svg;}
 
     initVis(){
@@ -81,19 +81,14 @@ class ScopeChart {
             .force("collide",forceCollide)
 
         displayStoryPointsLegend(vis);
-        vis.wrangleData()
+        vis.wrangleData();
     }
 
     wrangleData = function (){
         const vis = this;
 
         // get stories for active sprint
-        if (vis.sprint_id == "") {
-            //console.log("_data",vis._data)
-            vis.storiesForSprint = vis._data.activeSprint.issues
-          }else{
-            vis.storiesForSprint = vis._data.sprintMap[vis.sprint_id]
-        }
+        vis.storiesForSprint = vis.issueStore.selectedSprint.issues;
 
         //filter out sub-tasks
         vis.storiesForSprint = vis.storiesForSprint.filter(function(d){
@@ -105,9 +100,9 @@ class ScopeChart {
         //update color scale range
         vis.colorScale.range(vis.colorScheme.filter(function (d,i) {
             //needed as the legend needs the domain and range lengths to match
-            return i < vis.data.selectedIssueProperty.length;
+            return i < vis.issueStore.selectedIssueProperty.length;
         }));
-        vis.colorScale.domain(vis.data.selectedIssueProperty);
+        vis.colorScale.domain(vis.issueStore.selectedIssueProperty);
 
         vis.updateVis();
     }
@@ -121,9 +116,9 @@ class ScopeChart {
 
         getImageSVGDef(vis);
 
-        var circles = vis.svgElem.selectAll(".bubble")
-            .data(vis.storiesForSprint)
-            .enter().append("circle")
+        var circles = vis.svgElem.selectAll("circle")
+        .data(vis.storiesForSprint)
+        .enter().append("circle")
             .attr("class", "bubble")
             .attr("r", d => vis.radiusScale(d.storyPoints))
             .attr("stroke",1)
@@ -156,7 +151,7 @@ class ScopeChart {
 
         vis.svgElem.selectAll(".bubble")
             .attr("fill", function (d) {
-                return vis.colorScale(vis.data.getSelectedIssuePropertyValue(d));
+                return vis.colorScale(vis.issueStore.getSelectedIssuePropertyValue(d));
             });
 
         vis.simulation.nodes(vis.storiesForSprint)
@@ -172,6 +167,7 @@ class ScopeChart {
         }
 
     }
+
 }
 
 function displayImagesForScrumTeam(vis) {

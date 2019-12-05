@@ -57,10 +57,16 @@ function visualize(error, jiraData, scrumText, retroData, test) {
                         visVelocity.onSelectedLayerChange(selection);
                         visScope.wrangleData();
                 });
+                $(eventHandler).trigger("selectedSprintChange", 1);
         });
 
-        $(eventHandler).bind("selectedMetricChange", function(event, selection) {
-                visVelocity.onSelectedMetricChange(selection);
+        $(eventHandler).bind("selectedSprintChange", function(event, selection) {
+                issueStore.onSelectedSprintChange(selection, function () {
+                        //todo update scope chart
+                        //todo update sprint cards
+                });
         });
+
+
 }
 
