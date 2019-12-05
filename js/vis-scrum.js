@@ -6,9 +6,29 @@ class ScrumProcess {
         this._retroStore = retroStore;
         this._actionMapping = actionMapping;
 
+        this.populateSprintSelector();
         this.setStats();
         this.setText();
         this.setClickHandlers();
+    }
+
+    populateSprintSelector() {
+        const selectorElem = document.querySelector("#sprint-selector");
+
+        const sprints = this.issueStore.getSprints();
+        sprints.forEach((sprint)=> {
+            const optionElement = document.createElement("option");
+            optionElement.value= sprint.id;
+            selectorElem.appendChild(optionElement);
+
+            let sprintName = sprint.name;
+            if (sprint.state == "ACTIVE") {
+                sprintName += " - Active Sprint";
+                selectorElem.value = sprint.id;
+            }
+            optionElement.innerHTML = sprintName;
+
+        })
     }
 
     setStats(){
@@ -81,6 +101,9 @@ class ScrumProcess {
     }
 
     setClickHandlers() {
+        document.querySelector("#sprint-selector").onchange = () => {
+            $(eventHandler).trigger("selectedSprintChange", d3.select("#sprint-selector").property("value"));
+        };
 
         document.querySelector("#b-product-backlog").onclick = () => {
             window.open("https://cs171-jira.atlassian.net/secure/RapidBoard.jspa?rapidView=1&projectKey=JV&view=planning&selectedIssue=JV-122&epics=visible", "_blank")
