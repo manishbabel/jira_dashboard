@@ -6,31 +6,54 @@ class ScrumProcess {
         this._retroStore = retroStore;
         this._actionMapping = actionMapping;
 
+        this.populateSprintSelector();
         this.setStats();
         this.setText();
         this.setClickHandlers();
     }
 
-    setStats(){
+    populateSprintSelector() {
+        const selectorElem = document.querySelector("#sprint-selector");
 
         const sprints = this.issueStore.getSprints();
-        const activeSprint = sprints.filter(d => d.state == "ACTIVE")[0];
+        sprints.forEach((sprint)=> {
+            const optionElement = document.createElement("option");
+            optionElement.value= sprint.id;
+            selectorElem.appendChild(optionElement);
+
+            let sprintName = sprint.name;
+            if (sprint.state == "ACTIVE") {
+                sprintName += " - Active Sprint";
+                selectorElem.value = sprint.id;
+            }
+            optionElement.innerHTML = sprintName;
+
+        })
+    }
+
+    setStats(){
+
+        const activeSprint = this.issueStore.activeSprint;
+        const velocity = this.issueStore.previousSprint.completedStoryPoints;
         const committed = activeSprint.totalStoryPoints;
         const completed = activeSprint.completedStoryPoints;
         const burndownPct =  parseFloat(100 * completed / committed).toFixed()+"%";
         const backlogStoryCount = this.issueStore.getIssues().length;
         const averageHappiness = this.retroStore.getSprintHappiness(activeSprint);
+        const totalAlerts = activeSprint.totalAlerts;
 
-        document.querySelector("#scrum-velocity").innerText = committed + " story points";
+        const arrow = "<i class='fas fa-angle-double-right'></i>";
+
+        document.querySelector("#scrum-velocity").innerText = velocity + " story points";
         document.querySelector("#scrum-burndown-pct").innerText = burndownPct;
         document.querySelector("#burn-down-progress").style = "width: " + burndownPct;
         document.querySelector("#total-blockers").innerText = activeSprint.totalBlockers;
         document.querySelector("#sprint-goal").innerText = activeSprint.goal;
-        document.querySelector("#b-sprint-backlog").innerHTML = "Sprint Backlog <br>" + committed + " points";
-        document.querySelector("#b-product-increment").innerHTML = "Product Increment <br>" + completed + " points";
-        document.querySelector("#b-product-backlog").innerHTML = "Product Backlog <br>" + backlogStoryCount + " stories";
-        document.querySelector("#b-sprint-planning").innerHTML = "Sprint Planning <br>" + "14" + " Alerts";
-        const retroElem = document.querySelector("#b-retrospective")
+        document.querySelector("#b-sprint-backlog").innerHTML = "Sprint Backlog <br>" + committed + " points <br>" + arrow;
+        document.querySelector("#b-product-increment").innerHTML = "Product Increment <br>" + completed + " points <br>" + arrow;
+        document.querySelector("#b-product-backlog").innerHTML = "Product Backlog <br>" + backlogStoryCount + " stories <br>" + arrow;
+        document.querySelector("#b-sprint-planning").innerHTML = "Sprint Planning <br>" + totalAlerts + " unestimated <br> stories " + arrow;
+        const retroElem = document.querySelector("#b-retrospective");
         retroElem.innerText += averageHappiness.toFixed(2);
 
         if (averageHappiness < 0){
@@ -78,9 +101,20 @@ class ScrumProcess {
     }
 
     setClickHandlers() {
+        document.querySelector("#sprint-selector").onchange = () => {
+            $(eventHandler).trigger("selectedSprintChange", d3.select("#sprint-selector").property("value"));
+        };
 
         document.querySelector("#b-product-backlog").onclick = () => {
             window.open("https://cs171-jira.atlassian.net/secure/RapidBoard.jspa?rapidView=1&projectKey=JV&view=planning&selectedIssue=JV-122&epics=visible", "_blank")
+        };
+
+        document.querySelector("#b-product-increment").onclick = () => {
+            window.open("https://cs171-jira.atlassian.net/issues/?jql=project%20%3D%20JV%20and%20status%20%3D%20Done%20and%20sprint%3D5", "_blank")
+        };
+
+        document.querySelector("#b-sprint-planning").onclick = () => {
+            window.open("https://cs171-jira.atlassian.net/browse/JV-162?jql=project%20%3D%20JV%20and%20sprint%3D5%20and%20%22Story%20Points%22%3Dnull", "_blank")
         };
 
         const visualizations = document.querySelectorAll(".viz");

@@ -8,6 +8,10 @@
  * getBacklogUrl: returns the url for the backlog in Jira
  * getStoryPointField: returns the field ID (string) of the field used for story points. Example: customfield_10003
  * getSprintUrlForSprint(<sprint object> or <sprint id>): returns the url of the sprint in Jira
+ *
+ * IssueStore properties
+ * activeSprint: returns the sprint that has a state of ACTIVE
+ * selectedSprint: returns the sprint that is currently selected
  */
 
 /**
@@ -51,6 +55,7 @@
 const defaultSprintField = "customfield_10401";
 const defaultStoryPointField = "customfield_10003";
 const jiraBaseUrl = "https://cs171-jira.atlassian.net/";
+const plumpData = true;
 //count metrics
 const totalStoryPoints = "totalSprintStoryPoints";
 const completedStoryPoints = "completedSprintStoryPoints";
@@ -58,7 +63,7 @@ const issueCount = "issueSprintCount";
 
 //layers
 const priorityLayer = "priority";
-const issueTypeLayer = "issueType";
+const issueTypeLayer = "issuetype";
 const componentLayer = "components";
 let parseDate = d3.timeParse("%Y-%m-%dT%H:%M:%S.%L%Z");
 
@@ -89,6 +94,8 @@ class IssueStore {
         var components = ["None"];
 
         self.issues.forEach(function (issue) {
+            //skip cancelled issues
+            if(issue.fields.status.name == "Cancelled") return;
             var sprints = issue.fields[self.sprintField];
             if(sprints != null) {
                 sprints.forEach(function (sprint, index) {
@@ -110,6 +117,8 @@ class IssueStore {
             deserializeIssueDates(issue);
             //setup issue helper functions
             setIssueHelperProperties(issue, self.storyPointField);
+            //plump the data
+            if(plumpData) plumpIssue(issue);
 
             //get all possible values for priority, issuetype, and component
             if(! priorityIds[issue.fields.priority.id]) {
@@ -137,8 +146,13 @@ class IssueStore {
         self.components = components;
 
         //setup sprint helper functions and data beakdown
+        self.sprints.sort( (a, b)=> a.id - b.id);
 
-
+        let previousSprintIndex = self.sprints.length - 2;
+        if (previousSprintIndex < 0) {
+            previousSprintIndex = 0
+        }
+        self.previousSprint = self.sprints[previousSprintIndex];
 
         allSprints.forEach(function (sprint) {
             var sprintIssues = self.getIssuesForSprint(sprint);
@@ -206,8 +220,13 @@ class IssueStore {
                     })
                 }
             });
-            if(sprint.state == "ACTIVE") self.activeSprint = sprint;
+            if(sprint.state == "ACTIVE") {
+                self.activeSprint = sprint;
+                self.selectedSprint = sprint;
+            }
         });
+
+        if(self.selectedSprint == null) self.selectedSprint = self.allSprints[self.allSprints.length -1 ];
 
         self.selectedIssueProperty = self.priorities;
     };
@@ -220,6 +239,8 @@ class IssueStore {
     set components(components) {this._components = components;}
     get selectedIssueProperty() {return this._selectedIssueProperty;}
     set selectedIssueProperty(selectedIssueProperty) {this._selectedIssueProperty = selectedIssueProperty;}
+    get selectedSprint() {return this._selectedSprint;}
+    set selectedSprint(selectedSprint) {this._selectedSprint = selectedSprint;}
 
     getIssuesForSprint (sprint) {
         //look up by passed ID or passed object
@@ -260,18 +281,39 @@ class IssueStore {
         }
     }
 
-    onSelectedIssuePropertyChange (selection) {
+    onSelectedIssuePropertyChange (selection, callback) {
+        var self = this;
         switch(selection) {
             case "priorities":
-                this.selectedIssueProperty = this.priorities;
+                self.selectedIssueProperty = self.priorities;
                 break;
             case "components":
-                this.selectedIssueProperty = this.components;
+                self.selectedIssueProperty = self.components;
                 break;
             case "issueType":
-                this.selectedIssueProperty = this.issueTypes;
+                self.selectedIssueProperty = self.issueTypes;
                 break;
         }
+        callback();
+    }
+
+    onSelectedSprintChange (selection, callback) {
+        var self = this;
+        //selection = sprint id
+        var newSprint = self.sprints.find((d) => (d.id == selection));
+        if (newSprint != null) {
+            self.selectedSprint = newSprint;
+            callback();
+        }
+    }
+    
+    getSelectedIssuePropertyValue (issue) {
+        if (this.selectedIssueProperty == this.issueTypes) return issue.fields[issueTypeLayer].name;
+        else if (this.selectedIssueProperty == this.components) {
+            if(issue.fields[componentLayer] == null || issue.fields[componentLayer].length == 0) return "None";
+            else return issue.fields[componentLayer][0].name;
+        } else return issue.fields[priorityLayer].name;
+
     }
 
 }
@@ -339,6 +381,7 @@ function setSprintHelperProperties(sprint, sprintIssues) {
     let storyPoints = 0;
     let completedStoryPoints = 0;
     let blockers = 0;
+    let totalAlerts = 0;
     sprintIssues.forEach(function (issue) {
         storyPoints += issue.storyPoints;
         //we want to use completedDate if available
@@ -347,12 +390,17 @@ function setSprintHelperProperties(sprint, sprintIssues) {
             completedStoryPoints += issue.storyPoints;
         }
 
-        if (issue.fields.status.name == "Blocked") {
+        if (issue.fields.status.name === "Blocked") {
             blockers += 1;
+        }
+
+        if (issue.storyPoints == 0) {
+            totalAlerts += 1;
         }
     });
 
     sprint.totalStoryPoints = storyPoints;
     sprint.completedStoryPoints = completedStoryPoints;
     sprint.totalBlockers = blockers;
+    sprint.totalAlerts = totalAlerts;
 }

@@ -1,5 +1,4 @@
 
-
 /* Styles from W3 Schools for double underlines and their tooltips*/
 /* https://www.w3schools.com/css/tryit.asp?filename=trycss_tooltip_arrow_top */
 
@@ -48,7 +47,10 @@ ul {
     visibility: visible;
 }
 
-/*================================================*/
+#sprint-selector {margin-left: 40px; }
+
+#sprint-selector:focus {outline: none;}
+
 #overview {
     background-color: white;
     padding: 20px;
@@ -155,6 +157,10 @@ ul {
     font-size: 22px;
 }
 
+.PT_Serif_Legend{
+    font-family: 'PT Serif', serif;
+    font-size: 15px;
+}
 .PT_Serif_Small{
     font-family: 'PT Serif', serif;
     font-size: 18px;
@@ -296,10 +302,7 @@ path.arc:hover {
     stroke: #fdb462;
     stroke-width: 5px;
 }
-.x-axis{
-    stroke: #fb8072;
-    font-family: 'Solway';
-}
+
 @font-face {
     font-family: 'Solway';
     font-style: normal;

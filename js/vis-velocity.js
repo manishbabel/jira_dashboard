@@ -7,11 +7,11 @@
 
 
 class VelocityChart2 {
-    constructor(data, svg, eventHandler) {
+    constructor(data, svg, colorScheme, eventHandler) {
         this._data = data;
         this._svg = svg;
         this._eventHandler = eventHandler;
-        this._velocityChart = new VelocityChart(this.svg.container.substr(1), this.data, eventHandler, this.svg);
+        this._velocityChart = new VelocityChart(this.svg.container.substr(1), this.data, eventHandler, this.svg, colorScheme);
     }
 
     get data() {return this._data;}
@@ -38,7 +38,7 @@ const maxSprints = 10;
 //count metrics
 
 
-VelocityChart = function(_parentElement, _issueStore, _eventHandler, svgObj){
+VelocityChart = function(_parentElement, _issueStore, _eventHandler, svgObj, _colorScheme){
     this.parentElement = _parentElement;
     this.issueStore = _issueStore;
     this.eventHandler = _eventHandler;
@@ -46,6 +46,7 @@ VelocityChart = function(_parentElement, _issueStore, _eventHandler, svgObj){
     this.margin = svgObj.margin;
     this.height = svgObj.height;
     this.width = svgObj.width;
+    this.coloScheme = _colorScheme;
 
     this.priorities = _issueStore.priorities;
     this.issueTypes = _issueStore.issueTypes;
@@ -156,16 +157,19 @@ VelocityChart.prototype.initVis = function(){
 
     // Initialize stack layout
     vis.colorScale = d3.scaleOrdinal();
-    vis.colorScale.domain(vis.issueStore.selectedIssueProperty);
 
     //Add selection object
     const metricSvg = new Svg("#velocityIssuePropertySelection", 200,vis.height,{top: 0, right: 0, bottom: 0, left: 0});
-    const issuePropertyControl = new IssuePropertyControl(vis.data, metricSvg, d3.schemeCategory20, vis.eventHandler, vis.issueStore);
+    const issuePropertyControl = new IssuePropertyControl(vis.data, metricSvg, vis.coloScheme, vis.eventHandler, vis.issueStore);
     //Fin
 
     //add triggers
     d3.select("#velocitySelect").on("change", function () {
         $(vis.eventHandler).trigger("selectedMetricChange", d3.select("#velocitySelect").property("value"));
+    });
+
+    $(vis.eventHandler).bind("selectedMetricChange", function(event, selection) {
+        vis.onSelectedMetricChange(selection);
     });
 
     // (Filter, aggregate, modify data)
@@ -178,7 +182,7 @@ VelocityChart.prototype.initVis = function(){
 
 VelocityChart.prototype.wrangleData = function(){
     const vis = this;
-    vis.colorScale.range(d3.schemeCategory20.filter(function (d,i) {
+    vis.colorScale.range(vis.coloScheme.filter(function (d,i) {
         //needed as the legend needs the domain and range lengths to match
         return i < vis.issueStore.selectedIssueProperty.length;
     }));
@@ -224,8 +228,6 @@ VelocityChart.prototype.updateVis = function(){
     const categories = vis.svg.selectAll(".area")
         .data(vis.stackedData);
     //.data(vis.displayData);
-
-    categories.exit().remove();
 
     categories.enter().append("path")
         .attr("class", "area")

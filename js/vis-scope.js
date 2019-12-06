@@ -1,19 +1,22 @@
+
 class ScopeChart {
-    constructor(data, svg, visStory2) {
-        this._data = data;
+    constructor(issueStore, svg, visStory2,sprint_id, colorScheme, eventHandler) {
+        this._issueStore = issueStore;
         this._svg = svg;
-        const eventHandler = {};
+        this.sprint_id = sprint_id
         this.parentElement = this.svg.container.substr(1);
         this.displayData = [];
         this.eventHandler = eventHandler;
+        this.colorScheme = colorScheme;
         this.initVis();
-        $(eventHandler).bind("selectionChanged", function(event, d) {
-            console.log("eventtriggeered",d);
+
+        $(eventHandler).bind("scopeBubbleSelectionChanged", function(event, d) {
+            //console.log("eventtriggeered",d);
             visStory2.storyChart.onSelectionChange(d);
         });
     }
 
-    get data(){return this._data;}
+    get issueStore(){return this._issueStore;}
     get svg(){return this._svg;}
 
     initVis(){
@@ -21,15 +24,15 @@ class ScopeChart {
         vis.imageMap = {ked358 :"img/aa.png" ,mab7461 :"img/bb.png" ,jam7652 :"img/cc.png" ,admin :"img/dd.png"};
         var border=1;
         var bordercolor='black';
-
-        const diameter = 600;
         vis.margin = { top: 60, right: 60, bottom: 60, left: 60 };
         vis.width = 800;
-        vis.height = 800;
+        vis.height = 700;
         vis.svgElem = d3.select("#" + vis.parentElement).append("svg")
             .attr("width",  vis.width  )
             .attr("height",  vis.height  )
             .attr("border",border)
+
+        // Create border for SVG
         var borderPath = vis.svgElem.append("rect")
             .attr("x", 0)
             .attr("y", 0)
@@ -39,290 +42,123 @@ class ScopeChart {
             .style("fill", "none")
             .style("stroke-width", border);
 
+        //Definitions for svg image
         vis.defs = vis.svg.svg.append("defs");
-        
-        vis.radiusScale = d3.scaleSqrt().domain([0,11]).range([10,30]);
+        // scale to change radius for bubbles based on story size
+        vis.radiusScale = d3.scaleSqrt().domain([0, 1, 3, 5, 8]).range([10, 15, 20, 25, 30]);
+
+        //create color scale
+        vis.colorScale = d3.scaleOrdinal();
+
+        // cluster groups based on scrum team members.
+        // For the current design we have assumed we have 4 team members. This can be extended as needed to dynamically group with team mates
         vis.forceXSPlit = d3.forceX(function(d){
             if(d.fields.assignee ==null){
-                return 20
+                return 60
             }
             else if(d.fields.assignee.key == "ked358"){
-                return 130
+                return 210
             }
             else if(d.fields.assignee.key == "mab7461"){
-                return 290
+                return 350
             }else if(d.fields.assignee.key == "jam7652"){
-                return 470
+                return 520
             }else if(d.fields.assignee.key == "admin"){
-                return 660
+                return 690
             }
 
 
         }).strength(0.05)
+
+        //Force simulation settings for bubbles
         vis.forceXAll = d3.forceX(vis.width/2).strength(0.05)
         var forceCollide = d3.forceCollide(function(d){
             return  vis.radiusScale(d.storyPoints)+2
         })
         vis.simulation = d3.forceSimulation()
             .force("x",vis.forceXAll)
-            .force("y",d3.forceY(vis.height/2).strength(0.05))
+            .force("y",d3.forceY(vis.height/3.5).strength(0.05))
             .force("collide",forceCollide)
-        vis.wrangleData()
+
+        displayStoryPointsLegend(vis);
+        vis.wrangleData();
     }
 
     wrangleData = function (){
         const vis = this;
-        vis.displayData = vis.data.getSprints();
-        vis.activeSprint = vis.displayData.filter((d)=> d.state == "ACTIVE");
-        vis.activeSprint= vis.activeSprint[0];
-        vis.storiesForActiveSprint = vis.data.getIssuesForSprint(vis.activeSprint["id"]);
-        vis.storiesForActiveSprint = vis.storiesForActiveSprint.filter(function(d){
+
+        // get stories for active sprint
+        vis.storiesForSprint = vis.issueStore.selectedSprint.issues;
+
+        //filter out sub-tasks
+        vis.storiesForSprint = vis.storiesForSprint.filter(function(d){
             // console.log("subtask",d.fields.issuetype.subtask)
             return d.fields.issuetype.subtask ==false
-        })
-        vis.status = [{name:"Resolved",x:150},
-            {name:"In Progress",x:400}]
-        console.log("displayData",vis.displayData)
+        });
+        //console.log('vis.storiesForSprint',vis.storiesForSprint)
+
+        //update color scale range
+        vis.colorScale.range(vis.colorScheme.filter(function (d,i) {
+            //needed as the legend needs the domain and range lengths to match
+            return i < vis.issueStore.selectedIssueProperty.length;
+        }));
+        vis.colorScale.domain(vis.issueStore.selectedIssueProperty);
+
         vis.updateVis();
     }
 
     updateVis = function (value) {
         var vis = this
-        console.log('vis.storiesForActiveSprint',vis.storiesForActiveSprint)
+        // vis.radiusScale.domain([0, 1, 3, 5, 8, 13, 21])
 
-        var image1 = vis.svgElem.append("image")
-            .attr("xlink:href", "img/a.jpg")
-            .attr("class","image")
-            .attr("x",60)
-            .attr("y",450)
-        vis.svgElem.append("text")
-            .attr("class", "PT_Serif_original")
-            .attr("text-anchor", "middle")
-            .attr("x", 130)
-            .attr("y", 600)
-            .attr("stroke","#8dd3c7")
-            .text("Kevin");
+        displayImagesForScrumTeam(vis);
+        displayTitle(vis);
 
-        var image2 = vis.svgElem.append("image")
-            .attr("xlink:href", "img/b.jpg")
-            .attr("class","image")
-            .attr("x",220)
-            .attr("y",450)
-        vis.svgElem.append("text")
-            .attr("class", "PT_Serif_original")
-            .attr("text-anchor", "middle")
-            .attr("x", 290)
-            .attr("y", 600)
-            .attr("stroke","#fb8072")
-            .text("Manish");
+        getImageSVGDef(vis);
 
-        var image3 = vis.svgElem.append("image")
-            .attr("xlink:href", "img/c.jpg")
-            .attr("class","image")
-            .attr("x",420)
-            .attr("y",450)
-        vis.svgElem.append("text")
-            .attr("class", "PT_Serif_original")
-            .attr("text-anchor", "middle")
-            .attr("x", 490)
-            .attr("y", 600)
-            .attr("stroke","#b3de69")
-            .text("James");
-
-
-        var image4 = vis.svgElem.append("image")
-            .attr("xlink:href", "img/d.jpg")
-            .attr("class","image")
-            .attr("x",600)
-            .attr("y",450)
-        vis.svgElem.append("text")
-            .attr("class", "PT_Serif_original")
-            .attr("text-anchor", "middle")
-            .attr("x", 670)
-            .attr("y", 600)
-            .attr("stroke","#bebada")
-
-            .text("David");
-
-
-        // vis.svgElem.append("text")
-        //     .attr("class", "PT_Serif")
-        //     .attr("text-anchor", "middle")
-        //     .attr("x", vis.width/2)
-        //     .attr("y", 40)
-        //     .attr("stroke","black")
-        //     // .attr("stroke-width","8px")
-        //     .text("Scrum Team");
-
-        vis.svgElem.append("text")
-            .attr("class", "PT_Serif_Small")
-            // .attr("text-anchor", "end")
-            .attr("x", 100)
-            .attr("y", 50)
-            .attr("stroke","black")
-            // .attr("stroke-width","8px")
-            .text("Scrum Team - Who is working on what? Click on work item bubbles ");
-
-        vis.svgElem.append("text")
-            .attr("class", "story-text1")
-            // .attr("text-anchor", "end")
-            .attr("x", 30)
-            .attr("y", 90)
-            .attr("font-family", "Solway")
-            .attr("font-size", "14px")
-            // .attr("stroke","black")
-            // .attr("stroke-width","8px")
-            .text("");
-
-        vis.svgElem.append("text")
-            .attr("class", "story-text2")
-            // .attr("text-anchor", "end")
-            .attr("x", 30)
-            .attr("y", 110)
-            .attr("font-family", "Solway")
-            .attr("font-size", "14px")
-            // .attr("stroke","black")
-            // .attr("stroke-width","8px")
-            .text("");
-
-        vis.svgElem.append("text")
-            .attr("class", "story-text3")
-            // .attr("text-anchor", "end")
-            .attr("x", 30)
-            .attr("y", 130)
-            .attr("font-family", "Solway")
-            .attr("font-size", "14px")
-            // .attr("stroke","black")
-            // .attr("stroke-width","8px")
-            .text("");
-
-
-
-        vis.defs.selectAll(".scrum-pattern")
-            .data(vis.storiesForActiveSprint).enter()
-            .append("pattern")
-            .attr("class", "scrum-pattern")
-            .attr("id", function (d) {
-                return d.id
-            })
-            .attr("height", "100%")
-            .attr("width", "100%")
-            .attr("patternContentUnits", "objectBoundingBox")
-            .append("image")
-            .attr("height", "1")
-            .attr("width", "1")
-            .attr("preserveAspectRatio", "xMidYMid slice")
-            .attr("xlink:href", function (d, i) {
-                if (d.fields.assignee == null ){
-                    return "img/ee.jpeg"
-                }else{
-                     return vis.imageMap[d.fields.assignee["name"]]
-                }
-            })
-            .attr("fill","orange")
-        var circles = vis.svgElem.selectAll(".bubble")
-            .data(vis.storiesForActiveSprint)
-            .enter().append("circle")
+        var circles = vis.svgElem.selectAll("circle")
+        .data(vis.storiesForSprint)
+        .enter().append("circle")
             .attr("class", "bubble")
             .attr("r", d => vis.radiusScale(d.storyPoints))
-            // .attr("fill","orange")
-            .attr("fill", d => ("url(#" + d.id + ")"))
             .attr("stroke",1)
             .on("click", function (d) {
-                console.log("d",d)
-                var outputStr = ""
-                var storydesc=""
-                if (d.fields.summary == null ){
-                    storydesc = ""
-                }else{
-                    storydesc = "Goal of this story is to "+d.fields.summary
-                }
-                if (d.fields.assignee == null ){
-                    outputStr = "This story is unassigned"
-                }else{
-                    if(d.isResolved ==true){
-                        outputStr = d.fields.assignee.displayName + " completed this story"
-
-                    }else{
-                        outputStr = d.fields.assignee.displayName + " is working on this story"
-
-                    }
-                }
-                d3.select(".story-text1").text(outputStr)
-                d3.select(".story-text2").text( "This story is of "+d.storyPoints+" points.")
-                d3.select(".story-text3").text(storydesc)
-
-                $(vis.eventHandler).trigger("selectionChanged", d)
-
+               $(vis.eventHandler).trigger("scopeBubbleSelectionChanged", d)
             })
-
-            // .call(d3.drag()
-            //     .on("start", (d) => {
-            //         if (!d3.event.active) { vis.simulation.alphaTarget(0.2).restart(); }
-            //         d.fx = d.x;
-            //         d.fy = d.y;
-            //     })
-            //     .on("drag", (d) => {
-            //         d.fx = d3.event.x;
-            //         d.fy = d3.event.y;
-            //     })
-            //     .on("end", (d) => {
-            //         if (!d3.event.active) { vis.simulation.alphaTarget(0); }
-            //         d.fx = null;
-            //         d.fy = null;
-            //     })
-            // )
+            .call(d3.drag()
+                .on("start", (d) => {
+                    if (!d3.event.active) { vis.simulation.alphaTarget(0.2).restart(); }
+                    d.fx = d.x;
+                    d.fy = d.y;
+                })
+                .on("drag", (d) => {
+                    d.fx = d3.event.x;
+                    d.fy = d3.event.y;
+                })
+                .on("end", (d) => {
+                    if (!d3.event.active) { vis.simulation.alphaTarget(0); }
+                    d.fx = null;
+                    d.fy = null;
+                })
+            )
             .on ("mouseover",function(d){
                 d3.select(this).style('stroke', 'black');
-                // console.log("mouseover")
             })
             .on ("mouseout",function(d){
             d3.select(this).style('stroke', 'white');
-            // console.log("mouseover")
-        })
+        });
 
 
+        vis.svgElem.selectAll(".bubble")
+            .attr("fill", function (d) {
+                return vis.colorScale(vis.issueStore.getSelectedIssuePropertyValue(d));
+            });
 
-        // .call(d3.zoom().on("zoom", function () {
-            //     vis.svgElem.attr("transform", d3.event.transform)
-            // }))
-            // vis.svgElem.call(d3.zoom().on("zoom", zoom));
-        // function zoom() {
-        //     gX.call(xAxis.scale(d3.event.transform.rescaleX(xScale)));
-        //     gY.call(yAxis.scale(d3.event.transform.rescaleY(yScale)));
-        //
-        //     var new_XScale = d3.event.transform.rescaleX(xScale);
-        //     var new_yScale = d3.event.transform.rescaleY(yScale);
-        //
-        //     circles.attr("cx", function (d) {
-        //         return new_XScale(d.xAxisValue)
-        //     });
-        //     circles.attr("cy", function (d) {
-        //         return new_yScale(d.yAxisValue)
-        //     });
-        // }
-            vis.simulation.nodes(vis.storiesForActiveSprint)
+        vis.simulation.nodes(vis.storiesForSprint)
             .on("tick", ticked);
+
         vis.simulation.force("x", vis.forceXSPlit)
-
-
             .alphaTarget(0.5)
-        // d3.selectAll("#status").on("click.title", () =>
-        //     vis.simulation.force("x", vis.forceXSPlit)
-        //         .alphaTarget(0.5)
-        //         .restart()
-        // );
-        // d3.selectAll("#status").on("click", function () {
-        //     showStatusTitles(vis.status)
-        // });
-        // d3.selectAll("#all").on("click.title", () =>
-        //     vis.simulation.force("x", vis.forceXAll)
-        //         .alphaTarget(0.5)
-        //         .restart()
-        // );
-        // d3.selectAll("#all").on("click", function () {
-        //     showStatusTitles([])
-        // });
 
         function ticked() {
             circles.attr("cx", function (d) {
@@ -330,21 +166,151 @@ class ScopeChart {
             }).attr("cy", d => d.y)
         }
 
-        function showStatusTitles(split) {
-            var titles = vis.svgElem.selectAll('.title')
-                .data(split);
-            titles.enter(titles).append('text')
-                .attr('class', 'title')
-                .merge(titles).transition().duration(1000)
-                .attr('x', function (d) {
-                    return d.x
-                })
-                .attr('y', 20)
-                .attr('text-anchor', 'middle')
-                .text(function (d) {
-                    return d.name;
-                });
-            titles.exit().remove()
-        }
     }
+
+}
+
+function displayImagesForScrumTeam(vis) {
+    var unassigned = vis.svgElem.append("image")
+        .attr("xlink:href", "img/unassigned.png")
+        .attr("class", "image")
+        .attr("x", 5)
+        .attr("y", 270)
+    vis.svgElem.append("text")
+        .attr("class", "PT_Serif_original")
+        // .attr("text-anchor", "middle")
+        .attr("x", 40)
+        .attr("y", 440)
+        .attr("stroke", "#fdb462")
+        .text("Un-Assigned");
+    var image1 = vis.svgElem.append("image")
+        .attr("xlink:href", "img/kevin_happy.png")
+        .attr("class", "image")
+        .attr("x", 160)
+        .attr("y", 270)
+    vis.svgElem.append("text")
+        .attr("class", "PT_Serif_original")
+        .attr("text-anchor", "middle")
+        .attr("x", 210)
+        .attr("y", 440)
+        .attr("stroke", "#8dd3c7")
+        .text("Kevin");
+
+    var image2 = vis.svgElem.append("image")
+        .attr("xlink:href", "img/manish_happy.png")
+        .attr("class", "image")
+        .attr("x", 300)
+        .attr("y", 270)
+    vis.svgElem.append("text")
+        .attr("class", "PT_Serif_original")
+        .attr("text-anchor", "middle")
+        .attr("x", 360)
+        .attr("y", 440)
+        .attr("stroke", "#fb8072")
+        .text("Manish");
+    var image3 = vis.svgElem.append("image")
+        .attr("xlink:href", "img/james-happy.png")
+        .attr("class", "image")
+        .attr("x", 460)
+        .attr("y", 270)
+    vis.svgElem.append("text")
+        .attr("class", "PT_Serif_original")
+        .attr("text-anchor", "middle")
+        .attr("x", 510)
+        .attr("y", 440)
+        .attr("stroke", "#b3de69")
+        .text("James");
+    var image4 = vis.svgElem.append("image")
+        .attr("xlink:href", "img/david_happy.png")
+        .attr("class", "image")
+        .attr("x", 620)
+        .attr("y", 270)
+    vis.svgElem.append("text")
+        .attr("class", "PT_Serif_original")
+        .attr("text-anchor", "middle")
+        .attr("x", 670)
+        .attr("y", 440)
+        .attr("stroke", "#bebada")
+
+        .text("David");
+}
+
+function displayTitle(vis) {
+    vis.svgElem.append("text")
+        .attr("class", "PT_Serif_Small")
+        // .attr("text-anchor", "end")
+        .attr("x", 100)
+        .attr("y", 50)
+        .attr("stroke", "black")
+        // .attr("stroke-width","8px")
+        .text("Scrum Team - Who is working on what? Click on work item bubbles ");
+
+
+}
+
+function getImageSVGDef(vis) {
+    vis.defs.selectAll(".scrum-pattern")
+        .data(vis.storiesForSprint).enter()
+        .append("pattern")
+        .attr("class", "scrum-pattern")
+        .attr("id", function (d) {
+            return d.id
+        })
+        .attr("height", "100%")
+        .attr("width", "100%")
+        .attr("patternContentUnits", "objectBoundingBox")
+        .append("image")
+        .attr("height", "1")
+        .attr("width", "1")
+        .attr("preserveAspectRatio", "xMidYMid slice")
+        .attr("xlink:href", function (d, i) {
+            if (d.fields.assignee == null) {
+                return "img/ee.jpeg"
+            } else {
+                return vis.imageMap[d.fields.assignee["name"]]
+            }
+        })
+        .attr("fill", "orange")
+}
+
+
+
+function displayStoryPointsLegend(vis) {
+// Add legend: circles
+
+    vis.svgElem.append("g")
+        .attr("class", "legendSize")
+        .attr("transform", "translate(450, 530)");
+
+    var legendSize = d3.legendSize()
+        .scale(vis.radiusScale)
+        .shape('circle')
+        .shapePadding(15)
+        .labelOffset(20)
+        .orient('horizontal')
+        .labels([0,1,3,5,8])
+
+    vis.svgElem.select(".legendSize")
+        .call(legendSize)
+    vis.svgElem.selectAll(".legendSize").each(function(d) {
+        d3.select(this).style("fill", "none")
+        d3.select(this).style("stroke", "black")
+    })
+
+     vis.svgElem.append("rect")
+        .attr("x", 450)
+        .attr("y", 470)
+        .attr("height", 140)
+        .attr("width", 310)
+        .style("stroke", "black")
+        .style("fill", "none")
+        .style("stroke-width", vis.border);
+    vis.svgElem.append("text")
+        .attr("class", "PT_Serif_Legend")
+        // .attr("text-anchor", "end")
+        .attr("x", 560)
+        .attr("y", 640)
+        .attr("stroke", "black")
+        // .attr("stroke-width","8px")
+        .text("Story Points");
 }

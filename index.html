@@ -93,43 +93,20 @@
         <!-- Begin Page Content -->
         <div class="container-fluid">
 
-          <!-- Page Heading -->
-          <div class="d-sm-flex align-items-center justify-content-between mb-4">
-
-            <h1 class="h3 mb-0 text-gray-800">
-              <i class="fas fa-glasses fa-sm text-black-50"></i>&nbsp ScrumSee
-            </h1>
-          </div>
-
           <div class="row">
 
             <!-- Scrum Process -->
             <div class="col-xl-12 col-lg-12">
               <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">Explore Sprint 42</h6>
-                  <div class="dropdown no-arrow">
-                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLinkScrumProcess" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
-                      <div class="dropdown-header">Select Sprint:</div>
-                       <a class="dropdown-item" href="#">Sprint 1</a>
-                        <a class="dropdown-item" href="#">Sprint 2</a>
-                      </div>
-                    </div>
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-start">
+                  <h1 class="h3 mb-0 text-gray-800">
+                    <i class="fas fa-glasses fa-sm text-black-50"></i>&nbsp ScrumSee
+                  </h1>
+                  <select id="sprint-selector" name="sprint-selector"></select>
                   </div>
                 <!-- Card Body -->
                 <div class="card-body">
-                    <!--image from https://upload.wikimedia.org/wikipedia/commons/5/58/Scrum_process.svg                    -->
-                    <!--Scrum icon by Vorillaz https://iconscout.com/contributors/vorillaz https://iconscout.com/icon/scrum-2 -->
-                    <!--Scrum Framework poster https://scrumorg-website-prod.s3.amazonaws.com/drupal/2016-06/ScrumFramework_17x11.pdf -->
-                    <!--<img src="img/scrum-framework.jpg" width = "100%">-->
-                  <div>
-                    <button id = "forecast" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-glasses fa-sm text-white-50"></i> Watch Sprint Forecast</button>
-                    <button id = "replay" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-glasses fa-sm text-white-50"></i> Watch Sprint Replay</button>
-                  </div>
                   <div class="img-container">
                     <input type="checkbox" class="input" id="input-product-backlog" name="inputs">
                     <input type="checkbox" class="input-help" id="input-product-backlog-desc" name="inputs">
@@ -368,7 +345,7 @@
 
             <!-- Blockers Card -->
             <div class="col-xl-3 col-md-3 mb-4">
-              <a href="https://cs171-jira.atlassian.net/browse/JV-171?jql=project%20%3D%20JV%20AND%20sprint%20in%20(4%2C%205)%20AND%20status%20%3D%20%22BLOCKED%22">
+              <a href="https://cs171-jira.atlassian.net/issues/?jql=project%20%3D%20JV%20and%20status%20%3D%20Blocked%20and%20sprint%3D5">
               <div class="card border-left-danger shadow h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
@@ -395,16 +372,6 @@
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                   <h6 class="m-0 font-weight-bold text-primary">Exploring Sprint 42</h6>
-                  <div class="dropdown no-arrow">
-                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLinkScrumProcess2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
-                      <div class="dropdown-header">Select Sprint:</div>
-                      <a class="dropdown-item" href="#">Sprint 1</a>
-                      <a class="dropdown-item" href="#">Sprint 2</a>
-                    </div>
-                  </div>
                 </div>
                 <!-- Card Body -->
                 <div class="card-body" >
@@ -418,8 +385,6 @@
                     <div class="row">
                       <div class="col-xl-6 col-lg-6">
                         <div id="scope-chart" class="viz">
-                          <button id="status">Status</button>
-                          <button id="all">All</button>
                         </div>
                       </div>
                       <div class="col-xl-6 col-lg-6">
@@ -475,6 +440,7 @@
   <script src="js/lib/d3-tip.js"></script>
   <script src="js/lib/tnt.tooltip.min.js"></script>
   <script src="js/lib/queue.min.js"></script>
+  <script src="js/data-plumper.js"></script>
   <script src="js/issuestore.js"></script>
   <script src="js/retrostore.js"></script>
   <script src="js/scrumstore.js"></script>
