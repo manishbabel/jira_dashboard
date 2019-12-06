@@ -35,6 +35,17 @@ LineChart = function(_parentElement, _data){
 LineChart.prototype.initVis = function(){
     var vis = this;
 
+    // Add title
+    d3.select("#" + vis.parentElement)
+        .append("div")
+        .attr("id", "retro-title")
+        .text("Sprint Feedback");
+
+    d3.select("#" + vis.parentElement)
+        .append("div")
+        .attr("id", "retro-subtitle")
+        .text("Mouse over the charts to see a breakdown by individuals");
+
     // SVG margin convention
     vis.margin = { top: 70, right: 60, bottom: 50, left: 60 };
 
@@ -83,7 +94,7 @@ LineChart.prototype.initVis = function(){
 
     // Scales and axes
     vis.x = d3.scaleLinear()
-        .domain([0, vis.filteredData.length])
+        .domain([0, vis.filteredData.length-1])
         .range([0, vis.width]);
 
     vis.y = d3.scaleLinear()
@@ -92,7 +103,8 @@ LineChart.prototype.initVis = function(){
 
     vis.xAxis = d3.axisBottom()
         .scale(vis.x)
-        .tickFormat(function(d) { return d + 1; });
+        .tickFormat(function(d) { return d + 1; })
+        .ticks(vis.data.length-1);
 
     vis.yAxis = d3.axisLeft()
         .scale(vis.y);
@@ -230,6 +242,7 @@ LineChart.prototype.initVis = function(){
         })
         .on("click", split);
 
+    // Rect for detecting mouse events
     vis.svg
         .append("rect")
         .attr("class", function(d){ return "rectangle " + d3.keys(d)[0]; })
@@ -241,47 +254,49 @@ LineChart.prototype.initVis = function(){
         .on("mouseover", split)
         .on("mouseout", unsplit);
 
-    // Update functions
+    // Transition functions
     function split(){
+        var delay = 500;
         var cat = d3.select(this).attr("class").split(" ")[1];
         $(".fit." + cat).show();
         d3.select(".fit." + cat)
             .transition()
-            .duration(1000)
+            .duration(delay)
             .attr("x2", function(data){ return vis.x(data[1]); })
             .attr("y2", function(data){ return vis.y(data[3]); });
         $(".title." + cat).text(cat + " - Individual Rating");
         $(".dotG." + cat).show();
         d3.selectAll(".spots." + cat)
             .transition()
-            .duration(1000)
+            .duration(delay)
             .attr("cy", function(d){ return vis.y(d); });
         $(".lines." + cat).hide();
         $(".dots." + cat).hide();
     }
 
     function unsplit(){
+        var delay = 500;
         var cat = d3.select(this).attr("class").split(" ")[1];
         d3.select(".fit." + cat)
             .transition()
-            .duration(1000)
+            .duration(delay)
             .attr("x2", function(data){ return vis.x(data[0]); })
             .attr("y2", function(data){ return vis.y(data[2]); });
-        $(".fit." + cat).delay(1000).hide(0);
+        $(".fit." + cat).delay(delay).hide(0);
         $(".title." + cat).text(cat + " - Average Rating");
         d3.selectAll(".spots." + cat)
             .transition()
-            .duration(1000)
+            .duration(delay)
             .attr("cy", function(d){
                 var mean = d3.select(this.parentNode).attr("class").split(" ")[2];
                 return vis.y(mean);
             });
-        $(".lines." + cat).delay(1000).show(0);
-        $(".dots." + cat).delay(1000).show(0);
-        $(".dotG." + cat).delay(1000).hide(0);
-
+        $(".lines." + cat).delay(delay).show(0);
+        $(".dots." + cat).delay(delay).show(0);
+        $(".dotG." + cat).delay(delay).hide(0);
     }
 
+    // Add title
     vis.svg
         .append("text")
         .attr("class", function(d){
@@ -293,6 +308,7 @@ LineChart.prototype.initVis = function(){
         .text(function(d){ return d3.keys(d)[0] + " - Average Rating"; })
         .style("fill", function(d){ return vis.color(d3.keys(d)[0]) });
 
+    // Add regression line
     vis.svg.append("line")
         .attr("class", function(d){
             return "fit " + d3.keys(d)[0];
@@ -307,43 +323,12 @@ LineChart.prototype.initVis = function(){
         .style("display", "none")
         .attr("stroke", "black")
         .attr("stroke-width", 3);
-
-    // (Filter, aggregate, modify data)
-    vis.wrangleData();
 };
 
 
 /*
- * Data wrangling
+ * Regression Function
  */
-
-LineChart.prototype.wrangleData = function(){
-    var vis = this;
-
-    // Update the visualization
-    vis.updateVis();
-};
-
-
-/*
- * The drawing function
- */
-
-LineChart.prototype.updateVis = function(){
-    var vis = this;
-};
-
-
-LineChart.prototype.onSelectionChange = function(selectionStart, selectionEnd){
-    var vis = this;
-
-    // Filter original unfiltered data depending on selected time period (brush)
-    vis.filteredData = vis.data.filter(function(d){
-        return d.time >= selectionStart && d.time <= selectionEnd;
-    });
-
-    vis.wrangleData();
-};
 
 LineChart.prototype.regress = function(feedback){
     var vis = this;
@@ -372,9 +357,3 @@ LineChart.prototype.regress = function(feedback){
 
     return [0, n-1, b0, b1*(n-1)+b0];
 };
-
-/*
-* Regression line
-* lineVis.svg.append("line").attr("x1", lineVis.x(0)).attr("x2", lineVis.x(36)).attr("y1", lineVis.y(b0)).attr("y2", lineVis.y(b1*36+b0)).attr("stroke", "black")
-*
-* */

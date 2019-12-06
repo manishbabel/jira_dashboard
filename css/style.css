@@ -179,6 +179,20 @@ ul {
     fill: lightgray;
 }
 
+#retro-title {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 16pt;
+    font-weight: bold;
+}
+
+#retro-subtitle {
+    font-style: italic;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 14pt;
+}
 
 .PT_Serif{
     font-family: 'PT Serif', serif;
