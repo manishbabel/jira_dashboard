@@ -6,7 +6,7 @@ input { display: none; }
 p { margin: 0; }
 .button { color: white; font-weight: bold; font-size: 1em; background-color: #4e73df; display: inline; border-radius: 3%; cursor: pointer; animation: fadein .5s; animation: pulse 1.5s infinite; vertical-align: top;}
 .help { color: white; font-weight: bold; font-size: 1em; background-color: #4e73df; display: block; padding: .5% .75%; font-size: x-small; border-radius: 100%; cursor: pointer; animation: fadein .5s; animation: pulse 1.5s infinite; }
-.content { background: white; padding: 1rem 1rem 2rem 1rem; text-align: center; display: none; margin: 10%; border-radius: 8px; box-shadow: 0 4px 2px -2px rgba(211,47,47,0); }
+.content { background: white; padding: 1rem 1rem 1rem 1rem; vertical-align: top; text-align: center; display: none; margin: 10%; border-radius: 8px; box-shadow: 0 4px 2px -2px rgba(211,47,47,0); }
 .cross { font-weight: bold; }
 
 #b-product-backlog,
