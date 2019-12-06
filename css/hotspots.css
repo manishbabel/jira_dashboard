@@ -48,12 +48,12 @@ p { margin: 0; }
 #b-po,
 #b-sm,
 #b-tm,
-#b-daily-scrum { top: 5%;}
+#b-daily-scrum { top: 36%;}
 
 #b-po { left: 2%; }
 #b-sm { left: 6%; }
 #b-tm { left: 10%; }
-#b-daily-scrum { left: 63%;}
+#b-daily-scrum { left: 68%;}
 
 #b-sprint { top: 40%; left: 27%;
             padding-top: 4%; padding-bottom: 8%;
@@ -70,8 +70,9 @@ p { margin: 0; }
 #b-sprint-backlog-desc,
 #b-sprint-planning-desc{ top: 71%}
 
-#b-sprint-desc{ top: 53%; left: 28%; }
+#b-sprint-desc{ top: 60%; left: 23%; font-weight: bold;}
 
+#twenty-four-hours,
 #b-po,
 #b-sm,
 #b-tm,
@@ -84,6 +85,18 @@ p { margin: 0; }
 #b-sprint-backlog-desc,
 #b-sprint-planning-desc,
 #b-retrospective-desc { position: absolute; }
+
+#single-arrow {
+    top: 7%;
+    left: 0%;
+    width: 70%;
+}
+
+#twenty-four-hours{
+    left: 58%;
+    top: 40%;
+    font-weight: bold;
+}
 
 #input-product-backlog-desc:checked ~ #content-product-backlog-desc,
 #input-sprint-backlog-desc:checked ~ #content-sprint-backlog-desc,
