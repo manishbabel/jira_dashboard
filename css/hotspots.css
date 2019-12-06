@@ -1,7 +1,7 @@
 /*references */
 /* Hotspots code inspired and adapted from https://codepen.io/jack-taylor89/pen/JeajeL?editors=1100 */
 body { margin: 0 !important; padding: 0 !important; width: 100% !important; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol' !important; }
-.img-container { position: relative; overflow: hidden; height: 20vw; background-image:url("../img/scrum-arrows5.png"); background-size: 82%;}
+.img-container { position: relative; overflow: hidden; height: 20vw; background-image:url("../img/scrum-main.png"); background-size: cover;}
 input { display: none; }
 p { margin: 0; }
 .button { color: white; font-weight: bold; font-size: 1em; background-color: #4e73df; display: inline; border-radius: 3%; cursor: pointer; animation: fadein .5s; animation: pulse 1.5s infinite; vertical-align: top;}
@@ -12,8 +12,7 @@ p { margin: 0; }
 #b-product-backlog,
 #b-sprint-backlog,
 #b-sprint-planning,
-#b-product-increment,
-#b-retrospective{
+#b-product-increment{
     padding-top: 1%;
     padding-bottom: 4%;
     padding-left: .5%;
@@ -24,8 +23,23 @@ p { margin: 0; }
 }
 
 #b-retrospective{
+    padding-top: 1%;
+    padding-bottom: 7%;
     padding-left: 1.5%;
     padding-right: 1.5%;
+    position: absolute;
+    top: 55%;
+    text-align: center;
+}
+
+#retrospective-title{
+    position: absolute;
+    top: 75%;
+    left: 89%;
+    font-weight: bold;
+    text-align: center;
+    color: white;
+    padding-right: 10%;
 }
 
 #b-product-backlog-desc,
@@ -43,36 +57,36 @@ p { margin: 0; }
 #b-retrospective-desc,
 #b-retrospective {left: 87%;}
 #b-retrospective {font-size: xx-large;}
-#b-retrospective:hover {background: white; }
+#b-retrospective:hover {background: gray; }
 
 #b-po,
 #b-sm,
 #b-tm,
-#b-daily-scrum { top: 36%;}
+#b-daily-scrum { top: 13%;}
 
 #b-po { left: 2%; }
 #b-sm { left: 6%; }
 #b-tm { left: 10%; }
-#b-daily-scrum { left: 68%;}
+#b-daily-scrum { left: 76%;}
 
-#b-sprint { top: 40%; left: 27%;
-            padding-top: 4%; padding-bottom: 8%;
-            padding-left: 4%; padding-right: 4%;
-            border-radius: 100% 100% 0 0;
-            font-size: xx-large;
+#b-sprint { top: 32%; left: 45%;
+            padding-top: 6%; padding-bottom: 6%;
+            padding-left: 2%; padding-right: 2%;
+            border-radius: 100% ;
+            font-size: x-large;
 }
 
 #b-showcase { top: 55%; left: 93%; }
 
-#b-retrospective-desc,
+#b-retrospective-desc { top: 48%; }
+
 #b-product-increment-desc,
 #b-product-backlog-desc,
 #b-sprint-backlog-desc,
 #b-sprint-planning-desc{ top: 71%}
 
-#b-sprint-desc{ top: 60%; left: 23%; font-weight: bold;}
+#b-sprint-desc{ top: 38%; left: 47%; font-weight: bold;}
 
-#twenty-four-hours,
 #b-po,
 #b-sm,
 #b-tm,
@@ -85,18 +99,6 @@ p { margin: 0; }
 #b-sprint-backlog-desc,
 #b-sprint-planning-desc,
 #b-retrospective-desc { position: absolute; }
-
-#single-arrow {
-    top: 7%;
-    left: 0%;
-    width: 70%;
-}
-
-#twenty-four-hours{
-    left: 58%;
-    top: 40%;
-    font-weight: bold;
-}
 
 #input-product-backlog-desc:checked ~ #content-product-backlog-desc,
 #input-sprint-backlog-desc:checked ~ #content-sprint-backlog-desc,

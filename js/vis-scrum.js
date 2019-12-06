@@ -113,8 +113,8 @@ class ScrumProcess {
             window.open("https://cs171-jira.atlassian.net/issues/?jql=project%20%3D%20JV%20and%20status%20%3D%20Done%20and%20sprint%3D5", "_blank")
         };
 
-        document.querySelector("#b-sprint-planning").onclick = () => {
-            window.open("https://cs171-jira.atlassian.net/browse/JV-162?jql=project%20%3D%20JV%20and%20sprint%3D5%20and%20%22Story%20Points%22%3Dnull", "_blank")
+        document.querySelector("#b-sprint-backlog").onclick = () => {
+            window.open("https://cs171-jira.atlassian.net/secure/RapidBoard.jspa?rapidView=1&projectKey=JV", "_blank")
         };
 
         const visualizations = document.querySelectorAll(".viz");

@@ -43,10 +43,10 @@ function visualize(error, jiraData, scrumText, retroData, test) {
 
         //Map clickable elements to the visualization objects which will display
         const actionMapping = {
-                "#input-sprint-backlog": [visScope, visStory],
+                "#input-sprint": [visScope, visStory],
                 "#input-product-increment": [visScope, visStory],
                 "#input-retrospective": [visRetro],
-                "#input-sprint": [visVelocity]
+                "#input-sprint-planning": [visVelocity]
         };
         const visScrumProcess = new ScrumProcess(issueStore, scrumTextStore, retroStore, actionMapping);
 
