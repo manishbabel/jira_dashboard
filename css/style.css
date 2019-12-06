@@ -19,7 +19,7 @@ ul {
 
 .w3-tooltip .w3-tooltiptext {
     visibility: hidden;
-    width: 500px;
+    width: 300px;
     background-color: darkred;
     color: antiquewhite;
     text-align: center;
