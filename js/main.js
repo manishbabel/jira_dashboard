@@ -4,7 +4,7 @@ const useSampleData = false;
 document.addEventListener("DOMContentLoaded", () => {
 
     queue()
-        .defer(d3.json, (useSampleData ? "data/CFX-data-scrubbed.json" : "data/JV-12-3-19.json"))
+        .defer(d3.json, (useSampleData ? "data/CFX-data-scrubbed.json" : "data/JV-12-5-19.json"))
         .defer(d3.json, "data/scrum-process.json")
         .defer(d3.json, "data/metrics.json")
         .await(visualize);
@@ -56,12 +56,10 @@ function visualize(error, jiraData, scrumText, retroData, test) {
                         visVelocity.onSelectedLayerChange(selection);
                         visScope.wrangleData();
                 });
-                $(eventHandler).trigger("selectedSprintChange", 1);
         });
 
         $(eventHandler).bind("selectedSprintChange", (event, selection) => {
                 issueStore.onSelectedSprintChange(selection, ()=> {
-                        alert("sprint selection is " + selection);
                         //todo update scope chart
                         //todo update sprint cards
                 });
