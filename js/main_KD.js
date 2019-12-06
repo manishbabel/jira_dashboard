@@ -10,6 +10,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function visualize(error, jiraData, scrumText, retroData) {
-        const svgRetro = new LineChart("line-chart", retroData);
+        const svgRetro = new LineChart("line-chart", retroData.slice(16,21));
 }
 
