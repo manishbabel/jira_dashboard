@@ -22,7 +22,7 @@ StoryChart = function(_parentElement, _data){
 
 StoryChart.prototype.initVis = function (){
     var vis = this;
-    vis.margin = { top: 20, right: 20, bottom: 200, left: 60 };
+    vis.margin = { top: 20, right: 20, bottom: 200, left:80 };
 
     vis.width = 750 - vis.margin.left - vis.margin.right,
         vis.height = 600 - vis.margin.top - vis.margin.bottom;
@@ -39,29 +39,54 @@ StoryChart.prototype.initVis = function (){
     vis.x = d3.scaleTime()
         .range([0, vis.width ]).nice(d3.timeDay)
 
-    vis.y = d3.scaleLinear()
-        .range([vis.height, 150])
 
+    vis.y = d3.scaleLinear()
+        .range([vis.height, 200])
+
+
+    function timeFormat(formats) {
+        return function(date) {
+            var i = formats.length - 1, f = formats[i];
+            while (!f[1](date)) f = formats[--i];
+            return d3.functor(f[0])(date);
+        };
+    }
+
+    var customTimeFormat = timeFormat([
+        // ["00:00", function () { return true; }],
+        ["00:00", function (d) { return 0 <= d && d  < 9; }],
+        ["12:00", function (d) { return 9 <= d  && d   < 15; }],
+        ["24:00", function (d) { return 15 <= d  && d  < 25; }]
+    ]);
     vis.xAxis = d3.axisBottom()
         .scale(vis.x)
         .tickFormat(formatDate)
         .ticks(d3.timeDay)
     vis.yAxis = d3.axisLeft()
-        .scale(vis.y);
-
+        .scale(vis.y)
+        .ticks(3)
+        .tickValues(d3.range(0, 25, 12))
+        // .tickFormat(d3.format('h'))
+        .tickFormat(customTimeFormat)
+    // .innerTickSize(-vis.width)
+    // .outerTickSize(0)
+    // .tickPadding();
+    // .tickFormat(customTimeFormat)
+    // .tickPadding(5);
     vis.svgElem.append("g")
         .attr("class", "x-axis axis")
         .attr("transform", "translate(0," + (vis.height) + ")");
 
     vis.svgElem.append("g")
-        .attr("class", "y-axis axis");
+        .attr("class", "y-axis axis")
+        .attr("transform", "translate(0," + (0) + ")");
+
     vis.tooltip = vis.svgElem.append('g')
         .attr('class', 'tooltip');
 
     vis.line = d3.line()
         .curve(d3.curveStepBefore)
         .x(function(d) {
-            console.log("line called:",d)
             return vis.x(d.fulldate); })
         .y(function(d) { return vis.y(d.time); });
 
@@ -75,6 +100,12 @@ StoryChart.prototype.initVis = function (){
 
     vis.path, vis.trans = 25, vis.circle;
     vis.path = vis.svgElem.append("path");
+    // vis.svgElem.append("text")
+    //     .attr("class", "label")
+    //     .attr("x", -50)
+    //     .attr("y", -20)
+    //     .text("Time");
+
 }
 StoryChart.prototype.wrangleData = function (dataset){
     var vis = this
@@ -98,13 +129,12 @@ StoryChart.prototype.updateVis = function (dataset){
                     </table>
                     `;
             return content;
-            });
+        });
     vis.svgElem.call(tip)
     dataset = dataset.sort(function(a,b){
         return a.fulldate - b.fulldate
     })
     vis.x.domain([d3.min(dataset,function(d){
-        console.log( (d.fulldate) )
         return   (d.fulldate)
     }),
         d3.max(dataset,function(d){ return   (d.fulldate)})])
@@ -115,7 +145,7 @@ StoryChart.prototype.updateVis = function (dataset){
         .attr("id", "line")
         .attr("stroke-dasharray", totalLength + " " + totalLength)
         .attr("stroke-dashoffset", totalLength)
-         .attr("stroke", "rgb(255,74,27)")
+        .attr("stroke", "rgb(255,74,27)")
         .attr("stroke-width", "2")
         .attr("fill", "none")
         .attr("d", function(d){
@@ -157,7 +187,11 @@ StoryChart.prototype.updateVis = function (dataset){
 
 
     vis.svgElem.select(".x-axis").call(vis.xAxis);
-    // vis.svgElem.select(".y-axis").call(vis.yAxis);
+    vis.svgElem.select(".y-axis")
+        .call(vis.yAxis)
+        .call(g => g.select(".domain").remove())
+
+
     vis.svgElem.append("text")
         .attr("class", "PT_Serif")
         .attr("text-anchor", "end")
@@ -167,18 +201,43 @@ StoryChart.prototype.updateVis = function (dataset){
         .text("Timeline of the Story");
 
 
+
 }
 
 StoryChart.prototype.onSelectionChange = function(d1){
     var vis = this;
+    generateDynamicText(d1,vis);
+    if (vis.dataset.length !=0){
+        vis.wrangleData(vis.dataset)
+    }
+}
+
+function generateDynamicText(d1,vis) {
+    var assigneeDesc = ""
+    var storyDesc = ""
     var changelog = d1['changelog']['histories']
-    var dataset = []
+    vis.dataset = []
     var listOfAllowedFields = ["Story Points","priority","Rank","assignee","status"]
-    generateDynamicText(d1);
+    if (d1.fields.summary == null) {
+        storyDesc = ""
+    } else {
+        storyDesc = "Goal of this story is to " + d1.fields.summary
+    }
+    if (d1.fields.assignee == null) {
+        assigneeDesc = "This story is unassigned"
+    } else {
+        if (d1.isResolved == true) {
+            assigneeDesc = d1.fields.assignee.displayName + " completed "+d1.key+" story"
+
+        } else {
+            assigneeDesc = d1.fields.assignee.displayName + " is working on "+d1.key+" story"
+
+        }
+    }
     vis.svgElem.append("text")
         .attr("class", "story-text1 ")
         .attr("x", 10)
-        .attr("y", vis.height - 340)
+        .attr("y", vis.margin.top)
         .attr("font-family", "Solway")
         .attr("font-size", "14px")
         .text("");
@@ -186,7 +245,7 @@ StoryChart.prototype.onSelectionChange = function(d1){
     vis.svgElem.append("text")
         .attr("class", "story-text2")
         .attr("x", 10)
-        .attr("y", vis.height - 320)
+        .attr("y", vis.margin.top+20)
         .attr("font-family", "Solway")
         .attr("font-size", "14px")
         .text("");
@@ -194,13 +253,13 @@ StoryChart.prototype.onSelectionChange = function(d1){
     vis.svgElem.append("text")
         .attr("class", "story-text3")
         .attr("x", 10)
-        .attr("y", vis.height - 300)
+        .attr("y", vis.margin.top+40)
         .attr("font-family", "Solway")
         .attr("font-size", "14px")
         .text("");
     changelog.forEach(function(d){
         var copiedDate = new Date(d.created);
-        var myTime = copiedDate.getMinutes()
+        var myTime = copiedDate.getHours()
         if(myTime ==0){
             myTime =10
         }
@@ -220,7 +279,7 @@ StoryChart.prototype.onSelectionChange = function(d1){
                 toStr = d.items[0].toString
             }
             copiedDate.setHours(0,0,0,0);
-            dataset.push({field:d.items[0].field,
+            vis.dataset.push({field:d.items[0].field,
                 tostr:toStr,
                 fromstr:fStr,
                 desc:d.items[0].field +":"+d.items[0].toString,
@@ -232,33 +291,11 @@ StoryChart.prototype.onSelectionChange = function(d1){
                 assigned:assignee})
         }
     })
-
-    if (dataset.length !=0){
-        vis.wrangleData(dataset)
-    }
-}
-
-function generateDynamicText(d) {
-    var assigneeDesc = ""
-    var storyDesc = ""
-    console.log("hello",d)
-    if (d.fields.summary == null) {
-        storyDesc = ""
-    } else {
-        storyDesc = "Goal of this story is to " + d.fields.summary
-    }
-    if (d.fields.assignee == null) {
-        assigneeDesc = "This story is unassigned"
-    } else {
-        if (d.isResolved == true) {
-            assigneeDesc = d.fields.assignee.displayName + " completed "+d.key+" story"
-
-        } else {
-            assigneeDesc = d.fields.assignee.displayName + " is working on "+d.key+" story"
-
-        }
-    }
     d3.select(".story-text1").text(assigneeDesc)
-    d3.select(".story-text2").text("This story is of " + d.storyPoints + " points.")
+    d3.select(".story-text2").text("This story is of " + d1.storyPoints + " points.")
+    if (storyDesc.length > 95){
+        storyDesc = storyDesc.slice(0, 90) + "..."
+    }
     d3.select(".story-text3").text(storyDesc)
+
 }
