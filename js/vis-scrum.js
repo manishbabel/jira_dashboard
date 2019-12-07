@@ -39,7 +39,8 @@ class ScrumProcess {
         const dayOfSprint = Math.ceil((currentDay.getTime() - sprintStart.getTime()) / (1000*60*60*24));
 
         return "Sprint Day " + dayOfSprint + " of " + sprintLength +
-            "<br>Ends " + formatDate(sprintEnd);
+            "<br>Ends " + formatDate(sprintEnd) +
+            "<br><i class='fas fa-arrow-circle-down'></i>";
     }
 
     setStats(){
@@ -63,9 +64,9 @@ class ScrumProcess {
         document.querySelector("#b-sprint-backlog").innerHTML = "Sprint Backlog <br>" + committed + " points <br>";
         document.querySelector("#b-product-increment").innerHTML = "Product Increment <br>" + completed + " points <br>";
         document.querySelector("#b-product-backlog").innerHTML = "Product Backlog <br>" + backlogStoryCount + " stories <br>";
-        document.querySelector("#b-sprint-planning").innerHTML = "Sprint Planning <br>" + totalAlerts + " unestimated <br> stories ";
+        document.querySelector("#b-sprint-planning").innerHTML = "Sprint Planning <br>" + totalAlerts + " unestimated <br> stories<br><i class='fas fa-arrow-circle-down'></i>";
         const retroElem = document.querySelector("#b-retrospective");
-        retroElem.innerText += averageHappiness.toFixed(2);
+        retroElem.innerHTML = "&nbsp&nbsp" + averageHappiness.toFixed(2);
 
         if (averageHappiness < 0){
            retroElem.className += " fa-sad-tear";
