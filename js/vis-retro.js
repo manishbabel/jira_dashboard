@@ -6,7 +6,7 @@ class RetroChart {
     constructor(data, svg) {
         this._data = data;
         this._svg = svg;
-        this._lineChart = new LineChart(this.svg.container.substr(1), data);
+        this._lineChart = new LineChart("retrospective-chart", data);
     }
 
     get data(){return this._data;}

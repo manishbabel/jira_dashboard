@@ -9,9 +9,9 @@ class StoryChart2 {
     get svg() {return this._svg;}
     get storyChart() {return this._storyChart;}
 }
-var formatDate = d3.timeFormat("%b-%d")
-var dateFormatter = d3.timeFormat("%Y-%m-%d");
-var dateParser = d3.timeParse("%Y-%m-%d");
+const formatDate = d3.timeFormat("%b-%d")
+const dateFormatter = d3.timeFormat("%Y-%m-%d");
+const dateParser = d3.timeParse("%Y-%m-%d");
 
 StoryChart = function(_parentElement, _data){
     this.parentElement = _parentElement;
@@ -21,7 +21,7 @@ StoryChart = function(_parentElement, _data){
 }
 
 StoryChart.prototype.initVis = function (){
-    var vis = this;
+    const vis = this;
     vis.margin = { top: 20, right: 20, bottom: 200, left: 60 };
 
     vis.width = 750 - vis.margin.left - vis.margin.right,
@@ -45,7 +45,7 @@ StoryChart.prototype.initVis = function (){
     vis.xAxis = d3.axisBottom()
         .scale(vis.x)
         .tickFormat(formatDate)
-        .ticks(d3.timeDay)
+        .ticks(d3.timeDay);
     vis.yAxis = d3.axisLeft()
         .scale(vis.y);
 
@@ -77,12 +77,12 @@ StoryChart.prototype.initVis = function (){
     vis.path = vis.svgElem.append("path");
 }
 StoryChart.prototype.wrangleData = function (dataset){
-    var vis = this
+    const vis = this;
     vis.updateVis(dataset)
 
 }
 StoryChart.prototype.updateVis = function (dataset){
-    var vis = this
+    const vis = this;
 
     //tooltip
     tip = d3.tip().attr('class', 'd3-tip')
@@ -103,10 +103,7 @@ StoryChart.prototype.updateVis = function (dataset){
     dataset = dataset.sort(function(a,b){
         return a.fulldate - b.fulldate
     })
-    vis.x.domain([d3.min(dataset,function(d){
-        console.log( (d.fulldate) )
-        return   (d.fulldate)
-    }),
+    vis.x.domain([d3.min(dataset,d => d.fulldate),
         d3.max(dataset,function(d){ return   (d.fulldate)})])
     vis.y.domain([0, d3.max(dataset, function(d) { return d.time; })]);
     vis.path
@@ -131,9 +128,9 @@ StoryChart.prototype.updateVis = function (dataset){
         .ease(d3.easeLinear)
         .attr("stroke-dashoffset", 0)
         .attr("pointer-events", "none");
-    var bubble = vis.svgElem
+    let bubble = vis.svgElem
         .selectAll(".dot")
-        .data(dataset)
+        .data(dataset);
     bubble.enter()
         .append("circle")
         .merge(bubble)
@@ -170,7 +167,7 @@ StoryChart.prototype.updateVis = function (dataset){
 }
 
 StoryChart.prototype.onSelectionChange = function(d1){
-    var vis = this;
+    const vis = this;
     var changelog = d1['changelog']['histories']
     var dataset = []
     var listOfAllowedFields = ["Story Points","priority","Rank","assignee","status"]
@@ -199,8 +196,8 @@ StoryChart.prototype.onSelectionChange = function(d1){
         .attr("font-size", "14px")
         .text("");
     changelog.forEach(function(d){
-        var copiedDate = new Date(d.created);
-        var myTime = copiedDate.getMinutes()
+        let copiedDate = new Date(d.created);
+        let myTime = copiedDate.getMinutes();
         if(myTime ==0){
             myTime =10
         }
