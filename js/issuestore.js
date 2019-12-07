@@ -122,7 +122,7 @@ class IssueStore {
 
             //get all possible values for priority, issuetype, and component
             if(! priorityIds[issue.fields.priority.id]) {
-                priorities.push(issue.fields.priority.name);
+                priorities.push(issue.fields.priority);
                 priorityIds[issue.fields.priority.id] = issue.fields.priority.name;
             }
             if(! issueTypeIds[issue.fields.issuetype.id]) {
@@ -139,9 +139,17 @@ class IssueStore {
 
         });
 
+        //sort values
+        const sortById = function(a,b) {
+            return parseInt(a.id) - parseInt(b.id);
+        };
+        priorities.sort(sortById);
+
+        self.priorities = d3.range(0, priorities.length).map(function (d) {
+            return priorities[d].name;
+        });
         self.sprints = allSprints;
         self.sprintMap = sprintMap;
-        self.priorities = priorities;
         self.issueTypes = issueTypes;
         self.components = components;
 
@@ -173,7 +181,7 @@ class IssueStore {
             sprint[completedStoryPoints][componentLayer] = {};
             sprint[completedStoryPoints][issueTypeLayer] = {};
 
-            priorities.forEach(function (priority) {
+            self.priorities.forEach(function (priority) {
 
                 sprint[priority] = 0; //TODO remove this
                 sprint[totalStoryPoints][priorityLayer][priority] = 0;
