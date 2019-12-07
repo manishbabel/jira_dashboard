@@ -128,6 +128,18 @@ class ScrumProcess {
             window.open("https://cs171-jira.atlassian.net/secure/RapidBoard.jspa?rapidView=1&projectKey=JV", "_blank")
         };
 
+        document.querySelector("#velocity-card").onclick = () => {
+            window.open("https://cs171-jira.atlassian.net/secure/RapidBoard.jspa?projectKey=JV&rapidView=1&view=reporting&chart=velocityChart", "_blank")
+        };
+
+        document.querySelector("#burn-down-card").onclick = () => {
+            window.open("https://cs171-jira.atlassian.net/secure/RapidBoard.jspa?rapidView=1&projectKey=JV&view=reporting&chart=burndownChart&sprint=4", "_blank")
+        };
+
+        document.querySelector("#blockers-card").onclick = () => {
+            window.open("https://cs171-jira.atlassian.net/issues/?jql=project%20%3D%20JV%20and%20status%20%3D%20Blocked%20and%20sprint%3D5", "_blank")
+        };
+
         const visualizations = document.querySelectorAll(".viz");
         visualizations.forEach( viz => { viz.style.display = "none";});
 

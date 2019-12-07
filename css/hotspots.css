@@ -43,6 +43,11 @@ p { margin: 0; }
     padding-right: 10%;
 }
 
+#velocity-card:hover,
+#burn-down-card:hover,
+#blockers-card:hover,
+#retrospective-title:hover{cursor: pointer;}
+
 #b-product-backlog-desc,
 #b-product-backlog { left: 1%;}
 
