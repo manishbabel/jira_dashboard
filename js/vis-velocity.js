@@ -257,7 +257,7 @@ VelocityChart.prototype.updateVis = function(){
             obj.rows.push({"label":layer, "value":d.vis.stackedData[i][d.i][1] - d.vis.stackedData[i][d.i][0]});
         });
 
-        tooltip.table()
+        vis.toolTipTable = tooltip.table()
             .width(200)
             .call (this, obj);
     };
@@ -285,6 +285,7 @@ VelocityChart.prototype.updateVis = function(){
         })
         .on('mouseout', function(){
             vertline.style("opacity", 0);
+            vis.toolTipTable.close();
         });
 
     // Call axis functions with the new domain

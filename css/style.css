@@ -177,8 +177,13 @@ ul {
     font-size: 14pt;
 }
 
+.colorLegendTitle {
+    font-size: 14pt;
+    font-weight: bold;
+}
+
 .label {
-    fill: lightgray;
+    fill: darkgray;
 }
 
 #retro-title {

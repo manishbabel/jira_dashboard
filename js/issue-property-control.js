@@ -10,6 +10,15 @@ IssuePropertyControl = function(_svg, _colorScheme, _eventHandler, _issueStore, 
 IssuePropertyControl.prototype.initVis = function(){
         var vis = this;
 
+
+        vis.svg
+            .append("g")
+            .append("text")
+            .attr("class", "title colorLegendTitle " + vis.visClass)
+            .attr("y", 14)
+            .attr("x", 0)
+            .text(() => $("#issue-property-selector option:selected").text());
+
         vis.svg
         .append("g")
             .attr("class", "colorLegend " + vis.visClass);
@@ -29,6 +38,9 @@ IssuePropertyControl.prototype.updateVis = function() {
         return i < vis.issueStore.selectedIssueProperty.length;
     }));
 
+    d3.select(".colorLegendTitle."+vis.visClass)
+        .text(() => $("#issue-property-selector option:selected").text());
+
     var legend = d3.legendColor()
             .shapeWidth(30)
             .orient("verticle")
@@ -36,8 +48,8 @@ IssuePropertyControl.prototype.updateVis = function() {
             .cells(vis.issueStore.selectedIssueProperty.length)
     ;
 
-    d3.selectAll("."+vis.visClass).attr("transform", "translate(0,10)");
+    d3.selectAll(".colorLegend."+vis.visClass).attr("transform", "translate(0,22)");
 
-    d3.selectAll("."+vis.visClass)
+    d3.selectAll(".colorLegend."+vis.visClass)
         .call(legend);
 }
