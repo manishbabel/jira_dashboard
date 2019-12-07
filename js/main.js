@@ -20,7 +20,7 @@ function visualize(error, jiraData, scrumText, retroData) {
         console.log(retroStore.data);
 
         const margin = {top: 0, right: 0, bottom: 0, left: 0};
-        const marginVelocity = { top: 0, right: 0, bottom: 0, left: 0 };
+        const marginVelocity = { top: 40, right: 65, bottom: 60, left: 60 };
         const marginScope = { top: 0, right: 0, bottom: 0, left: 0 };
         const marginRetro = { top: 0, right: 0, bottom: 0, left: 0 };
         const width = 0;
