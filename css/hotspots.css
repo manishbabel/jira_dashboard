@@ -15,8 +15,8 @@ p { margin: 0; }
 #b-product-increment{
     padding-top: 1%;
     padding-bottom: 4%;
-    padding-left: .5%;
-    padding-right: .5%;
+    padding-left: 1%;
+    padding-right: 1%;
     position: absolute;
     top: 70%;
     text-align: center;
@@ -29,14 +29,14 @@ p { margin: 0; }
     padding-left: 1.5%;
     padding-right: 1.5%;
     position: absolute;
-    top: 55%;
+    top: 65%;
     text-align: center;
 }
 
 #retrospective-title{
     position: absolute;
-    top: 75%;
-    left: 89%;
+    top: 78%;
+    left: 86%;
     font-weight: bold;
     text-align: center;
     color: white;
@@ -65,7 +65,7 @@ p { margin: 0; }
 }
 
 #b-product-increment-desc,
-#b-product-increment { left: 74%;}
+#b-product-increment { left: 70%;}
 
 #b-product-increment:hover{
     background-image:url("../img/backlog3.png");
@@ -74,7 +74,7 @@ p { margin: 0; }
 }
 
 #b-retrospective-desc,
-#b-retrospective {left: 87%;}
+#b-retrospective {left: 84%;}
 #b-retrospective {font-size: xx-large;}
 #b-retrospective:hover {background: gray; }
 
@@ -83,32 +83,46 @@ p { margin: 0; }
 #b-tm,
 #b-daily-scrum { top: 13%;}
 
-#b-po { left: 5%; }
-#b-sm { left: 16%; }
-#b-tm { left: 25%; }
-#b-daily-scrum { left: 76%;}
+#daily-scrum{top: 21%; left: 71%;}
+#b-daily-scrum { left: 69.5%;}
 
-#b-sprint { top: 32%; left: 45%;
+#b-po { left: 2%; }
+#b-sm { left: 13%; }
+#b-tm { left: 23%; }
+
+#product-owner,
+#scrum-master,
+#team {top: 34%;}
+
+#product-owner{left: 2%;}
+#scrum-master{left: 14%;}
+#team {left: 27%;}
+
+#b-sprint { top: 22%; left: 45%;
             padding-top: 6%; padding-bottom: 6%;
             padding-left: 2%; padding-right: 2%;
             border-radius: 100% ;
             font-size: x-large;
 }
+#b-sprint-desc{ top: 25%; left: 47%; font-weight: bold;}
 
 #b-showcase { top: 55%; left: 93%; }
 
-#b-retrospective-desc { top: 48%; }
+#b-retrospective-desc { top: 59.5%; }
 
 #b-product-increment-desc,
 #b-product-backlog-desc,
 #b-sprint-backlog-desc,
 #b-sprint-planning-desc{ top: 65%}
 
-#b-sprint-desc{ top: 38%; left: 47%; font-weight: bold;}
 
 #b-po,
 #b-sm,
 #b-tm,
+#daily-scrum,
+#product-owner,
+#scrum-master,
+#team,
 #b-daily-scrum,
 #b-sprint,
 #b-sprint-desc,
