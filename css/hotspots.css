@@ -51,32 +51,27 @@ p { margin: 0; }
 #b-product-backlog-desc,
 #b-product-backlog { left: 1%;}
 
-#b-product-backlog:hover{
-    background-image:url("../img/backlog1.png");
+#b-product-backlog:hover,
+#b-sprint-backlog:hover,
+#b-product-increment:hover
+{
     background-size: cover;
     color: transparent;
 }
+
+#b-product-backlog:hover{background-image:url("../img/backlog1.png");}
 
 #b-sprint-planning-desc,
 #b-sprint-planning { left: 13%;}
 
 #b-sprint-backlog-desc,
 #b-sprint-backlog  { left: 25%;}
-
-#b-sprint-backlog:hover{
-    background-image:url("../img/backlog2.png");
-    background-size: cover;
-    color: transparent;
-}
+#b-sprint-backlog:hover{background-image:url("../img/backlog2.png");}
 
 #b-product-increment-desc,
 #b-product-increment { left: 70%;}
+#b-product-increment:hover{background-image:url("../img/backlog3.png");}
 
-#b-product-increment:hover{
-    background-image:url("../img/backlog3.png");
-    background-size: cover;
-    color: transparent;
-}
 
 #b-retrospective-desc,
 #b-retrospective {left: 84%;}
@@ -120,7 +115,6 @@ p { margin: 0; }
 #b-sprint-backlog-desc,
 #b-sprint-planning-desc{ top: 65%}
 
-
 #b-po,
 #b-sm,
 #b-tm,
@@ -151,6 +145,7 @@ p { margin: 0; }
 #input-sprint-planning-desc:checked ~ #content-sprint-planning-desc
 { display: block !important; animation: fadein .5s; }
 
+.input-help:checked ~ label #retrospective-title,
 .input-help:checked ~ label .button,
 .input-help:checked ~ label .help { display: none !important; animation: fadeout .5s; }
 
