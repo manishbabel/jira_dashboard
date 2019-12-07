@@ -60,10 +60,10 @@ class ScrumProcess {
         document.querySelector("#burn-down-progress").style = "width: " + burndownPct;
         document.querySelector("#total-blockers").innerText = activeSprint.totalBlockers;
         document.querySelector("#sprint-goal").innerText = activeSprint.goal;
-        document.querySelector("#b-sprint-backlog").innerHTML = "Sprint Backlog <br>" + committed + " points <br>" + arrow;
-        document.querySelector("#b-product-increment").innerHTML = "Product Increment <br>" + completed + " points <br>" + arrow;
-        document.querySelector("#b-product-backlog").innerHTML = "Product Backlog <br>" + backlogStoryCount + " stories <br>" + arrow;
-        document.querySelector("#b-sprint-planning").innerHTML = "Sprint Planning <br>" + totalAlerts + " unestimated <br> stories " + arrow;
+        document.querySelector("#b-sprint-backlog").innerHTML = "Sprint Backlog <br>" + committed + " points <br>";
+        document.querySelector("#b-product-increment").innerHTML = "Product Increment <br>" + completed + " points <br>";
+        document.querySelector("#b-product-backlog").innerHTML = "Product Backlog <br>" + backlogStoryCount + " stories <br>";
+        document.querySelector("#b-sprint-planning").innerHTML = "Sprint Planning <br>" + totalAlerts + " unestimated <br> stories ";
         const retroElem = document.querySelector("#b-retrospective");
         retroElem.innerText += averageHappiness.toFixed(2);
 
