@@ -71,9 +71,9 @@ class ScopeChart {
         }).strength(0.08)
 
         //Force simulation settings for bubbles
-        vis.forceXAll = d3.forceX(vis.width/2).strength(0.09)
+        vis.forceXAll = d3.forceX(vis.width/2).strength(0.04)
         var forceCollide = d3.forceCollide(function(d){
-            return  vis.radiusScale(d.storyPoints)+4
+            return  vis.radiusScale(d.storyPoints)+3
         })
         vis.simulation = d3.forceSimulation()
             .force("x",vis.forceXAll)
@@ -87,8 +87,9 @@ class ScopeChart {
 
 
         vis.wrangleData();
-        displayImagesForScrumTeam(vis);
+
         vis.renderVis();
+        displayImagesForScrumTeam(vis);
     }
 
     wrangleData = function (){
@@ -123,16 +124,16 @@ class ScopeChart {
         vis.map =[]
         vis.nested_data.forEach(function(d){
             if (d.key =="admin"){
-                vis.map.push({id:d.key,name:"david",sp:d.value['total_time'],x:170,y:280})
+                vis.map.push({id:d.key,name:"david",sp:d.value['total_time'],x:170,y:290})
             }
             if (d.key =="mab7461"){
-                vis.map.push({id:d.key,name:"manish",sp:d.value['total_time'],x:320,y:280})
+                vis.map.push({id:d.key,name:"manish",sp:d.value['total_time'],x:320,y:290})
             }
             if (d.key =="jam7652"){
-                vis.map.push({id:d.key,name:"james",sp:d.value['total_time'],x:490,y:280})
+                vis.map.push({id:d.key,name:"james",sp:d.value['total_time'],x:490,y:290})
             }
             if (d.key =="ked358"){
-                vis.map.push({id:d.key,name:"kevin",sp:d.value['total_time'],x:665,y:280})
+                vis.map.push({id:d.key,name:"kevin",sp:d.value['total_time'],x:665,y:290})
             }
 
 
@@ -172,7 +173,7 @@ class ScopeChart {
             .append("circle")
             .attr("class", "node")
             .attr("r", d => vis.radiusScale(d.storyPoints))
-            .attr("stroke",1)
+            .attr("stroke","white")
             .on("click", function (d) {
                 $(vis.eventHandler).trigger("scopeBubbleSelectionChanged", d)
             })
@@ -187,22 +188,22 @@ class ScopeChart {
             .attr("fill", function (d) {
                 return vis.colorScale(vis.issueStore.getSelectedIssuePropertyValue(d));
             })
-            .call(d3.drag()
-                .on("start", (d) => {
-                    if (!d3.event.active) { vis.simulation.alphaTarget(0.2).restart(); }
-                    d.fx = d.x;
-                    d.fy = d.y;
-                })
-                .on("drag", (d) => {
-                    d.fx = d3.event.x;
-                    d.fy = d3.event.y;
-                })
-                .on("end", (d) => {
-                    if (!d3.event.active) { vis.simulation.alphaTarget(0); }
-                    d.fx = null;
-                    d.fy = null;
-                })
-            );
+            // .call(d3.drag()
+            //     .on("start", (d) => {
+            //         if (!d3.event.active) { vis.simulation.alphaTarget(0.2).restart(); }
+            //         d.fx = d.x;
+            //         d.fy = d.y;
+            //     })
+            //     .on("drag", (d) => {
+            //         d.fx = d3.event.x;
+            //         d.fy = d3.event.y;
+            //     })
+            //     .on("end", (d) => {
+            //         if (!d3.event.active) { vis.simulation.alphaTarget(0); }
+            //         d.fx = null;
+            //         d.fy = null;
+            //     })
+            // );
     };
 
     exitNodes = function(n) {
