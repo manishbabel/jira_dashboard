@@ -28,16 +28,16 @@ EmployeeDetailsChart.prototype.initVis = function (){
 }
 EmployeeDetailsChart.prototype.wrangleData = function (d){
 
-    console.log("employee",d)
+    // console.log("employee",d)
     var vis = this
     vis.text_val  = "Hello ! I am "+d.fields.assignee.displayName+" This story is about" +d.fields.description
     vis.changelog = d['changelog']['histories']
     vis.dataset = []
     vis.changelog.forEach(function(d){
         var date1 =d.created
-        console.log((date1))
+        // console.log((date1))
         var myTime = String(date1).substr(16, 2);
-        console.log(dateFormatter(new Date(date1)),myTime)
+        // console.log(dateFormatter(new Date(date1)),myTime)
 
         vis.dataset.push({desc:d.items[0].field +":"+d.items[0].toString,fulldate:d.created,date: (new Date(date1)),time:myTime})
     })
@@ -87,7 +87,7 @@ EmployeeDetailsChart.prototype.updateVis = function (value){
 
 EmployeeDetailsChart.prototype.onSelectionChange = function(d){
     var vis = this;
-    console.log("e",d)
+    // console.log("e",d)
     //
     // console.log(selectionEnd)
     // Filter original unfiltered data depending on selected time period (brush)

@@ -133,11 +133,11 @@ EmployeeChart.prototype.wrangleData = function () {
             if (d.isResolved ==true){
                 var initialName = (d.fields.assignee.displayName)
                 initialName =initialName.split(' ')
-                console.log("initialName",initialName)
+                // console.log("initialName",initialName)
                 if (initialName.length > 1) {
                     initials += initialName[0].substring(0, 1).toUpperCase() + initialName[1].substring(0, 1).toUpperCase();
                 }
-            console.log(initials)
+            // console.log(initials)
                 vis.dataset.push({name:initials,state:status,statusName:stateName,time:timeSpent,key:d.fields.assignee.key+i})
             }
             else{
