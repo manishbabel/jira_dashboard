@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
         .await(visualize);
 });
 
-function visualize(error, jiraData, scrumText, retroData, test) {
+function visualize(error, jiraData, scrumText, retroData) {
         const issueStore = (useSampleData ? new IssueStore(jiraData) : new IssueStore(jiraData, "customfield_10020", "customfield_10028" )) ;
         const scrumTextStore = new ScrumTextStore(scrumText);
         const retroStore = new RetroStore(retroData);
