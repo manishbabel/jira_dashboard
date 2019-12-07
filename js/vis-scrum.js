@@ -31,8 +31,18 @@ class ScrumProcess {
         })
     }
 
-    setStats(){
+    getSprintDaysHTML(sprint){
+        const sprintStart = sprint.startDate;
+        const sprintEnd = sprint.endDate;
+        const sprintLength = Math.ceil((sprintEnd.getTime() - sprintStart.getTime()) / (1000*60*60*24));
+        const currentDay = new Date();
+        const dayOfSprint = Math.ceil((currentDay.getTime() - sprintStart.getTime()) / (1000*60*60*24));
 
+        return "Sprint Day " + dayOfSprint + " of " + sprintLength +
+            "<br>Ends " + formatDate(sprintEnd);
+    }
+
+    setStats(){
         const activeSprint = this.issueStore.activeSprint;
         const velocity = this.issueStore.previousSprint.completedStoryPoints;
         const committed = activeSprint.totalStoryPoints;
@@ -44,6 +54,7 @@ class ScrumProcess {
 
         const arrow = "<i class='fas fa-angle-double-right'></i>";
 
+        document.querySelector("#b-sprint").innerHTML = this.getSprintDaysHTML(activeSprint);
         document.querySelector("#scrum-velocity").innerText = velocity + " story points";
         document.querySelector("#scrum-burndown-pct").innerText = burndownPct;
         document.querySelector("#burn-down-progress").style = "width: " + burndownPct;
