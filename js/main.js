@@ -54,7 +54,7 @@ function visualize(error, jiraData, scrumText, retroData, test) {
         $(eventHandler).bind("selectedIssuePropertyChange", function(event, selection) {
                 issueStore.onSelectedIssuePropertyChange(selection, function () {
                         visVelocity.onSelectedLayerChange(selection);
-                        visScope.updateSelectedProperty();
+                        visScope.onSelectedPropertyChange();
                 });
         });
 
@@ -63,6 +63,12 @@ function visualize(error, jiraData, scrumText, retroData, test) {
                         visScope.updateVis();
                         //todo update sprint cards
                 });
+        });
+
+        $(eventHandler).bind("selectedVisualizationChange", (event, selection) => {
+                if (selection == "velocity-visualization") visVelocity.onSelectedVisualizationChange();
+                else if (selection == "scope-visualization") visScope.onSelectedVisualizationChange();
+
         });
 
         //bind triggers

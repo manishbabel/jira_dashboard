@@ -148,11 +148,13 @@ class ScrumProcess {
                         document.querySelectorAll(".scope-selector").forEach(element => {
                             element.style.display = "block";
                         });
+                        $(eventHandler).trigger("selectedVisualizationChange", "scope-visualization");
 
                     } else if(visContainerSelector == "#velocity-chart") {
                         document.querySelectorAll(".velocity-selector").forEach(element => {
                             element.style.display = "block";
                         });
+                        $(eventHandler).trigger("selectedVisualizationChange", "velocity-visualization");
                     }
 
                 });
