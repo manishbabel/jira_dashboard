@@ -134,7 +134,7 @@ class ScopeChart {
                 vis.map.push({id:d.key,name:"kevin",sp:d.value['total_time'],x:665,y:290})
             }
         })
-        console.log(vis.map);
+        // console.log(vis.map);
     }
 
     updateVis = function() {
@@ -253,7 +253,7 @@ function displayImagesForScrumTeam(vis) {
         .attr("class", "assignee-image")
         .merge(vis.img)
         .attr("xlink:href", function(d,i){
-            console.log(d.name + " " + d.sp );
+            // console.log(d.name + " " + d.sp );
             if( d.sp > 10){
                 return "img/"+d.name+"_sad.png"
             }else{
