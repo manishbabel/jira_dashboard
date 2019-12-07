@@ -28,6 +28,7 @@ IssuePropertyControl.prototype.updateVis = function() {
         return i < vis.issueStore.selectedIssueProperty.length;
     }));
 
+    console.log(vis.issueStore.selectedIssueProperty.length);
     var legend = d3.legendColor()
             .shapeWidth(30)
             .orient("verticle")
