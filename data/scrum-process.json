@@ -1,6 +1,6 @@
 {
   "general": {
-    "sprint": "2 - 4 week iteration which is planned to produce incremental product which meets the definition of done."
+    "sprint": "1 - 4 week iteration which is planned to produce incremental product which meets the definition of done."
   },
   "roles": {
     "product-owner": "The product owner owns the product vision.  Sets the priorities.  Sets the acceptance criteria and approves product increment.",
