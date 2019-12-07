@@ -27,6 +27,10 @@ class VelocityChart2 {
         this._velocityChart.onSelectedMetricChange(selection);
     }
 
+    onSelectedVisualizationChange() {
+        this._velocityChart.onSelectedVisualizationChange();
+    }
+
 }
 
 
@@ -156,18 +160,12 @@ VelocityChart.prototype.initVis = function(){
 
     //Add selection object
     const metricSvg = new Svg("#velocityIssuePropertyLegend", 200,vis.height,{top: 0, right: 0, bottom: 0, left: 0});
-    vis.issuePropertyControl = new IssuePropertyControl(metricSvg.svg, vis.coloScheme, vis.eventHandler, vis.issueStore);
-    //Fin
-/*
-    //add triggers
-    d3.select("#velocitySelect").on("change", function () {
-        $(vis.eventHandler).trigger("selectedMetricChange", d3.select("#velocitySelect").property("value"));
-    });
-*/
+    vis.issuePropertyControl = new IssuePropertyControl(metricSvg.svg, vis.coloScheme, vis.eventHandler, vis.issueStore, "velocity-property-legend");
+
+    //add event handler
     $(vis.eventHandler).bind("selectedMetricChange", function(event, selection) {
         vis.onSelectedMetricChange(selection);
     });
-
 
 
     // (Filter, aggregate, modify data)
@@ -347,6 +345,11 @@ VelocityChart.prototype.onSelectedMetricChange = function(selection){
         .text(() => $("#issue-metric-selector option:selected").text());
     vis.wrangleData();
 };
+
+VelocityChart.prototype.onSelectedVisualizationChange = function() {
+    const vis = this;
+    vis.issuePropertyControl.updateVis();
+}
 
 
 //Function that returns discrete values of a range given start, end, and # of values

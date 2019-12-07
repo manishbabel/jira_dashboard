@@ -114,6 +114,7 @@ class ScopeChart {
     updateVis = function() {
         var vis = this;
         vis.wrangleData();
+        vis.simulation.restart();
         vis.simulation.nodes(vis.storiesForSprint);
 
         var n = vis.svgElem.selectAll(".node")
@@ -123,13 +124,19 @@ class ScopeChart {
         vis.node = vis.svgElem.selectAll(".node");
     }
 
-    updateSelectedProperty = function() {
+    onSelectedPropertyChange = function() {
         var vis = this;
         vis.wrangleData();
         vis.node.attr("fill", function (d) {
             return vis.colorScale(vis.issueStore.getSelectedIssuePropertyValue(d));
         });
+        vis.issuePropertyControl.updateVis();
     };
+
+    onSelectedVisualizationChange = function() {
+        var vis = this;
+        vis.issuePropertyControl.updateVis();
+    }
 
     enterNodes = function(n) {
         var vis = this;
@@ -344,5 +351,5 @@ function displayStoryPointsLegend(vis) {
 function displayIssuePropertyLegend(vis) {
     var propertyLegend = vis.svgElem.append("g")
         .attr("transform", "translate(50, 470)");
-    vis.issuePropertyControl = new IssuePropertyControl(propertyLegend, vis.colorScheme, vis.eventHandler, vis.issueStore);
+    vis.issuePropertyControl = new IssuePropertyControl(propertyLegend, vis.colorScheme, vis.eventHandler, vis.issueStore, "scope-property-legend");
 }
