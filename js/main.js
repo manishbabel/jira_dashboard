@@ -31,14 +31,12 @@ function visualize(error, jiraData, scrumText, retroData, test) {
         const svgScope = new Svg("#scope-chart", width/2, height, marginScope);
         const svgStory = new Svg("#story-chart", width/2, height, margin);
         const svgRetro = new Svg("#retrospective-chart", 0, 0, marginRetro);
-        const svgBurnDown = new Svg("#burn-down-chart", width, height, margin);
         const svgEmployee = new Svg("#employee-chart", width, height, margin);
 
         const visVelocity = new VelocityChart2(issueStore, svgVelocity, colorScheme, eventHandler);
         const visStory = new StoryChart2(issueStore, svgStory);
         const visScope = new ScopeChart(issueStore, svgScope, visStory,'', colorScheme, eventHandler);
         const visRetro = new RetroChart(retroData.slice(16,21), svgRetro);
-        const visBurnDown = new BurnDownChart(issueStore, svgBurnDown);
         const visEmployee = new EmployeeChart2(issueStore, svgEmployee);
 
         //Map clickable elements to the visualization objects which will display

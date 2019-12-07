@@ -57,6 +57,8 @@ ul {
     margin-bottom: 20px;
 }
 
+#goto-scrumsee{text-align: center;}
+
 .link {
     fill: none;
     stroke: #ccc;

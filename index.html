@@ -13,9 +13,9 @@
   <link rel="icon" href="img/favicon.ico">
   <!-- Custom fonts for this template-->
   <link href="css/all.min.css" rel="stylesheet" type="text/css">
-<!--  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">-->
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
   <link href="css/reset.css" rel="stylesheet">
+
   <!-- Custom styles for this template-->
   <link href="css/jira-dashboard.min.css" rel="stylesheet">
   <link href="css/hotspots.css" rel="stylesheet">
@@ -77,6 +77,7 @@
           </h5>
           <br>
           <h2 style="color:darkgreen">
+            <i class="fas fa-glasses fa-sm "></i>
             ScrumSee makes us happy again
             <i id="happy-again" class="fas fa-smile-wink fa-2x"></i>
           </h2>
@@ -88,6 +89,16 @@
             Scrum process and it encourages the team to explore with interactive visualizations.
           </h5>
 
+          <br><br><br><br>
+          <div id="goto-scrumsee">
+            <h3>
+                <a href="#scrumsee" >Get started <i class="fas fa-arrow-circle-down"></i></a>
+            </h3>
+          </div>
+          <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+
+
         </header>
 
         <!-- Begin Page Content -->
@@ -96,7 +107,7 @@
           <div class="row">
 
             <!-- Scrum Process -->
-            <div class="col-xl-12 col-lg-12">
+            <div id="scrumsee" class="col-xl-12 col-lg-12">
               <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-start">
@@ -513,7 +524,6 @@
   <script src="js/vis-velocity.js"></script>
   <script src="js/vis-retro.js"></script>
   <script src="js/employee-chart.js"></script>
-  <script src="js/vis-burndown.js"></script>
 
   <!-- Main script -->
   <script src="js/main.js"></script>
