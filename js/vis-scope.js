@@ -81,15 +81,13 @@ class ScopeChart {
             .force("collide",forceCollide)
 
         displayStoryPointsLegend(vis);
-
         displayTitle(vis);
         displayIssuePropertyLegend(vis);
+        displayUserLabels(vis);
 
 
         vis.wrangleData();
-
         vis.renderVis();
-        displayImagesForScrumTeam(vis);
     }
 
     wrangleData = function (){
@@ -135,14 +133,14 @@ class ScopeChart {
             if (d.key =="ked358"){
                 vis.map.push({id:d.key,name:"kevin",sp:d.value['total_time'],x:665,y:290})
             }
-
-
         })
+        console.log(vis.map);
     }
 
     updateVis = function() {
         var vis = this;
         vis.wrangleData();
+        displayImagesForScrumTeam(vis);
         vis.simulation.restart();
         vis.simulation.nodes(vis.storiesForSprint);
 
@@ -212,7 +210,7 @@ class ScopeChart {
 
     renderVis = function (value) {
         var vis = this;
-
+        displayImagesForScrumTeam(vis);
 
 
         vis.simulation.nodes(vis.storiesForSprint);
@@ -248,55 +246,24 @@ function displayImagesForScrumTeam(vis) {
         .attr("y", 450)
         .attr("stroke", "#fdb462")
         .text("Un-Assigned");
-    vis.img = vis.svgElem.selectAll(".image")
+    vis.img = vis.svgElem.selectAll(".assignee-image")
         .data(vis.map)
 
     vis.img.enter().append("image")
+        .attr("class", "assignee-image")
+        .merge(vis.img)
         .attr("xlink:href", function(d,i){
+            console.log(d.name + " " + d.sp );
             if( d.sp > 10){
                 return "img/"+d.name+"_sad.png"
             }else{
                 return "img/"+d.name+"_happy.png"
             }
         })
-        .attr("class", "image")
         .attr("x", function(d){return d.x})
         .attr("y",function(d){return d.y})
 
     vis.img.exit().remove()
-
-    vis.svgElem.append("text")
-        .attr("class", "PT_Serif_original")
-        .attr("text-anchor", "middle")
-
-        .attr("x", 230)
-        .attr("y", 450)
-        .attr("stroke", "#bebada")
-
-        .text("David");
-    vis.svgElem.append("text")
-        .attr("class", "PT_Serif_original")
-        .attr("text-anchor", "middle")
-        .attr("x", 380)
-        .attr("y", 450)
-        .attr("stroke", "#fb8072")
-        .text("Manish");
-
-    vis.svgElem.append("text")
-        .attr("class", "PT_Serif_original")
-        .attr("text-anchor", "middle")
-        .attr("x", 550)
-        .attr("y", 450)
-        .attr("stroke", "#b3de69")
-        .text("James");
-
-    vis.svgElem.append("text")
-        .attr("class", "PT_Serif_original")
-        .attr("text-anchor", "middle")
-        .attr("x", 725)
-        .attr("y", 450)
-        .attr("stroke", "#8dd3c7")
-        .text("Kevin");
 }
 
 function displayTitle(vis) {
@@ -377,6 +344,41 @@ function displayStoryPointsLegend(vis) {
         .attr("stroke", "black")
         // .attr("stroke-width","8px")
         .text("Story Points");
+}
+
+function displayUserLabels(vis) {
+    vis.svgElem.append("text")
+        .attr("class", "PT_Serif_original")
+        .attr("text-anchor", "middle")
+
+        .attr("x", 230)
+        .attr("y", 450)
+        .attr("stroke", "#bebada")
+
+        .text("David");
+    vis.svgElem.append("text")
+        .attr("class", "PT_Serif_original")
+        .attr("text-anchor", "middle")
+        .attr("x", 380)
+        .attr("y", 450)
+        .attr("stroke", "#fb8072")
+        .text("Manish");
+
+    vis.svgElem.append("text")
+        .attr("class", "PT_Serif_original")
+        .attr("text-anchor", "middle")
+        .attr("x", 550)
+        .attr("y", 450)
+        .attr("stroke", "#b3de69")
+        .text("James");
+
+    vis.svgElem.append("text")
+        .attr("class", "PT_Serif_original")
+        .attr("text-anchor", "middle")
+        .attr("x", 725)
+        .attr("y", 450)
+        .attr("stroke", "#8dd3c7")
+        .text("Kevin");
 }
 
 function displayIssuePropertyLegend(vis) {

@@ -227,10 +227,10 @@ function generateDynamicText(d1,vis) {
         assigneeDesc = "This story is unassigned"
     } else {
         if (d1.isResolved == true) {
-            assigneeDesc = d1.fields.assignee.displayName + " completed "+d1.key+" story"
+            assigneeDesc = d1.fields.assignee.displayName + " completed <a target='_blank' href='" + jiraBaseUrl+"/browse/"+d1.key + "'>"+ d1.key + "</a>"+" story";
 
         } else {
-            assigneeDesc = d1.fields.assignee.displayName + " is working on "+d1.key+" story"
+            assigneeDesc = d1.fields.assignee.displayName + " is working on <a target='_blank' href='" + jiraBaseUrl+"/browse/"+d1.key + "'>"+ d1.key + "</a>"+" story"
 
         }
     }
@@ -291,7 +291,7 @@ function generateDynamicText(d1,vis) {
                 assigned:assignee})
         }
     })
-    d3.select(".story-text1").text(assigneeDesc)
+    d3.select(".story-text1").html(assigneeDesc)
     d3.select(".story-text2").text("This story is of " + d1.storyPoints + " points.")
     if (storyDesc.length > 95){
         storyDesc = storyDesc.slice(0, 90) + "..."
