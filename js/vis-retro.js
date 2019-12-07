@@ -103,7 +103,13 @@ LineChart.prototype.initVis = function(){
 
     vis.xAxis = d3.axisBottom()
         .scale(vis.x)
-        .tickFormat(function(d) { return d + 1; })
+        .tickFormat(function(d) {
+            var lab = "Sprint " + (d+1)
+            if( (d+1) == vis.data.length){
+                lab += " (Active)";
+            };
+            return lab;
+        })
         .ticks(vis.data.length-1);
 
     vis.yAxis = d3.axisLeft()
@@ -131,11 +137,11 @@ LineChart.prototype.initVis = function(){
         .attr("y", -20)
         .text("Rating");
 
-    vis.svg.append("text")
+    /*vis.svg.append("text")
         .attr("class", "label")
         .attr("y", vis.height+40)
         .attr("x", vis.width)
-        .text("Sprint");
+        .text("Sprint");*/
 
     // Tool tip
     vis.svg.append("text")

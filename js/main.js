@@ -30,7 +30,7 @@ function visualize(error, jiraData, scrumText, retroData, test) {
         const svgVelocity = new Svg("#velocity-chart", -1, 400, marginVelocity);
         const svgScope = new Svg("#scope-chart", width/2, height, marginScope);
         const svgStory = new Svg("#story-chart", width/2, height, margin);
-        const svgRetro = new Svg("#retrospective-chart", 600, 400, marginRetro);
+        const svgRetro = new Svg("#retrospective-chart", 0, 0, marginRetro);
         const svgBurnDown = new Svg("#burn-down-chart", width, height, margin);
         const svgEmployee = new Svg("#employee-chart", width, height, margin);
 
