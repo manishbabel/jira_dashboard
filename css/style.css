@@ -177,7 +177,8 @@ ul {
     font-size: 14pt;
 }
 
-.colorLegendTitle {
+.legendTitle {
+    font-family: 'PT Serif', serif;
     font-size: 14pt;
     font-weight: bold;
 }
@@ -199,6 +200,13 @@ ul {
     margin-bottom: 20px;
     text-align: center;
     font-size: 14pt;
+}
+
+.scrum-description {
+    text-align: center;
+    font-size: 14pt;
+
+    fill: black;
 }
 
 .PT_Serif{
