@@ -224,7 +224,7 @@ function generateDynamicText(d1,vis) {
         storyDesc = "Goal of this story is to " + d1.fields.summary
     }
     if (d1.fields.assignee == null) {
-        assigneeDesc = "This story is unassigned"
+        assigneeDesc = "<a target='_blank' href='" + jiraBaseUrl+"browse/"+d1.key + "'>"+ d1.key + "</a>"+" story is unassigned."
     } else {
         if (d1.isResolved == true) {
             assigneeDesc = d1.fields.assignee.displayName + " completed <a target='_blank' href='" + jiraBaseUrl+"/browse/"+d1.key + "'>"+ d1.key + "</a>"+" story";
@@ -258,6 +258,7 @@ function generateDynamicText(d1,vis) {
         .attr("font-size", "14px")
         .text("");
     changelog.forEach(function(d){
+        var assignee=""
         var copiedDate = new Date(d.created);
         var myTime = copiedDate.getHours()
         if(myTime ==0){

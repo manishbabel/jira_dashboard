@@ -22,7 +22,7 @@ function visualize(error, jiraData, scrumText, retroData, test) {
         const margin = {top: 0, right: 0, bottom: 0, left: 0};
         const marginVelocity = { top: 40, right: 65, bottom: 60, left: 60 };
         const marginScope = { top: 60, right: 60, bottom: 60, left: 60 };
-        const marginRetro = { top: 70, right: 60, bottom: 50, left: 60 };
+        const marginRetro = { top: 0, right: 0, bottom: 0, left: 0 };
         const width = 800;
         const height = 200;
         const colorScheme = d3.schemeCategory20;
@@ -31,14 +31,12 @@ function visualize(error, jiraData, scrumText, retroData, test) {
         const svgScope = new Svg("#scope-chart", width/2, height, marginScope);
         const svgStory = new Svg("#story-chart", width/2, height, margin);
         const svgRetro = new Svg("#retrospective-chart", 0, 0, marginRetro);
-        const svgBurnDown = new Svg("#burn-down-chart", width, height, margin);
         const svgEmployee = new Svg("#employee-chart", width, height, margin);
 
         const visVelocity = new VelocityChart2(issueStore, svgVelocity, colorScheme, eventHandler);
         const visStory = new StoryChart2(issueStore, svgStory);
         const visScope = new ScopeChart(issueStore, svgScope, visStory,'', colorScheme, eventHandler);
         const visRetro = new RetroChart(retroData.slice(16,21), svgRetro);
-        const visBurnDown = new BurnDownChart(issueStore, svgBurnDown);
         const visEmployee = new EmployeeChart2(issueStore, svgEmployee);
 
         //Map clickable elements to the visualization objects which will display
