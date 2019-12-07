@@ -153,14 +153,9 @@ class ScrumProcess {
             document.querySelector(clickedId).onclick = () => {
 
                 //Hide all visualizations and selectors
-                const vizContainerElements = document.querySelectorAll(".viz");
-                vizContainerElements.forEach(vizContainerElem => {
-                    vizContainerElem.style.display = "none";
-                });
-
-                const vizSelectorElements = document.querySelectorAll(".scrum-selector");
-                vizSelectorElements.forEach(vizSelectorElem => {
-                    vizSelectorElem.style.display = "none";
+                document.querySelectorAll(".viz, .scrum-selector, .scrum-description")
+                .forEach(domElement => {
+                    domElement.style.display = "none";
                 });
 
                 //Display the visualizations mapped to the clicked on element
@@ -170,16 +165,20 @@ class ScrumProcess {
 
                     if (visContainerSelector == "#employee-chart") vizObj.employeeChart.updateVis();
                     else if(visContainerSelector == "#scope-chart") {
-                        document.querySelectorAll(".scope-selector").forEach(element => {
+                        document.querySelectorAll(".scope-selector, .scope-description").forEach(element => {
                             element.style.display = "block";
                         });
                         $(eventHandler).trigger("selectedVisualizationChange", "scope-visualization");
 
                     } else if(visContainerSelector == "#velocity-chart") {
-                        document.querySelectorAll(".velocity-selector").forEach(element => {
+                        document.querySelectorAll(".velocity-selector, .velocity-description").forEach(element => {
                             element.style.display = "block";
                         });
                         $(eventHandler).trigger("selectedVisualizationChange", "velocity-visualization");
+                    } else if(visContainerSelector == "#retrospective-chart") {
+                        document.querySelectorAll(".velocity-selector, .retrospective-description").forEach(element => {
+                            element.style.display = "block";
+                        });
                     }
 
                 });

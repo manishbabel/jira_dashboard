@@ -14,7 +14,7 @@ IssuePropertyControl.prototype.initVis = function(){
         vis.svg
             .append("g")
             .append("text")
-            .attr("class", "title colorLegendTitle " + vis.visClass)
+            .attr("class", "title legendTitle colorLegendTitle " + vis.visClass)
             .attr("y", 14)
             .attr("x", 0)
             .text(() => $("#issue-property-selector option:selected").text());

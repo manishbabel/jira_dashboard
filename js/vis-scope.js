@@ -270,11 +270,11 @@ function displayTitle(vis) {
     vis.svgElem.append("text")
         .attr("class", "PT_Serif_Small")
         // .attr("text-anchor", "end")
-        .attr("x", 30)
+        .attr("x", 290)
         .attr("y", 30)
         .attr("stroke", "black")
         // .attr("stroke-width","8px")
-        .text("Scrum Team - Who is working on what? Click on work item bubbles. Limit work in progress ");
+        .text("Click on the work item bubbles!");
 
 
 }
@@ -330,17 +330,17 @@ function displayStoryPointsLegend(vis) {
 
     vis.svgElem.append("rect")
         .attr("x", 450)
-        .attr("y", 470)
-        .attr("height", 140)
+        .attr("y", 500)
+        .attr("height", 110)
         .attr("width", 310)
         .style("stroke", "black")
         .style("fill", "none")
         .style("stroke-width", vis.border);
     vis.svgElem.append("text")
-        .attr("class", "PT_Serif_Legend")
+        .attr("class", "legendTitle")
         // .attr("text-anchor", "end")
         .attr("x", 560)
-        .attr("y", 640)
+        .attr("y", 480)
         .attr("stroke", "black")
         // .attr("stroke-width","8px")
         .text("Story Points");
