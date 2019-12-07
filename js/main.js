@@ -54,13 +54,14 @@ function visualize(error, jiraData, scrumText, retroData, test) {
         $(eventHandler).bind("selectedIssuePropertyChange", function(event, selection) {
                 issueStore.onSelectedIssuePropertyChange(selection, function () {
                         visVelocity.onSelectedLayerChange(selection);
-                        visScope.wrangleData();
+                        visScope.updateSelectedProperty();
                 });
         });
 
         $(eventHandler).bind("selectedSprintChange", (event, selection) => {
                 issueStore.onSelectedSprintChange(selection, ()=> {
                         //todo update scope chart
+                        visScope.updateVis();
                         //todo update sprint cards
                 });
         });

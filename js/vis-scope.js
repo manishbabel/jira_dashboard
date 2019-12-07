@@ -81,7 +81,12 @@ class ScopeChart {
             .force("collide",forceCollide)
 
         displayStoryPointsLegend(vis);
+        displayImagesForScrumTeam(vis);
+        displayTitle(vis);
+
+
         vis.wrangleData();
+        vis.renderVis();
     }
 
     wrangleData = function (){
@@ -103,68 +108,88 @@ class ScopeChart {
             return i < vis.issueStore.selectedIssueProperty.length;
         }));
         vis.colorScale.domain(vis.issueStore.selectedIssueProperty);
-
-        vis.updateVis();
     }
 
-    updateVis = function (value) {
-        var vis = this
-        // vis.radiusScale.domain([0, 1, 3, 5, 8, 13, 21])
+    updateVis = function() {
+        var vis = this;
+        vis.wrangleData();
+        vis.simulation.nodes(vis.storiesForSprint);
 
-        displayImagesForScrumTeam(vis);
-        displayTitle(vis);
+        var n = vis.svgElem.selectAll(".node")
+            .data(vis.storiesForSprint);
+        vis.enterNodes(n);
+        vis.exitNodes(n);
+        vis.node = vis.svgElem.selectAll(".node");
+    }
 
-        getImageSVGDef(vis);
+    updateSelectedProperty = function() {
+        var vis = this;
+        vis.wrangleData();
+        vis.node.attr("fill", function (d) {
+            return vis.colorScale(vis.issueStore.getSelectedIssuePropertyValue(d));
+        });
+    };
 
-        var circles = vis.svgElem.selectAll("circle")
-        .data(vis.storiesForSprint)
-        .enter().append("circle")
-            .attr("class", "bubble")
+    enterNodes = function(n) {
+        var vis = this;
+        var g = n.enter()
+        .append("circle")
+            .attr("class", "node")
             .attr("r", d => vis.radiusScale(d.storyPoints))
             .attr("stroke",1)
             .on("click", function (d) {
-               $(vis.eventHandler).trigger("scopeBubbleSelectionChanged", d)
+                $(vis.eventHandler).trigger("scopeBubbleSelectionChanged", d)
             })
-            .call(d3.drag()
-                .on("start", (d) => {
-                    if (!d3.event.active) { vis.simulation.alphaTarget(0.2).restart(); }
-                    d.fx = d.x;
-                    d.fy = d.y;
-                })
-                .on("drag", (d) => {
-                    d.fx = d3.event.x;
-                    d.fy = d3.event.y;
-                })
-                .on("end", (d) => {
-                    if (!d3.event.active) { vis.simulation.alphaTarget(0); }
-                    d.fx = null;
-                    d.fy = null;
-                })
-            )
             .on ("mouseover",function(d){
                 d3.select(this).style('stroke', 'black');
             })
             .on ("mouseout",function(d){
-            d3.select(this).style('stroke', 'white');
-        });
-
-
-        vis.svgElem.selectAll(".bubble")
+                d3.select(this).style('stroke', 'white');
+            })
             .attr("fill", function (d) {
                 return vis.colorScale(vis.issueStore.getSelectedIssuePropertyValue(d));
-            });
+            })
+            .call(d3.drag()
+            .on("start", (d) => {
+                if (!d3.event.active) { vis.simulation.alphaTarget(0.2).restart(); }
+                d.fx = d.x;
+                d.fy = d.y;
+            })
+            .on("drag", (d) => {
+                d.fx = d3.event.x;
+                d.fy = d3.event.y;
+            })
+            .on("end", (d) => {
+                if (!d3.event.active) { vis.simulation.alphaTarget(0); }
+                d.fx = null;
+                d.fy = null;
+            })
+        );
+    };
 
-        vis.simulation.nodes(vis.storiesForSprint)
-            .on("tick", ticked);
+    exitNodes = function(n) {
+        n.exit().remove();
+    };
+
+    renderVis = function (value) {
+        var vis = this;
+
+        getImageSVGDef(vis);
+
+        vis.simulation.nodes(vis.storiesForSprint);
+        var nodes = vis.svgElem.selectAll(".node")
+        .data(vis.storiesForSprint);
+        vis.enterNodes(nodes);
+        vis.node = vis.svgElem.selectAll(".node");
 
         vis.simulation.force("x", vis.forceXSPlit)
             .alphaTarget(0.5)
 
-        function ticked() {
-            circles.attr("cx", function (d) {
+        vis.simulation.on("tick", function() {
+            vis.node.attr("cx", function (d) {
                 return d.x
             }).attr("cy", d => d.y)
-        }
+        });
 
     }
 
