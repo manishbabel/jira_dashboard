@@ -370,9 +370,34 @@
             <div class="col-xl-12 col-lg-12">
               <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <select id="sprint-selector" name="sprint-selector"></select>
+                <div class="card-header">
+                  <div class="row">
+                    <div class="col-md-3">
+                      <div class="scrum-selector scope-selector" style="display: none">
+                      <div class="row"><div class="col-md-1"></div><div class="col-md-11"><label for="sprint-selector">Sprint</label></div></div>
+                      <div class="row"><div class="col-md-12"><select id="sprint-selector" name="sprint-selector"></select></div></div></div></div>
+
+                    <div class="col-md-1">
+                      <div class="scrum-selector scope-selector velocity-selector" style="display: none">
+                      <div class="row"><div class="col-md-12"><label for="issue-property-selector">Issue Property</label></div></div>
+                      <div class="row"><div class="col-md-12"> <select id="issue-property-selector" name="issue-property-selector">
+                        <option value="priorities" selected>Priorities</option>
+                        <option value="components">Components</option>
+                        <option value="issueType">Issue Type</option>
+                      </select></div></div></div></div>
+
+                    <div class="col-md-1">
+                      <div class="scrum-selector velocity-selector" style="display: none">
+                      <div class="row"><div class="col-md-12"><label for="issue-metric-selector">Issue Metric</label></div></div>
+                      <div class="row"><div class="col-md-12"> <select id="issue-metric-selector" name="issue-metric-selector">
+                        <option value="totalStoryPoints" selected>Total Story Points</option>
+                        <option value="completedStoryPoints" >Completed Story Points</option>
+                        <option value="issueCount">Issue Count</option>
+                      </select></div></div></div></div>
+
+                  </div>
                 </div>
+
                 <!-- Card Body -->
                 <div class="card-body" >
                   <div id="burn-down-chart" class="viz">

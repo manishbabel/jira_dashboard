@@ -83,6 +83,7 @@ class ScopeChart {
         displayStoryPointsLegend(vis);
         displayImagesForScrumTeam(vis);
         displayTitle(vis);
+        displayIssuePropertyLegend(vis);
 
 
         vis.wrangleData();
@@ -338,4 +339,10 @@ function displayStoryPointsLegend(vis) {
         .attr("stroke", "black")
         // .attr("stroke-width","8px")
         .text("Story Points");
+}
+
+function displayIssuePropertyLegend(vis) {
+    var propertyLegend = vis.svgElem.append("g")
+        .attr("transform", "translate(50, 470)");
+    vis.issuePropertyControl = new IssuePropertyControl(propertyLegend, vis.colorScheme, vis.eventHandler, vis.issueStore);
 }

@@ -132,11 +132,7 @@ VelocityChart.prototype.initVis = function(){
         .attr("y", 0 - vis.margin.top/2 - 20)
         .attr("x", 0 - vis.margin.left/2 -170)
         .attr("transform", "rotate(-90)")
-        .text(function () {
-            return velocitySelect.find(function (d) {
-                return d.value == d3.select("#velocitySelect").property("value");
-            }).displayName;
-        });
+        .text(() => $("#issue-metric-selector option:selected").text());
 
     // TO-DO: Tooltip placeholder
     vis.svg.append("text")
@@ -159,18 +155,20 @@ VelocityChart.prototype.initVis = function(){
     vis.colorScale = d3.scaleOrdinal();
 
     //Add selection object
-    const metricSvg = new Svg("#velocityIssuePropertySelection", 200,vis.height,{top: 0, right: 0, bottom: 0, left: 0});
-    const issuePropertyControl = new IssuePropertyControl(vis.data, metricSvg, vis.coloScheme, vis.eventHandler, vis.issueStore);
+    const metricSvg = new Svg("#velocityIssuePropertyLegend", 200,vis.height,{top: 0, right: 0, bottom: 0, left: 0});
+    vis.issuePropertyControl = new IssuePropertyControl(metricSvg.svg, vis.coloScheme, vis.eventHandler, vis.issueStore);
     //Fin
-
+/*
     //add triggers
     d3.select("#velocitySelect").on("change", function () {
         $(vis.eventHandler).trigger("selectedMetricChange", d3.select("#velocitySelect").property("value"));
     });
-
+*/
     $(vis.eventHandler).bind("selectedMetricChange", function(event, selection) {
         vis.onSelectedMetricChange(selection);
     });
+
+
 
     // (Filter, aggregate, modify data)
     vis.wrangleData();
@@ -328,6 +326,7 @@ VelocityChart.prototype.onSelectedLayerChange = function(selection) {
     }
 
     vis.wrangleData();
+    vis.issuePropertyControl.updateVis();
 
 };
 
@@ -345,11 +344,7 @@ VelocityChart.prototype.onSelectedMetricChange = function(selection){
             break;
     }
     d3.select(".velocityMetric")
-        .text(function () {
-            return velocitySelect.find(function (d) {
-                return d.value == selection;
-            }).displayName;
-        });
+        .text(() => $("#issue-metric-selector option:selected").text());
     vis.wrangleData();
 };
 
@@ -377,30 +372,16 @@ function findClosestPoint(range, value) {
 
 }
 
-const velocitySelect = [
-    {value: "totalStoryPoints", displayName: "Total Story Points", selected:true},
-    {value: "completedStoryPoints", displayName: "Completed Story Points"},
-    {value: "issueCount", displayName: "Issue Count"}
-];
-
-
 
 const velocityHtml = `
 <div class="container">
     <div class="row">
-    <div class="col-md-2" id="velocityIssuePropertySelection"></div>
+    <div class="col-md-2" id="velocityIssuePropertyLegend"></div>
     <div class="col-md-1"></div>
         <div class="col-md-9" >
-        <div class="row">
-            <select class="select col-md-22" id="velocitySelect">
-                ${velocitySelect.map(function (option) {
-    return `<option value=${option.value} ${option.selected ? "selected" : ""}>${option.displayName}</option>`
-}).join('')}
-            </select>
-        </div>
-        <div class="row">
-        <div class="col-md-12" id="vis-velocity-chart"></div>
-        </div>
+            <div class="row">
+                <div class="col-md-12" id="vis-velocity-chart"></div>
+            </div>
         </div>
     </div>
 </div>

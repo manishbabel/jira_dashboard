@@ -127,10 +127,15 @@ class ScrumProcess {
 
             document.querySelector(clickedId).onclick = () => {
 
-                //Hide all visualizations
+                //Hide all visualizations and selectors
                 const vizContainerElements = document.querySelectorAll(".viz");
                 vizContainerElements.forEach(vizContainerElem => {
                     vizContainerElem.style.display = "none";
+                });
+
+                const vizSelectorElements = document.querySelectorAll(".scrum-selector");
+                vizSelectorElements.forEach(vizSelectorElem => {
+                    vizSelectorElem.style.display = "none";
                 });
 
                 //Display the visualizations mapped to the clicked on element
@@ -138,9 +143,18 @@ class ScrumProcess {
                     const visContainerSelector = vizObj.svg.container;
                     document.querySelector(visContainerSelector).style.display = "block";
 
-                    if (visContainerSelector == "#employee-chart") {
-                        vizObj.employeeChart.updateVis();
+                    if (visContainerSelector == "#employee-chart") vizObj.employeeChart.updateVis();
+                    else if(visContainerSelector == "#scope-chart") {
+                        document.querySelectorAll(".scope-selector").forEach(element => {
+                            element.style.display = "block";
+                        });
+
+                    } else if(visContainerSelector == "#velocity-chart") {
+                        document.querySelectorAll(".velocity-selector").forEach(element => {
+                            element.style.display = "block";
+                        });
                     }
+
                 });
             }
         });

@@ -1,17 +1,4 @@
-const breakdownOptions = [
-    {value: "priorities", displayName: "Priorities", selected:true},
-    {value: "components", displayName: "Components"},
-    {value: "issueType", displayName: "Issue Type"}
-];
-
-const issuePropertySelection = `<div id="issuePropertySelectionContainer"><select class="select" id="issuePropertySelection">
-                ${breakdownOptions.map(function (option) {
-    return `<option value=${option.value} ${option.selected ? "selected" : ""}>${option.displayName}</option>`
-}).join('')}
-            </select></div>`;
-
-IssuePropertyControl = function(_data, _svg, _colorScheme, _eventHandler, _issueStore) {
-        this.data = _data;
+IssuePropertyControl = function(_svg, _colorScheme, _eventHandler, _issueStore) {
         this.svg = _svg;
         this.colorScheme = _colorScheme;
         this.eventHandler = _eventHandler;
@@ -22,24 +9,11 @@ IssuePropertyControl = function(_data, _svg, _colorScheme, _eventHandler, _issue
 IssuePropertyControl.prototype.initVis = function(){
         var vis = this;
 
-        $(vis.svg.container).html(issuePropertySelection);
-
-        //bind listender
-        d3.select("#issuePropertySelection").on("change", function () {
-            $(vis.eventHandler).trigger("selectedIssuePropertyChange", d3.select("#issuePropertySelection").property("value"));
-            vis.updateVis();
-         });
-
-        console.log(d3.select(vis.svg.container + " svg"));
-        //.attr("background-color", "red");
-
-        vis.selectionSvg = d3.select(vis.svg.container)
-        .append("svg")
-        .attr("width", vis.svg.width)
-        .attr("height", vis.svg.height)
+        vis.svg
         .append("g")
             .attr("class", "colorLegend");
 
+        vis.selectedProperty = vis.issueStore.selectedIssueProperty;
         vis.updateVis();
 
     };
@@ -54,7 +28,6 @@ IssuePropertyControl.prototype.updateVis = function() {
         return i < vis.issueStore.selectedIssueProperty.length;
     }));
 
-
     var legend = d3.legendColor()
             .shapeWidth(30)
             .orient("verticle")
@@ -62,8 +35,8 @@ IssuePropertyControl.prototype.updateVis = function() {
             .cells(vis.issueStore.selectedIssueProperty.length)
     ;
 
-    d3.select(".colorLegend").attr("transform", "translate(0,10)");
+    d3.selectAll(".colorLegend").attr("transform", "translate(0,10)");
 
-    d3.select(".colorLegend")
+    d3.selectAll(".colorLegend")
         .call(legend);
 }

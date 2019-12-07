@@ -4,7 +4,7 @@ const useSampleData = false;
 document.addEventListener("DOMContentLoaded", () => {
 
     queue()
-        .defer(d3.json, (useSampleData ? "data/CFX-data-scrubbed.json" : "data/JV-12-5-19.json"))
+        .defer(d3.json, (useSampleData ? "data/CFX-data-scrubbed.json" : "data/JV-12-6-19.json"))
         .defer(d3.json, "data/scrum-process.json")
         .defer(d3.json, "data/metrics.json")
         .await(visualize);
@@ -60,10 +60,18 @@ function visualize(error, jiraData, scrumText, retroData, test) {
 
         $(eventHandler).bind("selectedSprintChange", (event, selection) => {
                 issueStore.onSelectedSprintChange(selection, ()=> {
-                        //todo update scope chart
                         visScope.updateVis();
                         //todo update sprint cards
                 });
+        });
+
+        //bind triggers
+        d3.select("#issue-property-selector").on("change", function () {
+                $(eventHandler).trigger("selectedIssuePropertyChange", d3.select("#issue-property-selector").property("value"));
+        });
+
+        d3.select("#issue-metric-selector").on("change", function () {
+                $(eventHandler).trigger("selectedMetricChange", d3.select("#issue-metric-selector").property("value"));
         });
 
 
