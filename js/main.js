@@ -23,8 +23,8 @@ function visualize(error, jiraData, scrumText, retroData, test) {
         const marginVelocity = { top: 0, right: 0, bottom: 0, left: 0 };
         const marginScope = { top: 0, right: 0, bottom: 0, left: 0 };
         const marginRetro = { top: 0, right: 0, bottom: 0, left: 0 };
-        const width = 800;
-        const height = 200;
+        const width = 0;
+        const height = 0;
         const colorScheme = scrumColorScheme;
 
         const svgVelocity = new Svg("#velocity-chart", -1, 400, marginVelocity);
