@@ -1,7 +1,7 @@
 /*references */
 /* Hotspots code inspired and adapted from https://codepen.io/jack-taylor89/pen/JeajeL?editors=1100 */
 body { margin: 0 !important; padding: 0 !important; width: 100% !important; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol' !important; }
-.img-container { position: relative; overflow: hidden; height: 20vw; background-image:url("../img/scrum-main.png"); background-size: cover;}
+.img-container { position: relative; overflow: hidden; height: 27vw; background-image:url("../img/scrum-main.png"); background-size: cover;}
 input { display: none; }
 p { margin: 0; }
 .button { color: white; font-weight: bold; font-size: 1em; background-color: #4e73df; display: inline; border-radius: 3%; cursor: pointer; animation: fadein .5s; animation: pulse 1.5s infinite; vertical-align: top;}
