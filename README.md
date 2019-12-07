@@ -1,37 +1,46 @@
-## Welcome to GitHub Pages
+# ScrumSee
 
-You can use the [editor on GitHub](https://github.com/manishbabel/jira_dashboard/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+ScrumSee is a novel dashboard visualization for Jira data.  This GitHub repository contains all of 
+the files for this project. This is our final project for CSCI E-171. The contents are explained 
+below:
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+## Contents
 
-### Markdown
+We will explain the structure of our repository and the important files within.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+### index.html
 
-```markdown
-Syntax highlighted code block
+This HTML file is the primary display of our work.  It sources all of the Javascript and CSS files that comprise our 
+visualizations. Open this in your browser.
 
-# Header 1
-## Header 2
-### Header 3
 
-- Bulleted
-- List
+### js/
 
-1. Numbered
-2. List
+This directory contains all of the Javascript code that was written for the project. `main.js`
+is the primary script which loads the data and creates instances of the visualization scripts 
+defined in the other Javascript files.
 
-**Bold** and _Italic_ and `Code` text
+Within the `lib/` subdirectory are the Javascript libraries that were also used for this project. 
 
-[Link](url) and ![Image](src)
-```
+### data/
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+This directory contains all of the Jira data which was used for the visualization.
 
-### Jekyll Themes
+### img/
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/manishbabel/jira_dashboard/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+This directory contains images that were used in the dashboard.
+ 
+## Acknowledgements
 
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+* Hotspots code inspired and adapted from https://codepen.io/jack-taylor89/pen/JeajeL?editors=1100
+* `scrum-main.png` inspired and adapted from https://www.verbindungszentrum.com/scrum-en/
+* https://www.w3schools.com/css/tryit.asp?filename=trycss_tooltip_arrow_top
+* `reset.css` from http://meyerweb.com/eric/tools/css/reset/
+* https://wesbos.com/template-strings-html/ 
+* https://tntvis.github.io/tnt.tooltip/
+* https://codepen.io/ashokgowtham/pen/LpnHe 
+* https://www.d3-graph-gallery.com/graph/line_cursor.html
+* https://d3-legend.susielu.com/
+* https://github.com/d3/d3/wiki/Gallery
+* https://vallandingham.me/bubble_charts_in_d3.html
+* http://dimplejs.org/advanced_examples_viewer.html?id=advanced_time_axis
