@@ -18,8 +18,9 @@ p { margin: 0; }
     padding-left: .5%;
     padding-right: .5%;
     position: absolute;
-    top: 75%;
+    top: 70%;
     text-align: center;
+
 }
 
 #b-retrospective{
@@ -45,14 +46,32 @@ p { margin: 0; }
 #b-product-backlog-desc,
 #b-product-backlog { left: 1%;}
 
-#b-sprint-planning-desc,
-#b-sprint-planning { left: 10.2%;}
+#b-product-backlog:hover{
+    background-image:url("../img/backlog1.png");
+    background-size: cover;
+    color: transparent;
+}
 
-#b-sprint-backlog,
-#b-sprint-backlog-desc { left: 18.7%;}
+#b-sprint-planning-desc,
+#b-sprint-planning { left: 13%;}
+
+#b-sprint-backlog-desc,
+#b-sprint-backlog  { left: 25%;}
+
+#b-sprint-backlog:hover{
+    background-image:url("../img/backlog2.png");
+    background-size: cover;
+    color: transparent;
+}
 
 #b-product-increment-desc,
-#b-product-increment { left: 75%;}
+#b-product-increment { left: 74%;}
+
+#b-product-increment:hover{
+    background-image:url("../img/backlog3.png");
+    background-size: cover;
+    color: transparent;
+}
 
 #b-retrospective-desc,
 #b-retrospective {left: 87%;}
@@ -64,9 +83,9 @@ p { margin: 0; }
 #b-tm,
 #b-daily-scrum { top: 13%;}
 
-#b-po { left: 2%; }
-#b-sm { left: 6%; }
-#b-tm { left: 10%; }
+#b-po { left: 5%; }
+#b-sm { left: 16%; }
+#b-tm { left: 25%; }
 #b-daily-scrum { left: 76%;}
 
 #b-sprint { top: 32%; left: 45%;
@@ -83,7 +102,7 @@ p { margin: 0; }
 #b-product-increment-desc,
 #b-product-backlog-desc,
 #b-sprint-backlog-desc,
-#b-sprint-planning-desc{ top: 71%}
+#b-sprint-planning-desc{ top: 65%}
 
 #b-sprint-desc{ top: 38%; left: 47%; font-weight: bold;}
 
