@@ -186,22 +186,22 @@ class ScopeChart {
             .attr("fill", function (d) {
                 return vis.colorScale(vis.issueStore.getSelectedIssuePropertyValue(d));
             })
-            // .call(d3.drag()
-            //     .on("start", (d) => {
-            //         if (!d3.event.active) { vis.simulation.alphaTarget(0.2).restart(); }
-            //         d.fx = d.x;
-            //         d.fy = d.y;
-            //     })
-            //     .on("drag", (d) => {
-            //         d.fx = d3.event.x;
-            //         d.fy = d3.event.y;
-            //     })
-            //     .on("end", (d) => {
-            //         if (!d3.event.active) { vis.simulation.alphaTarget(0); }
-            //         d.fx = null;
-            //         d.fy = null;
-            //     })
-            // );
+            .call(d3.drag()
+                .on("start", (d) => {
+                    if (!d3.event.active) { vis.simulation.alphaTarget(0.2).restart(); }
+                    d.fx = d.x;
+                    d.fy = d.y;
+                })
+                .on("drag", (d) => {
+                    d.fx = d3.event.x;
+                    d.fy = d3.event.y;
+                })
+                .on("end", (d) => {
+                    if (!d3.event.active) { vis.simulation.alphaTarget(0); }
+                    d.fx = null;
+                    d.fy = null;
+                })
+            );
     };
 
     exitNodes = function(n) {
@@ -238,7 +238,7 @@ function displayImagesForScrumTeam(vis) {
         .attr("xlink:href", "img/unassigned.png")
         .attr("class", "image1")
         .attr("x", 1)
-        .attr("y", 270)
+        .attr("y", 290)
     vis.svgElem.append("text")
         .attr("class", "PT_Serif_original")
         // .attr("text-anchor", "middle")
