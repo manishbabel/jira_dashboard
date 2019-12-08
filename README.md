@@ -50,3 +50,6 @@ https://manishbabel.github.io/jira_dashboard/
 
 ## Video
 https://www.youtube.com/watch?v=0Xa_DAD3ay0
+
+## Code
+https://github.com/manishbabel/jira_dashboard
