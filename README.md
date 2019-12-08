@@ -64,6 +64,7 @@ https://manishbabel.github.io/jira_dashboard/
 
 ## Video
 Intro: https://www.youtube.com/watch?v=BbnWgeNTiy0
+
 2min feature overview: https://www.youtube.com/watch?v=0Xa_DAD3ay0
 
 ## Code
