@@ -1,8 +1,12 @@
 # ScrumSee
 
-ScrumSee is a novel dashboard visualization for Jira data.  This GitHub repository contains all of 
-the files for this project. This is our final project for CSCI E-171. The contents are explained 
-below:
+ScrumSee is a novel dashboard visualization that guides you through the process of Agile Scrum by visualizing how your
+Jira data fits into the Scrum model while learning about Scrum and best practices along the way.
+
+## Jira
+
+Jira is an industry leading project management software suite that enables development teams to practice Agile Scrum.
+More information: https://www.atlassian.com/software/jira
 
 ## Contents
 
@@ -24,7 +28,17 @@ Within the `lib/` subdirectory are the Javascript libraries that were also used 
 
 ### data/
 
-This directory contains all of the Jira data which was used for the visualization.
+This directory contains all of the Jira data which was used for the visualization. 
+
+CFX-data-scrubbed.json and all JV-xx-xx-19.json files are exports of Jira data coming straight from the api. 
+CFX-data-scrubbed.json was the original data but as this development team used Jira, there was enough data to start 
+pulling from the Jira project used to manage this project.
+
+To view the Jira site, go to https://cs171-jira.atlassian.net/secure/RapidBoard.jspa?rapidView=1&projectKey=JV .
+You must sign in using an @g.harvard.edu email.
+
+The json file used in the website is JV-12-7-19.json . If converted to a NodeJs application, this visualization could
+pull live Jira Data.
 
 ### img/
 
@@ -49,7 +63,8 @@ This directory contains images that were used in the dashboard.
 https://manishbabel.github.io/jira_dashboard/
 
 ## Video
-https://www.youtube.com/watch?v=0Xa_DAD3ay0
+Intro: https://www.youtube.com/watch?v=BbnWgeNTiy0
+2min feature overview: https://www.youtube.com/watch?v=0Xa_DAD3ay0
 
 ## Code
 https://github.com/manishbabel/jira_dashboard
