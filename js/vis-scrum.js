@@ -176,7 +176,7 @@ class ScrumProcess {
                         });
                         $(eventHandler).trigger("selectedVisualizationChange", "velocity-visualization");
                     } else if(visContainerSelector == "#retrospective-chart") {
-                        document.querySelectorAll(".velocity-selector, .retrospective-description").forEach(element => {
+                        document.querySelectorAll(".retrospective-description").forEach(element => {
                             element.style.display = "block";
                         });
                     }
