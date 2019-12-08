@@ -44,3 +44,9 @@ This directory contains images that were used in the dashboard.
 * https://github.com/d3/d3/wiki/Gallery
 * https://vallandingham.me/bubble_charts_in_d3.html
 * http://dimplejs.org/advanced_examples_viewer.html?id=advanced_time_axis
+
+## Website
+https://manishbabel.github.io/jira_dashboard/
+
+## Video
+https://www.youtube.com/watch?v=0Xa_DAD3ay0

@@ -254,7 +254,7 @@ function displayImagesForScrumTeam(vis) {
         .merge(vis.img)
         .attr("xlink:href", function(d,i){
             // console.log(d.name + " " + d.sp );
-            if( d.sp > 10){
+            if( d.sp > 22){
                 return "img/"+d.name+"_sad.png"
             }else{
                 return "img/"+d.name+"_happy.png"
